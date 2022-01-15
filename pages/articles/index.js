@@ -82,7 +82,7 @@ const Index = ({ articles }) => {
 };
 
 Index.getInitialProps = async () => {
-	const res = await fetch('http://localhost:3000/api/articles');
+	const res = await fetch('/api/articles');
 	const { data } = await res.json();
 
 	return { articles: data };

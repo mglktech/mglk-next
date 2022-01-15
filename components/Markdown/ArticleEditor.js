@@ -36,17 +36,14 @@ const EditArticle = ({ article, form, setForm }) => {
 
 	const updateArticle = async () => {
 		try {
-			const res = await fetch(
-				`http://localhost:3000/api/articles/${router.query.id}`,
-				{
-					method: 'PUT',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(form),
-				}
-			);
+			const res = await fetch(`/api/articles/${router.query.id}`, {
+				method: 'PUT',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(form),
+			});
 			console.log(form);
 			router.push(`/articles/${router.query.id}`);
 		} catch (error) {
@@ -55,7 +52,7 @@ const EditArticle = ({ article, form, setForm }) => {
 	};
 	const createArticle = async () => {
 		try {
-			const res = await fetch('http://localhost:3000/api/articles', {
+			const res = await fetch('/api/articles', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
@@ -187,7 +184,7 @@ const EditArticle = ({ article, form, setForm }) => {
 };
 
 // EditArticle.getInitialProps = async ({ query: { id } }) => {
-// 	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
+// 	const res = await fetch(`/api/articles/${id}`);
 // 	const { data } = await res.json();
 // 	console.log(data);
 // 	if (!data) {

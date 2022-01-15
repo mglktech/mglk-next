@@ -20,7 +20,7 @@ const Editor = (props) => {
 	}, [errors]);
 	const createArticle = async () => {
 		try {
-			const res = await fetch('http://localhost:3000/api/articles', {
+			const res = await fetch('/api/articles', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
