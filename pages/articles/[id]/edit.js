@@ -14,7 +14,7 @@ const EditArticle = ({ article }) => {
 		imgurl: article.imgurl,
 		content: article.content,
 	});
-	const [imgSrc, setImgSrc] = useState('');
+	//const [imgSrc, setImgSrc] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [errors, setErrors] = useState({});
 	const router = useRouter();
@@ -107,7 +107,7 @@ EditArticle.getInitialProps = async ({ query: { id } }) => {
 
 //export default EditArticle;
 
-const editor = ({ article }) => {
+const Editor = ({ article }) => {
 	const [form, setForm] = useState({
 		title: article.title,
 		description: article.description,
@@ -128,7 +128,7 @@ const editor = ({ article }) => {
 	);
 };
 
-editor.getInitialProps = async ({ query: { id } }) => {
+Editor.getInitialProps = async ({ query: { id } }) => {
 	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
 	const { data } = await res.json();
 	if (!data) {
@@ -144,4 +144,4 @@ editor.getInitialProps = async ({ query: { id } }) => {
 	return { article: data };
 };
 
-export default editor;
+export default Editor;

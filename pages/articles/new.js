@@ -3,7 +3,7 @@ import Preview from '../../components/Markdown/Preview';
 import ArticleEditor from '../../components/Markdown/ArticleEditor';
 import { useState } from 'react';
 
-const editor = ({ article }) => {
+const Editor = ({ article }) => {
 	const [form, setForm] = useState({
 		title: article.title,
 		description: article.description,
@@ -24,7 +24,7 @@ const editor = ({ article }) => {
 	);
 };
 
-editor.getInitialProps = async () => {
+Editor.getInitialProps = async () => {
 	return {
 		article: {
 			title: '',
@@ -35,4 +35,4 @@ editor.getInitialProps = async () => {
 	};
 };
 
-export default editor;
+export default Editor;
