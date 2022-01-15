@@ -1,12 +1,6 @@
-import Nav from '../../components/Nav/Nav';
-
+import DefaultLayout from '../../layouts/Default';
 const login = () => {
-	return (
-		<div>
-			<Nav />
-			Login Page
-		</div>
-	);
+	return <DefaultLayout>login Page</DefaultLayout>;
 };
 
 export default login;
