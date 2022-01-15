@@ -31,17 +31,14 @@ const EditArticle = ({ article }) => {
 
 	const updateArticle = async () => {
 		try {
-			const res = await fetch(
-				`http://localhost:3000/api/articles/${router.query.id}`,
-				{
-					method: 'PUT',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(form),
-				}
-			);
+			const res = await fetch(`/api/articles/${router.query.id}`, {
+				method: 'PUT',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(form),
+			});
 			router.push(`/articles/${router.query.id}`);
 		} catch (error) {
 			console.log(error);
@@ -90,7 +87,7 @@ const EditArticle = ({ article }) => {
 };
 
 EditArticle.getInitialProps = async ({ query: { id } }) => {
-	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
+	const res = await fetch(`/api/articles/${id}`);
 	const { data } = await res.json();
 	if (!data) {
 		return {
@@ -129,7 +126,7 @@ const Editor = ({ article }) => {
 };
 
 Editor.getInitialProps = async ({ query: { id } }) => {
-	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
+	const res = await fetch(`/api/articles/${id}`);
 	const { data } = await res.json();
 	if (!data) {
 		return {

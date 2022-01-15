@@ -30,12 +30,9 @@ const Article = ({ article }) => {
 	const deleteArticle = async () => {
 		const articleId = router.query.id;
 		try {
-			const deleted = await fetch(
-				`http://localhost:3000/api/articles/${articleId}`,
-				{
-					method: 'Delete',
-				}
-			);
+			const deleted = await fetch(`/api/articles/${articleId}`, {
+				method: 'Delete',
+			});
 
 			router.push('/articles');
 		} catch (error) {
@@ -90,7 +87,7 @@ const Article = ({ article }) => {
 };
 
 Article.getInitialProps = async ({ query: { id } }) => {
-	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
+	const res = await fetch(`/api/articles/${id}`);
 	const { data } = await res.json();
 
 	return { article: data };
