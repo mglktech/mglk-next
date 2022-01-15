@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Layout from '../../../layouts/ArticleEditor';
 import Preview from '../../../components/Markdown/Preview';
+import ArticleEditor from '../../../components/Markdown/ArticleEditor';
 import { useState, useEffect } from 'react';
 import fetch from 'isomorphic-unfetch';
 import { Button, Form, Loader, Container, Image } from 'semantic-ui-react';
@@ -8,8 +9,12 @@ import { useRouter } from 'next/router';
 
 const EditArticle = ({ article }) => {
 	const [form, setForm] = useState({
+		title: article.title,
+		description: article.description,
+		imgurl: article.imgurl,
 		content: article.content,
 	});
+	const [imgSrc, setImgSrc] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [errors, setErrors] = useState({});
 	const router = useRouter();
@@ -61,6 +66,9 @@ const EditArticle = ({ article }) => {
 		let err = {};
 
 		if (!form.content) {
+			err.title = 'Title is required';
+			err.description = 'Description is required';
+			err.imgsrc = 'Image is required';
 			err.content = 'Content is required';
 		}
 
@@ -69,61 +77,9 @@ const EditArticle = ({ article }) => {
 
 	return (
 		<Layout>
-			<main className="px-5 py-10 space-x-5 text-gray-700 bg-gray-300 min-h-screen grid grid-cols-12">
-				<div className="flex flex-col col-span-5">
-					{isSubmitting ? (
-						<Loader active inline="centered" />
-					) : (
-						<Form onSubmit={handleSubmit}>
-							<Form.Input
-								size="large"
-								label="Title"
-								placeholder="Your Article Title Here"
-							/>
-							<Form.Input
-								inline
-								label="Image Source"
-								placeholder="http://www.example.com/image.jpg"
-							/>
-							<Image
-								fluid
-								className="my-3"
-								alt="Fire Dancer"
-								// src="/bin/fire_dancer.jpg"
-								rounded
-							/>
-
-							<Form.TextArea
-								rows="10"
-								label="Description"
-								placeholder="Your Article Description Here"
-							/>
-
-							<Form.TextArea
-								fluid
-								label="Content"
-								placeholder="Article's Content"
-								name="content"
-								rows="30"
-								error={
-									errors.content
-										? {
-												content: 'Please enter some content!',
-												pointing: 'below',
-										  }
-										: null
-								}
-								value={form.content}
-								onChange={handleChange}
-							/>
-							<Button
-								onClick={() => router.push(`/articles/${router.query.id}`)}
-							>
-								Back
-							</Button>
-							<Button type="submit">Update</Button>
-						</Form>
-					)}
+			<main className="px-5 py-10 space-x-5 text-gray-700 bg-gray-300 grid grid-cols-12">
+				<div className="col-span-5">
+					<ArticleEditor article={article} form={form} setForm={setForm} />
 				</div>
 				<div className="col-span-7">
 					<Preview text={form.content} />
@@ -136,8 +92,56 @@ const EditArticle = ({ article }) => {
 EditArticle.getInitialProps = async ({ query: { id } }) => {
 	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
 	const { data } = await res.json();
-
+	if (!data) {
+		return {
+			article: {
+				title: '',
+				description: '',
+				imgurl: '',
+				content: '',
+			},
+		};
+	}
 	return { article: data };
 };
 
-export default EditArticle;
+//export default EditArticle;
+
+const editor = ({ article }) => {
+	const [form, setForm] = useState({
+		title: article.title,
+		description: article.description,
+		imgurl: article.imgurl,
+		content: article.content,
+	});
+	return (
+		<Layout>
+			<main className="px-5 space-x-5 text-gray-700 bg-gray-300 min-h-screen grid grid-cols-12">
+				<div className="col-span-5 py-5">
+					<ArticleEditor article={article} form={form} setForm={setForm} />
+				</div>
+				<div className="col-span-7 py-5 h-screen">
+					<Preview article={form} />
+				</div>
+			</main>
+		</Layout>
+	);
+};
+
+editor.getInitialProps = async ({ query: { id } }) => {
+	const res = await fetch(`http://localhost:3000/api/articles/${id}`);
+	const { data } = await res.json();
+	if (!data) {
+		return {
+			article: {
+				title: '',
+				description: '',
+				imgurl: '',
+				content: '',
+			},
+		};
+	}
+	return { article: data };
+};
+
+export default editor;

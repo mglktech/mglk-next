@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../Button/Button';
+import { Image, Header } from 'semantic-ui-react';
 
 const Hero = ({ title, sub, btnText }) => {
 	return (
@@ -13,11 +13,11 @@ const Hero = ({ title, sub, btnText }) => {
 				<div className="container mx-auto px-6">
 					<h2 className="text-4xl font-bold mb-2 text-white">{title}</h2>
 					<h3 className="text-2xl mb-8 text-gray-200">{sub}</h3>
-					<Button
+					{/* <Button
 						text={btnText}
 						className="bg-white font-bold rounded-full py-4 px-8 shadow-lg uppercase tracking-wider"
 						goto="/learnmore"
-					></Button>
+					></Button> */}
 				</div>
 			</div>
 		</div>

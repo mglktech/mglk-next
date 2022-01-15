@@ -13,9 +13,12 @@ const Default = ({ children }) => {
 					href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
 				/>
 			</Head>
-
-			<NavY />
-			<div className="ml-40">{children}</div>
+			<div className="flex flex-row">
+				<div className="flex flex-col">
+					<NavY />
+				</div>
+				<div className="flex flex-col w-full">{children}</div>
+			</div>
 		</div>
 	);
 };

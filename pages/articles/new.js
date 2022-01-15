@@ -1,25 +1,38 @@
 import Layout from '../../layouts/ArticleEditor';
-import Editor from '../../components/Markdown/Editor';
 import Preview from '../../components/Markdown/Preview';
-import Settings from '../../components/Markdown/Settings';
-import { FaChevronCircleRight } from 'react-icons/fa';
-//import  MarkdownStyle from '../markdown.module.css';
+import ArticleEditor from '../../components/Markdown/ArticleEditor';
 import { useState } from 'react';
 
-const editor = () => {
-	const [text, setText] = useState('');
+const editor = ({ article }) => {
+	const [form, setForm] = useState({
+		title: article.title,
+		description: article.description,
+		imgurl: article.imgurl,
+		content: article.content,
+	});
 	return (
 		<Layout>
-			<main className="px-5 py-10 space-x-5 text-gray-700 bg-gray-300 min-h-screen grid grid-cols-12">
-				<div className="flex flex-col col-span-5">
-					<Editor text={text} setText={setText} />
+			<main className="px-5 space-x-5 text-gray-700 bg-gray-300 min-h-screen grid grid-cols-12">
+				<div className="col-span-5 py-5 h-screen">
+					<ArticleEditor article={article} form={form} setForm={setForm} />
 				</div>
-				<div className="col-span-7">
-					<Preview text={text} />
+				<div className="col-span-7 py-5 h-screen">
+					<Preview article={form} />
 				</div>
 			</main>
 		</Layout>
 	);
+};
+
+editor.getInitialProps = async () => {
+	return {
+		article: {
+			title: '',
+			description: '',
+			imgurl: '',
+			content: '',
+		},
+	};
 };
 
 export default editor;
