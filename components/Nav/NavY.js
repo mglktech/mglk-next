@@ -9,7 +9,7 @@ const Nav = () => {
 	const fetchSpotify = async () => {
 		const response = await fetch('/api/spotify/nowPlaying');
 		const data = await response.json();
-		console.log(data);
+
 		setSpData(data);
 	};
 	useEffect(() => {

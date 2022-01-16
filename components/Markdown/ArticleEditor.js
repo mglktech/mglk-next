@@ -44,7 +44,7 @@ const EditArticle = ({ article, form, setForm }) => {
 				},
 				body: JSON.stringify(form),
 			});
-			console.log(form);
+
 			router.push(`/articles/${router.query.id}`);
 		} catch (error) {
 			console.log(error);
