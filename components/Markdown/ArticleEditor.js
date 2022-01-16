@@ -15,7 +15,7 @@ import {
 import { useRouter } from 'next/router';
 
 const EditArticle = ({ article, form, setForm }) => {
-	const [imgSrc, setImgSrc] = useState('');
+	//const [imgSrc, setImgSrc] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [errors, setErrors] = useState({});
 	const router = useRouter();
@@ -87,6 +87,7 @@ const EditArticle = ({ article, form, setForm }) => {
 			err.title = 'Title is required';
 			err.description = 'Description is required';
 			err.imgsrc = 'Image is required';
+			err.imgheight = 'Image height cannot be 0';
 			err.content = 'Content is required';
 		}
 
@@ -98,7 +99,7 @@ const EditArticle = ({ article, form, setForm }) => {
 			{isSubmitting ? (
 				<Loader active inline="centered" />
 			) : (
-				<Form onSubmit={handleSubmit} className="max-h-screen">
+				<Form onSubmit={handleSubmit} className="">
 					<Header as="h2">
 						<Icon name="edit" />
 						<Header.Content>
@@ -124,16 +125,28 @@ const EditArticle = ({ article, form, setForm }) => {
 						placeholder="Your Article Title Here"
 						onChange={handleChange}
 					/>
-					<Form.Input
-						onChange={(e) => {
-							handleChange(e);
-							setImgSrc(e.target.value);
-						}}
-						name="imgurl"
-						value={form.imgurl}
-						label="Image Source"
-						placeholder="http://www.example.com/image.jpg"
-					/>
+					<Form.Group>
+						<Form.Input
+							onChange={(e) => {
+								handleChange(e);
+								//setImgSrc(e.target.value);
+							}}
+							name="imgurl"
+							value={form.imgurl}
+							label="Image Source"
+							placeholder="http://www.example.com/image.jpg"
+						/>
+						<Form.Input
+							onChange={(e) => {
+								handleChange(e);
+							}}
+							name="imgheight"
+							value={form.imgheight}
+							label="Image Height"
+							placeholder="0"
+						/>
+					</Form.Group>
+
 					<Form.TextArea
 						name="description"
 						rows="6"

@@ -6,12 +6,13 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "lint": "next lint"
-    
   },
   "dependencies": {
+    "fomantic-ui": "^2.8.8",
     "isomorphic-unfetch": "^3.1.0",
     "mongoose": "^6.1.6",
     "next": "12.0.8",
+    "next-auth": "^4.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",

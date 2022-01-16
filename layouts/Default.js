@@ -14,7 +14,7 @@ const Default = ({ children }) => {
 				/>
 			</Head>
 			<Nav />
-			<main className="bg-gray-300">{children}</main>
+			<main className="w-screen h-full bg-gray-300">{children}</main>
 		</div>
 	);
 };

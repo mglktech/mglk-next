@@ -86,11 +86,16 @@ const Article = ({ article }) => {
 	);
 };
 
-Article.getInitialProps = async ({ query: { id } }) => {
-	const res = await fetch(`/api/articles/${id}`);
+export async function getServerSideProps(ctx) {
+	const id = ctx?.query?.id;
+	const res = await fetch(`http://${ctx.req.headers.host}/api/articles/${id}`);
 	const { data } = await res.json();
-
-	return { article: data };
-};
+	//console.log(data);
+	return {
+		props: {
+			article: data,
+		},
+	};
+}
 
 export default Article;

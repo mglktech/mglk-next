@@ -3,6 +3,7 @@ import { Button } from 'semantic-ui-react';
 import { FaUserAlt, FaClipboardList } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import User from './User';
 import Logo from './Logo';
 const Nav = () => {
 	const [spData, setSpData] = useState({});
@@ -33,22 +34,7 @@ const Nav = () => {
 					labelPosition="right"
 					onClick={() => router.push('/articles')}
 				/>
-				<Button
-					basic
-					color="purple"
-					content="Sign In"
-					icon="sign-in"
-					labelPosition="right"
-					onClick={() => router.push('/login')}
-				/>
-				<Button
-					basic
-					color="purple"
-					content="Sign Up"
-					icon="add user"
-					labelPosition="right"
-					onClick={() => router.push('/signup')}
-				/>
+				<User></User>
 				{/* <Button
 					text="Articles"
 					onClick={() => {
