@@ -34,7 +34,7 @@ const Preview = ({ article }) => {
 			background: `url('${url}') center / cover`,
 		};
 	};
-	console.log(article);
+
 	return (
 		<div className="markdown-body w-full h-full rounded overflow-auto bg-white">
 			<div style={headerImageStyling(article.imgurl, article.imgheight)}></div>

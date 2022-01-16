@@ -3,7 +3,7 @@ import Nav from '../components/Nav/Nav';
 
 const Default = ({ children }) => {
 	return (
-		<div>
+		<>
 			<Head>
 				<title>Mglk.tech</title>
 				<meta name="description" content="By mglk" />
@@ -15,7 +15,7 @@ const Default = ({ children }) => {
 			</Head>
 			<Nav />
 			<main className="w-screen h-full bg-gray-300">{children}</main>
-		</div>
+		</>
 	);
 };
 
