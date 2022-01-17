@@ -11,22 +11,45 @@ import { useSession, getSession } from 'next-auth/react';
 //export default EditArticle;
 
 const Editor = ({ session, article }) => {
-	const user = session?.user;
-
 	//console.log(article);
+	//console.log(session);
+	const router = useRouter();
+	console.log(session.user.id);
 	const [form, setForm] = useState({
+		author: session.user._id,
 		title: article.title,
 		description: article.description,
 		imgurl: article.imgurl,
 		imgheight: article.imgheight,
 		content: article.content,
 	});
+	const updateArticle = async () => {
+		try {
+			const res = await fetch(`/api/articles/${router.query.id}`, {
+				method: 'PUT',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(form),
+			});
+
+			router.push(`/articles/${router.query.id}`);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<Layout>
 			<main className="px-5 space-x-5 text-gray-700 bg-gray-300 grid grid-cols-12">
 				<div className="w-1/3 py-5 fixed">
-					<ArticleEditor article={article} form={form} setForm={setForm} />
+					<ArticleEditor
+						article={article}
+						form={form}
+						setForm={setForm}
+						doSubmit={updateArticle}
+					/>
 				</div>
 				<div className="col-start-5 col-end-12 py-5 h-full">
 					<Preview article={form} />

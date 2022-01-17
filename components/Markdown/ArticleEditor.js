@@ -14,7 +14,7 @@ import {
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 
-const EditArticle = ({ article, form, setForm }) => {
+const EditArticle = ({ article, form, setForm, doSubmit }) => {
 	//const [imgSrc, setImgSrc] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [errors, setErrors] = useState({});
@@ -23,48 +23,17 @@ const EditArticle = ({ article, form, setForm }) => {
 	useEffect(() => {
 		if (isSubmitting) {
 			if (Object.keys(errors).length === 0) {
-				if (article._id) {
-					updateArticle();
-					return;
-				}
-				createArticle();
-				return;
+				// if (article._id) {
+				// 	updateArticle();
+				// 	return;
+				// }
+				// createArticle();
+				// return;
+				doSubmit();
 			}
 			setIsSubmitting(false);
 		}
 	}, [errors]);
-
-	const updateArticle = async () => {
-		try {
-			const res = await fetch(`/api/articles/${router.query.id}`, {
-				method: 'PUT',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(form),
-			});
-
-			router.push(`/articles/${router.query.id}`);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-	const createArticle = async () => {
-		try {
-			const res = await fetch('/api/articles', {
-				method: 'POST',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(form),
-			});
-			router.push('/articles');
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -107,6 +76,11 @@ const EditArticle = ({ article, form, setForm }) => {
 							<Header.Subheader>
 								{article._id ? `_id: ${article._id}` : `Creating new article`}
 							</Header.Subheader>
+							<Header.Subheader>
+								{article.author
+									? `Author: ${article.author.name}`
+									: `Author: ...`}
+							</Header.Subheader>
 						</Header.Content>
 					</Header>
 					<Form.Input
@@ -127,14 +101,14 @@ const EditArticle = ({ article, form, setForm }) => {
 					/>
 					<Form.Group>
 						<Form.Input
-							onChange={(e) => {
-								handleChange(e);
-								//setImgSrc(e.target.value);
-							}}
 							name="imgurl"
 							value={form.imgurl}
 							label="Image Source"
 							placeholder="http://www.example.com/image.jpg"
+							onChange={(e) => {
+								handleChange(e);
+								//setImgSrc(e.target.value);
+							}}
 						/>
 						<Form.Input
 							onChange={(e) => {
@@ -144,7 +118,7 @@ const EditArticle = ({ article, form, setForm }) => {
 							value={form.imgheight}
 							label="Image Height"
 							placeholder="0"
-						/>
+						></Form.Input>
 					</Form.Group>
 
 					<Form.TextArea

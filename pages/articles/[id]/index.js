@@ -88,8 +88,14 @@ const Article = ({ article }) => {
 
 export async function getServerSideProps(ctx) {
 	const id = ctx?.query?.id;
-	const res = await fetch(`http://${ctx.req.headers.host}/api/articles/${id}`);
-	const { data } = await res.json();
+	const { data } = await fetch(
+		`http://${ctx.req.headers.host}/api/articles/${id}`
+	)
+		.then((res) => res.json())
+		.catch((err) => {
+			return null;
+		});
+
 	//console.log(data);
 	return {
 		props: {
