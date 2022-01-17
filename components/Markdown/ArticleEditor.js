@@ -77,9 +77,7 @@ const EditArticle = ({ article, form, setForm, doSubmit }) => {
 								{article._id ? `_id: ${article._id}` : `Creating new article`}
 							</Header.Subheader>
 							<Header.Subheader>
-								{article.author
-									? `Author: ${article.author.name}`
-									: `Author: ...`}
+								{article.author ? `Author: ${article.author}` : `Author: ...`}
 							</Header.Subheader>
 						</Header.Content>
 					</Header>

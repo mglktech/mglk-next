@@ -5,16 +5,19 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession, getSession } from 'next-auth/react';
 
-const Editor = ({ article }) => {
+const Editor = () => {
 	const router = useRouter();
+	const { data: session } = useSession();
+	//console.log(session);
 	const [form, setForm] = useState({
-		author: article.author._id,
-		title: article.title,
-		description: article.description,
-		imgurl: article.imgurl,
-		imgheight: article.imgheight,
-		content: article.content,
+		author: session.user.id,
+		title: '',
+		description: '',
+		imgurl: '',
+		imgheight: '',
+		content: '',
 	});
+
 	const createArticle = async () => {
 		try {
 			const res = await fetch('/api/articles', {
@@ -35,7 +38,7 @@ const Editor = ({ article }) => {
 			<div className="px-5 space-x-5 text-gray-700 bg-gray-300 grid grid-cols-12">
 				<div className="col-span-5">
 					<ArticleEditor
-						article={article}
+						article={form}
 						form={form}
 						setForm={setForm}
 						doSubmit={createArticle}
@@ -49,30 +52,5 @@ const Editor = ({ article }) => {
 	);
 };
 
-export async function getServerSideProps(ctx) {
-	const session = await getSession(ctx);
-
-	if (!session) {
-		return {
-			redirect: {
-				destination: '/accessDenied',
-				permanent: false,
-			},
-		};
-	}
-	return {
-		props: {
-			session,
-			article: {
-				author: session.user,
-				title: '',
-				description: '',
-				imgurl: '',
-				content: '',
-				imgheight: '',
-			},
-		},
-	};
-}
-
 export default Editor;
+Editor.auth = true;

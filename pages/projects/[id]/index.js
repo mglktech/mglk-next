@@ -2,7 +2,6 @@ import Style from '../../../layouts/Default';
 import fetch from 'isomorphic-unfetch';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import {
 	Confirm,
 	Button,
@@ -13,11 +12,11 @@ import {
 } from 'semantic-ui-react';
 import Preview from '../../../components/Markdown/Preview';
 
-const Article = ({ article, author }) => {
+const Article = ({ article }) => {
 	const [confirm, setConfirm] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const router = useRouter();
-	const { data: session } = useSession();
+
 	useEffect(() => {
 		if (isDeleting) {
 			deleteArticle();
@@ -54,23 +53,17 @@ const Article = ({ article, author }) => {
 						<div className="flex flex-row-reverse">
 							<div className="flex flex-col space-y-1 py-1 fixed">
 								<Button onClick={() => router.push(`/articles/`)}>Back</Button>
-								{session ? (
-									<>
-										<Button
-											primary
-											onClick={() =>
-												router.push(`/articles/${router.query.id}/edit`)
-											}
-										>
-											Edit
-										</Button>
-										<Button color="red" onClick={open}>
-											Delete
-										</Button>
-									</>
-								) : (
-									<></>
-								)}
+								<Button
+									primary
+									onClick={() =>
+										router.push(`/articles/${router.query.id}/edit`)
+									}
+								>
+									Edit
+								</Button>
+								<Button color="red" onClick={open}>
+									Delete
+								</Button>
 							</div>
 						</div>
 					</div>
@@ -80,7 +73,7 @@ const Article = ({ article, author }) => {
 							<Loader active />
 						) : (
 							<>
-								<Preview article={article} author={author} />
+								<Preview article={article} />
 							</>
 						)}
 					</div>
@@ -97,16 +90,9 @@ export async function getServerSideProps(ctx) {
 	const id = ctx?.query?.id;
 	const res = await fetch(`http://${ctx.req.headers.host}/api/articles/${id}`);
 	const { data } = await res.json();
-	const user_id = data.author;
-	//console.log(user_id);
-	const { data: authorData } = await fetch(
-		`http://${ctx.req.headers.host}/api/users/${user_id}`
-	).then((res) => res.json());
-
 	//console.log(data);
 	return {
 		props: {
-			author: authorData ? authorData : null,
 			article: data,
 		},
 	};

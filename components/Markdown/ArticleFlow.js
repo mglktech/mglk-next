@@ -2,7 +2,9 @@ import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import { Button, Card, Container, Image, Icon } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 const ArticleFlow = ({ articles }) => {
+	const { data: session } = useSession();
 	const router = useRouter();
 	const headerImageStyling = (url) => {
 		return {
@@ -29,16 +31,23 @@ const ArticleFlow = ({ articles }) => {
 							<p>{article.description}</p>
 						</Card.Content>
 						<Card.Content extra className="flex justify-evenly">
-							<Button
-								icon
-								labelPosition="right"
-								onClick={() => {
-									router.push(`/articles/${article._id}/edit`);
-								}}
-							>
-								Edit
-								<Icon name="edit" />
-							</Button>
+							{session ? (
+								<>
+									<Button
+										icon
+										labelPosition="right"
+										onClick={() => {
+											router.push(`/articles/${article._id}/edit`);
+										}}
+									>
+										Edit
+										<Icon name="edit" />
+									</Button>
+								</>
+							) : (
+								<></>
+							)}
+
 							<Button
 								icon
 								primary
@@ -53,6 +62,25 @@ const ArticleFlow = ({ articles }) => {
 					//</div>
 				);
 			})}
+			{session ? (
+				<>
+					<Card
+						style={{
+							height: '360px',
+						}}
+					>
+						<Button
+							icon
+							className="h-full"
+							onClick={() => router.push(`/articles/new`)}
+						>
+							<Icon name="add circle" size="big" />
+						</Button>
+					</Card>
+				</>
+			) : (
+				<></>
+			)}
 		</>
 	);
 };

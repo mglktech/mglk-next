@@ -1,5 +1,11 @@
+import Layout from '../../layouts/Default';
+import { getSession } from 'next-auth/react';
 const Page = () => {
-	return <></>;
+	return (
+		<>
+			<Layout>Account Page</Layout>
+		</>
+	);
 };
 export async function getServerSideProps(ctx) {
 	const session = await getSession(ctx);

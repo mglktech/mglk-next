@@ -64,6 +64,10 @@ export default NextAuth({
 		}),
 	],
 	callbacks: {
+		async signIn({ user, account, profile, email, credentials }) {
+			console.log(`User Signed in - ${user.name}`);
+			return true;
+		},
 		async session({ session, token, user }) {
 			// Send properties to the client, like an access_token from a provider.
 			session.user = user;

@@ -15,6 +15,19 @@ const Index = ({ articles }) => {
 				{/* <div className="grid grid-flow-col grid-cols-4"> */}
 				<Card.Group itemsPerRow={3} className="justify-center">
 					<ArticleFlow articles={articles} />
+					<Card
+						style={{
+							height: '360px',
+						}}
+					>
+						<Button
+							icon
+							className="h-full"
+							onClick={() => router.push(`/articles/new`)}
+						>
+							<Icon name="add circle" size="big" />
+						</Button>
+					</Card>
 				</Card.Group>
 
 				{/* </div> */}
