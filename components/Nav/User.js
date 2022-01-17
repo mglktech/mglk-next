@@ -4,7 +4,7 @@ import { Button, Header, Image, Label } from 'semantic-ui-react';
 export default function Component() {
 	const { data: session } = useSession();
 	if (session) {
-		console.log(session);
+		//console.log(session);
 		return (
 			<div className="content-center">
 				<Label as="a" image color="violet" size="medium">
