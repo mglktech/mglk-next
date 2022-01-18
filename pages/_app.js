@@ -7,7 +7,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 		<SessionProvider session={session}>
 			{Component.auth ? (
 				<Auth>
-					<Component {...pageProps} />
+					{Component.admin ? (
+						<Admin>
+							<Component {...pageProps} />
+						</Admin>
+					) : (
+						<Component {...pageProps} />
+					)}
 				</Auth>
 			) : (
 				<Component {...pageProps} />
@@ -18,8 +24,18 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 function Auth({ children }) {
 	const { data: session, status } = useSession({ required: true });
 	const isUser = !!session?.user;
-
 	if (isUser) {
+		return children;
+	}
+
+	// Session is being fetched, or no user.
+	// If no user, useEffect() will redirect.
+	return <div>Loading...</div>;
+}
+function Admin({ children }) {
+	const { data: session, status } = useSession({ required: true });
+	const isAdmin = !!session?.user?.serverOwner;
+	if (isAdmin) {
 		return children;
 	}
 

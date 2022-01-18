@@ -1,21 +1,32 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { Button, Header, Image, Label } from 'semantic-ui-react';
-
+import { Button, Header, Image, Label, Icon } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
 export default function Component() {
 	const { data: session } = useSession();
+	const router = useRouter();
 	if (session) {
 		//console.log(session);
 		return (
 			<div className="content-center">
-				<Label as="a" image color="violet" size="medium">
+				{session.user.serverOwner ? (
+					<>
+						<Button icon color="teal" onClick={() => router.push('/admin')}>
+							<Icon name="shield" />
+						</Button>
+					</>
+				) : (
+					<></>
+				)}
+
+				<Label as="a" image color="violet" size="big">
 					<Image
 						avatar
 						alt="profile avatar"
 						spaced="right"
-						src={session.user.image}
+						src={session.user.image_url}
 					/>
-					{session.user.name}
-					<Label.Detail>#{session.user.discord.discriminator}</Label.Detail>
+					{session.user.username}
+					<Label.Detail>#{session.user.discriminator}</Label.Detail>
 				</Label>
 
 				<Button
