@@ -1,7 +1,7 @@
 //import '../styles/globals.css'
 import '/styles/github-markdown.css';
 import 'semantic-ui-css/semantic.min.css';
-import { SessionProvider, useSession } from 'next-auth/react';
+import { SessionProvider, useSession, getSession } from 'next-auth/react';
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<SessionProvider session={session}>
@@ -34,7 +34,7 @@ function Auth({ children }) {
 }
 function Admin({ children }) {
 	const { data: session, status } = useSession({ required: true });
-	const isAdmin = !!session?.user?.serverOwner;
+	const isAdmin = !!session?.user?.owner;
 	if (isAdmin) {
 		return children;
 	}
@@ -43,5 +43,21 @@ function Admin({ children }) {
 	// If no user, useEffect() will redirect.
 	return <div>Loading...</div>;
 }
+
+// async function Admin({ children }) {
+// 	const session = getSession();
+// 	const AdminGuild = await guildModel.find({
+// 		guild_id: process.env.DISCORD_SERVER_ID,
+// 	});
+// 	const AdminId = AdminGuild.owner;
+// 	const isAdmin = !!session?.user?.id === AdminId;
+// 	if (isAdmin) {
+// 		return children;
+// 	}
+
+// 	// Session is being fetched, or no user.
+// 	// If no user, useEffect() will redirect.
+// 	return <div>Loading...</div>;
+// }
 
 export default MyApp;

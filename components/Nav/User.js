@@ -8,7 +8,7 @@ export default function Component() {
 		//console.log(session);
 		return (
 			<div className="content-center">
-				{session.user.serverOwner ? (
+				{session.user.owner ? (
 					<>
 						<Button icon color="teal" onClick={() => router.push('/admin')}>
 							<Icon name="shield" />
@@ -18,7 +18,13 @@ export default function Component() {
 					<></>
 				)}
 
-				<Label as="a" image color="violet" size="big">
+				<Label
+					as="a"
+					image
+					color="violet"
+					size="big"
+					onClick={() => router.push('/account')}
+				>
 					<Image
 						avatar
 						alt="profile avatar"

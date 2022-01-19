@@ -5,6 +5,7 @@ import clientPromise from '../../../lib/mongodb';
 import Account from '../../../models/Account';
 import Article from '../../../models/Article';
 import { ObjectId } from 'mongodb';
+import findGuilds from '../../../utils/discord/findGuilds';
 const NewDiscordProvider = (options) => {
 	return {
 		id: 'discord',
@@ -20,6 +21,19 @@ const NewDiscordProvider = (options) => {
 			// console.log(`TOKENS`);
 			//console.log(tokens);
 			//console.log(tokens.access_token);
+			profile.discord_id = profile.id;
+			profile.guilds = await findGuilds(profile.id, tokens);
+			//const guilds = await findGuilds(tokens);
+			if (profile.guilds) {
+				const ownerGuild = await profile.guilds.find(
+					(guild) => guild.id === process.env.DISCORD_SERVER_ID
+				);
+				if (ownerGuild) {
+					if (ownerGuild.owner === true) {
+						profile.owner = true;
+					}
+				}
+			}
 			if (profile.avatar === null) {
 				const defaultAvatarNumber = parseInt(profile.discriminator) % 5;
 				profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
@@ -32,22 +46,6 @@ const NewDiscordProvider = (options) => {
 		},
 		options,
 	};
-};
-
-const findGuilds = async (id) => {
-	const account = await Account.findOne({ userId: new ObjectId(id) });
-	//console.log(account);
-	if (!account) {
-		return null;
-	}
-	const guilds = await fetch(`https://discord.com/api/users/@me/guilds`, {
-		headers: {
-			Authorization: `Bearer ${account.access_token}`,
-		},
-	})
-		.then((res) => res.json())
-		.catch((err) => null);
-	return guilds;
 };
 
 export default NextAuth({
@@ -79,27 +77,37 @@ export default NextAuth({
 		NewDiscordProvider({
 			clientId: process.env.DISCORD_CLIENT_ID,
 			clientSecret: process.env.DISCORD_CLIENT_SECRET,
-			authorization: { params: { scope: 'identify guilds' } },
+			authorization: {
+				params: { scope: 'identify guilds' },
+			},
 		}),
 	],
 	callbacks: {
-		async signIn(params) {
+		async signIn({ user, account, profile }) {
 			//console.log(`User Signed in - ${user.name}`);
 			//console.log(params);
+			// Collect users' Guilds and upsert each guild into the Guilds collection
+			// If user is guild owner, save discord ID in guild's owner field
+			//findGuilds(account);
 			return true;
 		},
 		async session({ session, user }) {
+			const isAdmin = () => {};
 			// Send properties to the client, like an access_token from a provider.
 			session.user = user;
-			session.user.guilds = await findGuilds(user.id);
-			const serverGuild = session.user.guilds.find(
-				(guild) => guild.id === process.env.DISCORD_SERVER_ID
-			);
-			if (serverGuild.owner) {
-				session.user.serverOwner = true;
-			} else {
-				session.user.serverOwner = false;
-			}
+			// console.log(session);
+			// session.user.guilds = await findGuilds(user.id);
+			// if (session.user.guilds) {
+			// 	//console.log(session.user.guilds);
+			// 	const serverGuild = session.user.guilds.find(
+			// 		(guild) => guild.id === process.env.DISCORD_SERVER_ID
+			// 	);
+			// 	if (serverGuild.owner) {
+			// 		session.user.serverOwner = true;
+			// 	} else {
+			// 		session.user.serverOwner = false;
+			// 	}
+			// }
 
 			return Promise.resolve(session);
 		},
