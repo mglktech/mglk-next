@@ -40,35 +40,25 @@ const Preview = ({ article, author }) => {
 	return (
 		<div className="markdown-body w-full h-full rounded overflow-auto bg-white">
 			<div style={headerImageStyling(article.imgurl, article.imgheight)}></div>
-			{author ? (
-				<div className="p-2">
-					<Header as="h5" floated="right">
-						<Image circular src={author.image} className="" />
-						<Header.Content className="">
-							Author: {author.name}
-							{article.createdAt ? (
-								<>
-									<Header.Subheader>
-										Created on <Moment format="LL">{article.createdAt}</Moment>
-									</Header.Subheader>
-									<Header.Subheader>
-										Updated on <Moment format="LL">{article.updatedAt}</Moment>
-									</Header.Subheader>
-								</>
-							) : (
-								<></>
-							)}
-						</Header.Content>
-					</Header>
-				</div>
-			) : (
-				<></>
-			)}
-
-			{/* <Header as="h1" textAlign="center">
-				{article.title}
-			</Header>
-			<Header as="h5">{article.description}</Header> */}
+			<div className="p-2">
+				<Header as="h5" floated="right">
+					Written By: {article.author?.username || '(not found)'}
+					{/* <Header.Content className=" justify-center align-center content-center"></Header.Content> */}
+					{/* <Image circular src={article.author.image_url} className="p-2" /> */}
+					{article.createdAt ? (
+						<>
+							<Header.Subheader>
+								Created on <Moment format="LL">{article.createdAt}</Moment>
+							</Header.Subheader>
+							<Header.Subheader>
+								Updated on <Moment format="LL">{article.updatedAt}</Moment>
+							</Header.Subheader>
+						</>
+					) : (
+						<></>
+					)}
+				</Header>
+			</div>
 			<ReactMarkdown className="p-5" remarkPlugins={[remarkGfm]}>
 				{article.content}
 			</ReactMarkdown>

@@ -1,13 +1,15 @@
-import dbConnect from '../../../utils/dbConnect';
+//import dbConnect from '../../../utils/dbConnect';
+import dbConnect from '../../../lib/dbConnect';
 import User from '../../../models/User';
 
-dbConnect();
+//dbConnect();
 
 const UserById = async (req, res) => {
 	const {
 		query: { id },
 		method,
 	} = req;
+	await dbConnect();
 
 	switch (method) {
 		case 'GET':

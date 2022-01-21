@@ -2,6 +2,8 @@
 import '/styles/github-markdown.css';
 import 'semantic-ui-css/semantic.min.css';
 import { SessionProvider, useSession, getSession } from 'next-auth/react';
+import { useEffect } from 'react';
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<SessionProvider session={session}>
@@ -21,6 +23,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 		</SessionProvider>
 	);
 }
+
+// Serverside hooks for checking authentication with fewer lines on other files.
+// Component.auth [true,false] - Verifies AUTH (user is logged in)
+// Component.admin [true, false] - Verifies ADMIN (User is owner of the site)
 function Auth({ children }) {
 	const { data: session, status } = useSession({ required: true });
 	const isUser = !!session?.user;

@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import { Schema, models, model } from 'mongoose';
 
-const GuildSchema = new mongoose.Schema(
+const GuildSchema = new Schema(
 	{
 		guild_id: {
 			type: String,
@@ -24,5 +24,5 @@ const GuildSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-module.exports = mongoose.models.Guild || mongoose.model('Guild', GuildSchema);
+module.exports = models.Guild || model('Guild', GuildSchema);
 // export default models.Guild || model('Guild', GuildSchema);

@@ -1,19 +1,12 @@
-import Discord from 'discord.js';
-
-const connect = {};
-async function discordConnect() {
-	if (connect.isConnected) {
-		return connect;
-	}
-	const discordClient = new Discord.Client();
-	await discordClient.login(token);
-	connect.client = discordClient;
-	connect.isConnected = true;
-	return connect;
-}
-const token = process.env.DISCORD_BOT_TOKEN;
 //const logger = require('emberdyn-logger');
-
+import { Client } from 'discord.js';
+// import { Client } from 'Discord.js';
+const token = process.env.DISCORD_BOT_TOKEN;
+const client = new Client({
+	scope: 'bot',
+});
+client.login(token);
+client.on('ready', () => console.log('Discord Client Ready'));
 // client.fetchGuild = async (guildID) => {
 // 	try {
 // 		const guild = await client.guilds.fetch(guildID);
@@ -91,4 +84,4 @@ const token = process.env.DISCORD_BOT_TOKEN;
 // const HandleErrors = (err, src = 'utils/discordClient.js') => {
 // 	console.log(`[${src}]: ${err}`);
 // };
-export default discordConnect;
+export default client;

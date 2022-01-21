@@ -5,7 +5,7 @@ import clientPromise from '../../../lib/mongodb';
 import Account from '../../../models/Account';
 import Article from '../../../models/Article';
 import { ObjectId } from 'mongodb';
-import findGuilds from '../../../utils/discord/findGuilds';
+import { findGuilds } from '../../../utils/discord';
 const NewDiscordProvider = (options) => {
 	return {
 		id: 'discord',

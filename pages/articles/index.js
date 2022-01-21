@@ -34,6 +34,7 @@ const Index = ({ articles }) => {
 // };
 export async function getServerSideProps(ctx) {
 	const res = await fetch(`http://${ctx.req.headers.host}/api/articles/`);
+	//console.log(res);
 	const { data } = await res.json();
 	//console.log(data);
 	return {

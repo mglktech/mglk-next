@@ -1,11 +1,9 @@
-import dbConnect from '../../../utils/dbConnect';
+//import '../../../utils/dbConnect';
 import ArticleModel from '../../../models/Article';
-
-dbConnect();
-
+import dbConnect from '../../../lib/dbConnect';
 const Article = async (req, res) => {
 	const { method } = req;
-
+	await dbConnect();
 	switch (method) {
 		case 'GET':
 			try {

@@ -20,7 +20,7 @@ const Editor = () => {
 
 	const createArticle = async () => {
 		try {
-			const res = await fetch('/api/articles', {
+			const res = await fetch('https://discord.com/api/v8/oauth2/token', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
