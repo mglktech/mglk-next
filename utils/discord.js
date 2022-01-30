@@ -1,6 +1,53 @@
-//import mongooseConnection from './dbConnect';
+import dbConnect from '../lib/dbConnect';
 import guildModel from '../models/Guilds';
 import Bots from '../models/Bot';
+import URLSearchParams from 'url-search-params';
+const API_ENDPOINT = 'https://discord.com/api';
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+
+export const toParams = (data) => {
+	const searchParams = new URLSearchParams();
+	for (const prop in data) {
+		searchParams.set(prop, data[prop]);
+	}
+	return searchParams;
+};
+
+export const RefreshToken = async (refresh_token) => {
+	await dbConnect();
+	const headers = {
+		'Content-Type': 'application/x-www-form-urlencoded',
+	};
+	const data = {
+		client_id: CLIENT_ID,
+		client_secret: CLIENT_SECRET,
+		grant_type: 'refresh_token',
+		refresh_token: refresh_token,
+	};
+	const res = await fetch(`${API_ENDPOINT}/oauth2/token`, {
+		method: 'POST',
+		headers,
+		body: toParams(data),
+	});
+	const json = await res.json();
+	if (res.status === 400) {
+		console.log('utils/Discord.js Error:');
+		console.log(json);
+		return { success: false, error: json.error };
+	}
+	Bots.findOneAndUpdate(
+		{ client_id: CLIENT_ID },
+		{
+			access_token: json.access_token,
+			refresh_token: json.refresh_token,
+			expires_in: json.expires_in,
+		}
+	).exec();
+	console.log('utils/discord.js Success:');
+	console.log(json);
+	return { success: true, expires_in: json.expires_in };
+};
 
 const doFetch = async (access_token) => {
 	const res = await fetch(`https://discord.com/api/users/@me/guilds`, {
@@ -72,6 +119,7 @@ const upsertToDatabase = (userId, guilds) => {
 };
 export const findGuilds = async (userId, tokens) => {
 	//console.log(tokens);
+	await dbConnect();
 	const guilds = await doFetch(tokens.access_token);
 	if (guilds.code === 0) {
 		console.log(`GUILD FETCH ERROR ${guilds.message}`);

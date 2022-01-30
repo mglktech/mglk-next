@@ -7,7 +7,7 @@ const Article = async (req, res) => {
 	switch (method) {
 		case 'GET':
 			try {
-				const articles = await ArticleModel.find({});
+				const articles = await ArticleModel.find({}).populate('author');
 
 				res.status(200).json({ success: true, data: articles });
 			} catch (error) {

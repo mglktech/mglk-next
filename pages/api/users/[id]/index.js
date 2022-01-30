@@ -1,20 +1,20 @@
-//import dbConnect from '../../../utils/dbConnect';
-import dbConnect from '../../../lib/dbConnect';
-import User from '../../../models/User';
-
-//dbConnect();
-
+import User from '../../../../models/User';
+import dbConnect from '../../../../lib/dbConnect';
+// import { useSession } from 'next-auth/react';
 const UserById = async (req, res) => {
+	// const { data: session } = useSession();
 	const {
 		query: { id },
 		method,
 	} = req;
 	await dbConnect();
-
 	switch (method) {
 		case 'GET':
 			try {
-				const user = await User.findById(id);
+				const user = await User.findById(
+					id,
+					'_id username discord_id discriminator image_url'
+				);
 
 				if (!user) {
 					return res.status(400).json({ success: false });
