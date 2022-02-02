@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react';
 import { FaUserAlt, FaClipboardList } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import User from './User';
+import User from './_User';
 import Logo from './Logo';
 const Nav = () => {
 	const [spData, setSpData] = useState({});
@@ -27,13 +27,14 @@ const Nav = () => {
 			<div className="inline-flex p-2 space-x-2">
 				<Button
 					basic
+					compact
 					color="violet"
 					content="Articles"
 					icon="book"
 					labelPosition="right"
 					onClick={() => router.push('/articles')}
 				/>
-				<User></User>
+				<User />
 				{/* <Button
 					text="Articles"
 					onClick={() => {

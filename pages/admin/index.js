@@ -14,7 +14,10 @@ import {
 	GuildComponent,
 	// DemoComponent,
 } from '../../components/admin';
+
 import { DiscordBot } from '../../components/admin/DiscordBot';
+
+import InputInitiallyHidden from '../../components/base/InputInitiallyHidden';
 // import dbConnect from '../../lib/dbConnect';
 // import Bots from '../../models/Bot';
 //import { bot_findMe } from '../../utils/discord';
@@ -30,6 +33,7 @@ const Page = () => {
 					{/* <RouteTesting /> */}
 					{/* <GuildComponent botProps={props.botProps} /> */}
 					{/* <DemoComponent /> */}
+					{/* <InputInitiallyHidden text="Some"></InputInitiallyHidden> */}
 					<DiscordBot />
 					{/* <Button
 						basic
