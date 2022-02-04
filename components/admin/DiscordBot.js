@@ -1,6 +1,8 @@
-import { Form, Checkbox, Button, Label, Icon } from 'semantic-ui-react';
+import { Form, Checkbox, Button, Label, Icon, Loader } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import BotPanel from './DiscordBot/BotPanel';
+import TokenProperties from './DiscordBot/TokenProperties';
+import { HeaderIconSub } from '../base';
 export const DiscordBot = () => {
 	const [bot, setBot] = useState();
 	const fetchBotData = async () => {
@@ -34,27 +36,45 @@ export const DiscordBot = () => {
 		<>
 			<Form className="bg-gray-100 p-4">
 				<Form.Field>
-					<label>Discord Bot</label>
-				</Form.Field>
-				<Form.Field>
 					{bot ? (
 						<>
 							{bot.err ? (
 								<>
-									<Label>There was an error fetching Discord bot.</Label>
+									<HeaderIconSub
+										content="Discord Bot"
+										icon="file alternate outline"
+										sub={
+											<Label>There was an error fetching Discord bot.</Label>
+										}
+									/>
 								</>
 							) : (
 								<>
-									<BotPanel bot={bot} useRefreshToken={useRefreshToken} />
+									<HeaderIconSub
+										content="Discord Bot"
+										icon="file alternate outline"
+										sub={
+											<BotPanel bot={bot} useRefreshToken={useRefreshToken} />
+										}
+									/>
+
+									{/* Token Obtainy Bit above, token refreshy bit below. */}
+									<TokenProperties
+										bot={bot}
+										useRefreshToken={useRefreshToken}
+									/>
 								</>
 							)}
 						</>
 					) : (
 						<>
-							<Form loading></Form>
+							<Form loading>
+								<Loader size="massive">Loading</Loader>
+							</Form>
 						</>
 					)}
 				</Form.Field>
+				<Form.Field></Form.Field>
 			</Form>
 		</>
 	);

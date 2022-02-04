@@ -1,5 +1,6 @@
 import Layout from '../../layouts/Default';
 import { useSession } from 'next-auth/react';
+import { HeaderIconSub } from '../../components/base';
 import {
 	Header,
 	Textbox,
@@ -20,6 +21,12 @@ const Page = () => {
 	return (
 		<>
 			<Layout>
+				<HeaderIconSub
+					content="Account"
+					icon="settings"
+					sub="For all your account needs"
+				/>
+
 				<Container className="p-3 border-indigo-500 border bg-gray-100">
 					<div>
 						<Header as="h2">

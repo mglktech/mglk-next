@@ -1,5 +1,5 @@
 import { Form, Checkbox, Button, Label, Icon, List } from 'semantic-ui-react';
-import InputInitiallyHidden from '../../base/InputInitiallyHidden';
+import { InputInitiallyHidden } from '../../base';
 import Moment from 'react-moment';
 import 'moment-timezone';
 const TokenProperties = ({ bot, useRefreshToken }) => {
@@ -59,7 +59,7 @@ const TokenProperties = ({ bot, useRefreshToken }) => {
 								<Icon name="time" />
 								Token Lifetime
 								<Label.Detail>
-									{Math.floor(bot?.data.expires_in / 1000)} s
+									<Moment from={bot?.data.expires_in}></Moment>
 								</Label.Detail>
 							</Label>
 							<Label>

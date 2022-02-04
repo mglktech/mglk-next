@@ -54,10 +54,9 @@ export default function Component() {
 								description=""
 								onClick={() => router.push('/account')}
 							/>
-							<Dropdown.Header icon="book" content="Posts" />
+							<Dropdown.Header icon="book" content="Modules" />
 							<Dropdown.Divider />
-							<Dropdown.Item text="Posts Index" description="" />
-							<Dropdown.Item text="New" description="Create New Post" />
+							<Dropdown.Item text="Articles" description="" />
 							<Dropdown.Divider />
 							<Dropdown.Item>
 								<Button
