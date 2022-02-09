@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@artsy/fresnel": "^3.2.1",
     "@discordjs/rest": "^0.2.0-canary.0",
     "@next-auth/mongodb-adapter": "^1.0.1",
     "axios": "^0.24.0",

@@ -1,4 +1,4 @@
-import Style from '../../../layouts/Default';
+import { DefaultLayout as Style } from '../../../layouts/DefaultLayout';
 import fetch from 'isomorphic-unfetch';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';

@@ -1,4 +1,4 @@
-import DefaultLayout from '../../layouts/Default';
+import { DefaultLayout } from '../../layouts/DefaultLayout';
 // import { Container, Header, Button } from 'semantic-ui-react';
 import ArticleFlow from '../../components/Markdown/ArticleFlow';
 import Link from 'next/link';

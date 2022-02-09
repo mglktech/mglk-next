@@ -6,81 +6,89 @@ import {
 	Label,
 	Icon,
 	Dropdown,
+	Menu,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-export default function Component() {
+export default function Component({ fixed, mobile }) {
 	const { data: session } = useSession();
 	const router = useRouter();
+	if (mobile) {
+		return (
+			<Image
+				avatar
+				alt="profile avatar"
+				spaced="right"
+				src={session?.user.image_url}
+			/>
+		);
+	}
 	if (session) {
 		//console.log(session);
 		return (
-			<>
-				<div className="content-center">
-					{session.user.owner ? (
-						<>
-							<Button
-								compact
-								icon
-								color="teal"
-								onClick={() => router.push('/admin')}
-							>
-								<Icon name="shield" />
-							</Button>
-						</>
-					) : (
-						<></>
-					)}
-
-					<Label
-						as="a"
-						image
-						color="violet"
-						compact
-						onClick={() => router.push('/account')}
-					>
-						<Image
-							avatar
-							alt="profile avatar"
-							spaced="right"
-							src={session.user.image_url}
-						/>
-						{session.user.username}
-						<Label.Detail>#{session.user.discriminator}</Label.Detail>
-						<Dropdown floating>
-							<Dropdown.Menu>
-								<Dropdown.Item text="New" />
-								<Dropdown.Item text="Open..." description="ctrl + o" />
-								<Dropdown.Item text="Save as..." description="ctrl + s" />
-								<Dropdown.Item text="Rename" description="ctrl + r" />
-								<Dropdown.Item text="Make a copy" />
-								<Dropdown.Item icon="folder" text="Move to folder" />
-								<Dropdown.Item icon="trash" text="Move to trash" />
-								<Dropdown.Divider />
-								<Dropdown.Item text="Download As..." />
-								<Dropdown.Item text="Publish To Web" />
-								<Dropdown.Item text="E-mail Collaborators" />
-							</Dropdown.Menu>
-						</Dropdown>
-					</Label>
-
-					<Button
-						className=""
-						compact
-						color="purple"
-						content="Sign Out"
-						icon="sign-in"
-						labelPosition="right"
-						onClick={() => signOut()}
+			<div className="content-center">
+				<Label
+					className=""
+					as="a"
+					image
+					size="large"
+					color="violet"
+					// onClick={() => router.push('/account')}
+				>
+					<Image
+						avatar
+						alt="profile avatar"
+						spaced="right"
+						src={session.user.image_url}
 					/>
-				</div>
-			</>
+					{session.user.username}
+					<Label.Detail>#{session.user.discriminator}</Label.Detail>
+					<Dropdown>
+						<Dropdown.Menu direction="left">
+							{session.user.owner ? (
+								<>
+									<Dropdown.Header color="teal" icon="shield" content="Admin" />
+									<Dropdown.Divider />
+									<Dropdown.Item
+										text="Admin Menu"
+										description=""
+										onClick={() => router.push('/admin')}
+									/>
+								</>
+							) : (
+								<></>
+							)}
+							<Dropdown.Header icon="user" content="Account" />
+							<Dropdown.Divider />
+							<Dropdown.Item
+								text="Profile"
+								description=""
+								onClick={() => router.push('/account')}
+							/>
+							<Dropdown.Header icon="book" content="Modules" />
+							<Dropdown.Divider />
+							<Dropdown.Item text="Articles" description="" />
+							<Dropdown.Divider />
+							<Dropdown.Item>
+								<Button
+									className=""
+									compact
+									color="purple"
+									content="Sign Out"
+									icon="sign-in"
+									labelPosition="right"
+									onClick={() => signOut()}
+								/>
+							</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
+				</Label>
+			</div>
 		);
 	}
 	return (
 		<>
-			Not signed in <br />
 			<Button
-				basic
+				basic={!fixed}
 				color="purple"
 				content="Sign In"
 				icon="sign-in"

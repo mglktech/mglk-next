@@ -1,12 +1,21 @@
-import DefaultLayout from '../layouts/Default';
-import Hero from '../components/Hero/Hero';
+import { DefaultLayout, HomepageLayout } from '../layouts/DefaultLayout';
 
+import Hero from '../components/Hero/Hero';
+import {
+	Button,
+	Container,
+	Header,
+	Icon,
+	Segment,
+	Grid,
+	List,
+	Divider,
+	Image,
+} from 'semantic-ui-react';
 export default function Home() {
 	return (
 		<div className="App">
-			<DefaultLayout>
-				<Hero title="Bespoke, Premium Apps" sub="For Your Virtual Business" />
-			</DefaultLayout>
+			<HomepageLayout></HomepageLayout>
 		</div>
 	);
 }

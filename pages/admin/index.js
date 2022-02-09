@@ -1,4 +1,4 @@
-import Layout from '../../layouts/Default';
+import { DefaultLayout } from '../../layouts/DefaultLayout';
 import { Container } from 'semantic-ui-react';
 
 import { DiscordBot } from '../../components/admin/DiscordBot';
@@ -8,13 +8,13 @@ import NodeModules from '../../components/admin/NodeModules';
 const Page = () => {
 	return (
 		<>
-			<Layout>
+			<DefaultLayout>
 				<Container className="flex space-y-5">
 					<DiscordBot />
 					<NodeModules />
 					<ModuleEditor />
 				</Container>
-			</Layout>
+			</DefaultLayout>
 		</>
 	);
 };

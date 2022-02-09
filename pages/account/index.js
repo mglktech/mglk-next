@@ -1,4 +1,4 @@
-import Layout from '../../layouts/Default';
+import { DefaultLayout as Layout } from '../../layouts/DefaultLayout';
 import { useSession } from 'next-auth/react';
 import { HeaderIconSub } from '../../components/base';
 import {
