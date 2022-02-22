@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Layout from '../../../layouts/Default';
+import { DefaultLayout as Layout } from '../../../layouts/DefaultLayout';
 import Preview from '../../../components/Markdown/Preview';
 import ArticleEditor from '../../../components/Markdown/ArticleEditor';
 import { useState, useEffect } from 'react';

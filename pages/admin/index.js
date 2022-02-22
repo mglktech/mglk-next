@@ -2,7 +2,7 @@ import { DefaultLayout } from '../../layouts/DefaultLayout';
 import { Container } from 'semantic-ui-react';
 
 import { DiscordBot } from '../../components/admin/DiscordBot';
-import ModuleEditor from '../../components/admin/ModuleEditor';
+import { ProjectEditor } from '../../components/admin/projects';
 import NodeModules from '../../components/admin/NodeModules';
 
 const Page = () => {
@@ -10,15 +10,14 @@ const Page = () => {
 		<>
 			<DefaultLayout>
 				<Container className="flex space-y-5">
-					<DiscordBot />
-					<NodeModules />
-					<ModuleEditor />
+					<ProjectEditor />
+					{/* <DiscordBot /> */}
+					{/* <NodeModules /> */}
 				</Container>
 			</DefaultLayout>
 		</>
 	);
 };
 
-Page.auth = true;
-Page.admin = true;
+Page.requireRole = 'Owner';
 export default Page;

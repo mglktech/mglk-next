@@ -81,5 +81,5 @@ const Page = () => {
 // 		},
 // 	};
 // }
+Page.auth = true;
 export default Page;
-Page.isAuth = true;

@@ -1,30 +1,39 @@
-const mongoose = require('mongoose');
+import { Schema, models, model } from 'mongoose';
 
-const ProjectSchema = new mongoose.Schema({
-	title: {
-		type: String,
-		required: true,
-		unique: true,
-		// maxlength: [50, 'Title cannot be more than 50 characters'],
+const ProjectSchema = new Schema(
+	{
+		title: {
+			type: String,
+			required: true,
+			unique: [true, 'Title must be Unique.'],
+			// maxlength: [50, 'Title cannot be more than 50 characters'],
+		},
+		description: {
+			type: String,
+			required: true,
+			// maxlength: [200, 'Description cannot be more than 200 characters'],
+		},
+		headerImage_url: {
+			type: String,
+			required: true,
+		},
+		headerImage_height: {
+			type: Number,
+			required: true,
+		},
+		content: {
+			type: String,
+			required: true,
+		},
+		published: {
+			type: Boolean,
+		},
+		author: {
+			discord: String,
+		},
+		archived: Boolean,
 	},
-	description: {
-		type: String,
-		required: true,
-		// maxlength: [200, 'Description cannot be more than 200 characters'],
-	},
-	imgurl: {
-		type: String,
-		required: true,
-	},
-	imgheight: {
-		type: Number,
-		required: true,
-	},
-	content: {
-		type: String,
-		required: true,
-	},
-});
+	{ timestamps: true }
+);
 
-module.exports =
-	mongoose.models.Project || mongoose.model('Project', ProjectSchema);
+export default models.Project || model('Project', ProjectSchema);

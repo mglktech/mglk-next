@@ -1,56 +1,75 @@
-import Layout from '../../layouts/Default';
-import Preview from '../../components/Markdown/Preview';
-import ArticleEditor from '../../components/Markdown/ArticleEditor';
+import { DefaultLayout } from '../../layouts/DefaultLayout';
+import { ProjectEditor, ProjectPreview } from '../../components/projects';
+import { Grid, Segment, Button } from 'semantic-ui-react';
+import { useSession, getSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSession, getSession } from 'next-auth/react';
-
-const Editor = ({ article }) => {
+const Page = () => {
+	const { data: session } = useSession();
+	const router = useRouter();
 	const [form, setForm] = useState({
-		title: article.title,
-		description: article.description,
-		imgurl: article.imgurl,
-		imgheight: article.imgheight,
-		content: article.content,
+		author: session?.user?.discord_id,
+		title: '',
+		description: ``,
+		headerImage_url: '/bin/fire_dancer.jpg',
+		headerImage_height: 15,
+		content: '### Hello World',
 	});
+	const [errorLabel, SetErrorLabel] = useState();
+	const handleFormChange = (e) => {
+		setForm({
+			...form,
+			[e.target.name]: e.target.value,
+		});
+	};
+	const createProject = async () => {
+		try {
+			const res = await fetch('/api/projects', {
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(form),
+			}).then((res) => res.json());
+
+			if (!res.success) {
+				SetErrorLabel('There was an error submitting this form.');
+				return;
+			}
+			router.push('/admin');
+			return;
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
-		<Layout>
-			<div className="px-5 space-x-5 text-gray-700 bg-gray-300 grid grid-cols-12">
-				<div className="col-span-5">
-					<ArticleEditor article={article} form={form} setForm={setForm} />
-				</div>
-				<div className="col-span-7">
-					<Preview article={form} />
-				</div>
-			</div>
-		</Layout>
+		<DefaultLayout>
+			<Segment vertical>
+				<Grid celled="internally" columns="equal" stackable>
+					<Grid.Row>
+						<Grid.Column>
+							<ProjectEditor
+								project={form}
+								setProject={handleFormChange}
+								errorLabel={errorLabel}
+							/>
+						</Grid.Column>
+						<Grid.Column>
+							<ProjectPreview project={form} />
+						</Grid.Column>
+					</Grid.Row>
+					<Grid.Row>
+						<Grid.Column>
+							<Button onClick={createProject}>Submit</Button>
+						</Grid.Column>
+					</Grid.Row>
+				</Grid>
+			</Segment>
+		</DefaultLayout>
 	);
 };
 
-export async function getServerSideProps(ctx) {
-	const session = await getSession(ctx);
-
-	//console.log(data);
-	if (!session) {
-		return {
-			redirect: {
-				destination: '/accessDenied',
-				permanent: false,
-			},
-		};
-	}
-	return {
-		props: {
-			session,
-			article: {
-				title: '',
-				description: '',
-				imgurl: '',
-				content: '',
-				imgheight: '',
-			},
-		},
-	};
-}
-
-export default Editor;
+Page.auth = true;
+Page.admin = true;
+export default Page;

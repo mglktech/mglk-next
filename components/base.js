@@ -1,4 +1,9 @@
+import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { createMedia } from '@artsy/fresnel';
+import PropTypes from 'prop-types';
 import {
+	Button,
 	Container,
 	Divider,
 	Grid,
@@ -10,14 +15,24 @@ import {
 	Segment,
 	Sidebar,
 	Visibility,
+	Label,
 	Input,
-	Button,
 } from 'semantic-ui-react';
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
-export const DefaultHead = () => (
+import { useRouter } from 'next/router';
+import { DesktopContainer } from './Navigation/Desktop';
+import { MobileContainer } from './Navigation/Mobile';
+
+const { MediaContextProvider, Media } = createMedia({
+	breakpoints: {
+		mobile: 0,
+		tablet: 768,
+		computer: 1024,
+	},
+});
+
+export const DefaultHead = ({ title }) => (
 	<Head>
-		<title>Mglk.tech</title>
+		{title ? <title>{title}</title> : <title>Mglk.tech</title>}
 		<meta name="description" content="By mglk" />
 		<link rel="icon" href="/favicon.ico" />
 		<link
@@ -26,6 +41,109 @@ export const DefaultHead = () => (
 		/>
 	</Head>
 );
+
+export const ResponsiveContainer = ({ children, hero }) => {
+	return (
+		<MediaContextProvider>
+			<Media as={Sidebar.Pushable} at="mobile">
+				<MobileContainer hero={hero}>{children}</MobileContainer>
+			</Media>
+			<Media greaterThan="mobile">
+				<DesktopContainer hero={hero}>{children}</DesktopContainer>
+			</Media>
+		</MediaContextProvider>
+	);
+};
+
+ResponsiveContainer.propTypes = {
+	children: PropTypes.node,
+};
+
+export const NavMenuItems = ({ router }) => {
+	const setActive = (path) => (router.pathname.startsWith(path) ? true : false);
+	return (
+		<>
+			<Menu.Item
+				name="home"
+				content="Home"
+				as="a"
+				href="/"
+				active={router.pathname === '/'}
+			>
+				{/* <Label size="big" color="black" content="Home" /> */}
+			</Menu.Item>
+			<Menu.Item
+				as="a"
+				content="Gallery"
+				href="/gallery"
+				active={setActive('/gallery')}
+			/>
+			<Menu.Item
+				as="a"
+				content="Projects"
+				href="/projects"
+				active={setActive('/projects')}
+			/>
+			<Menu.Item
+				as="a"
+				content="Gaming"
+				href="/gaming"
+				active={setActive('/gaming')}
+			/>
+			<Menu.Item
+				as="a"
+				content="Music"
+				href="/music"
+				active={setActive('/music')}
+			/>
+			<Menu.Item
+				as="a"
+				content="Contact"
+				href="/contact"
+				active={setActive('/contact')}
+			/>
+		</>
+	);
+};
+
+export const HomepageHeading = ({ mobile }) => (
+	<Container
+		style={{
+			minHeight: mobile ? '30vh' : '30vh',
+		}}
+	>
+		<Header
+			inverted
+			as="h1"
+			content={`"I Like to Dance with Fire...`}
+			style={{
+				fontSize: mobile ? '2em' : '4em',
+				fontWeight: 'normal',
+				textShadow: '0 0 2px black',
+				marginBottom: 0,
+				marginTop: mobile ? '3em' : '4em',
+			}}
+		/>
+		<Header
+			as="h2"
+			content={`... and Build things for the Internet."`}
+			inverted
+			style={{
+				fontSize: mobile ? '1.5em' : '1.7em',
+				fontWeight: 'normal',
+				marginTop: mobile ? '0.5em' : '1.5em',
+			}}
+		/>
+
+		<Button size="large" as="a" href="/contact" inverted>
+			Get in Contact
+		</Button>
+	</Container>
+);
+
+HomepageHeading.propTypes = {
+	mobile: PropTypes.bool,
+};
 
 export const DefaultFooter = () => (
 	<Segment inverted vertical style={{ padding: '5em 0em' }}>
@@ -64,6 +182,25 @@ export const DefaultFooter = () => (
 		</Container>
 	</Segment>
 );
+
+export const ComingSoon = () => {
+	return (
+		<Segment placeholder>
+			<Header icon>
+				<Icon name="dolly" />
+				Coming Soon!
+				<Header.Subheader>
+					This page is in the pipeline, Just some last little fiddly bits before
+					we deliver. Check back soon!
+				</Header.Subheader>
+			</Header>
+
+			<Button as="a" href="/" primary>
+				Go Home
+			</Button>
+		</Segment>
+	);
+};
 
 export const HeaderIconSub = (props) => {
 	const { content, icon, sub } = props;

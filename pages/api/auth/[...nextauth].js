@@ -6,6 +6,17 @@ import clientPromise from '../../../lib/mongodb';
 //import Article from '../../../models/Article';
 //import { ObjectId } from 'mongodb';
 import { findGuilds } from '../../../utils/discord';
+import { ServerSession } from 'mongoose/node_modules/mongodb';
+
+const doRoles = (user) => {
+	const roles = [];
+	const isOwner = user.discord_id === process.env.DISCORD_SITE_OWNER_ID;
+	if (isOwner) {
+		roles.push('Owner');
+	}
+	return roles;
+};
+
 const NewDiscordProvider = (options) => {
 	return {
 		id: 'discord',
@@ -21,19 +32,24 @@ const NewDiscordProvider = (options) => {
 			// console.log(`TOKENS`);
 			//console.log(tokens);
 			//console.log(tokens.access_token);
-			profile.discord_id = profile.id;
-			profile.guilds = await findGuilds(profile.id, tokens);
+
+			//profile.guilds = await findGuilds(profile.id, tokens);
+			// const isOwner = profile.id === process.env.DISCORD_SITE_OWNER_ID;
+			// if (isOwner) {
+			// 	profile.isOwner = true;
+			// }
 			//const guilds = await findGuilds(tokens);
-			if (profile.guilds) {
-				const ownerGuild = await profile.guilds.find(
-					(guild) => guild.id === process.env.DISCORD_SERVER_ID
-				);
-				if (ownerGuild) {
-					if (ownerGuild.owner === true) {
-						profile.owner = true;
-					}
-				}
-			}
+			// if (profile.guilds) { // For filtering owner role to guild owner, useful later.
+			// 	const ownerGuild = await profile.guilds.find(
+			// 		(guild) => guild.id === process.env.DISCORD_SERVER_ID
+			// 	);
+			// 	if (ownerGuild) {
+			// 		if (ownerGuild.owner === true) {
+			// 			profile.owner = true;
+			// 		}
+			// 	}
+			// }
+			profile.discord_id = profile.id;
 			if (profile.avatar === null) {
 				const defaultAvatarNumber = parseInt(profile.discriminator) % 5;
 				profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
@@ -41,7 +57,6 @@ const NewDiscordProvider = (options) => {
 				const format = profile.avatar.startsWith('a_') ? 'gif' : 'png';
 				profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
 			}
-
 			return profile;
 		},
 		options,
@@ -61,12 +76,12 @@ export default NextAuth({
 		strategy: 'database',
 
 		// Seconds - How long until an idle session expires and is no longer valid.
-		maxAge: 30 * 24 * 60 * 60, // 30 days
+		maxAge: 86400000, // 24 hours
 
 		// Seconds - Throttle how frequently to write to database to extend a session.
 		// Use it to limit write operations. Set to 0 to always update the database.
 		// Note: This option is ignored if using JSON Web Tokens
-		updateAge: 24 * 60 * 60, // 24 hours
+		updateAge: 0, // Always keep the database updated.
 	},
 	providers: [
 		// DiscordProvider({
@@ -84,17 +99,15 @@ export default NextAuth({
 	],
 	callbacks: {
 		async signIn({ user, account, profile }) {
-			//console.log(`User Signed in - ${user.name}`);
-			//console.log(params);
-			// Collect users' Guilds and upsert each guild into the Guilds collection
-			// If user is guild owner, save discord ID in guild's owner field
-			//findGuilds(account);
+			console.log(`User Signed in - ${user.username}`);
+			// Scrub their guilds
+			// Scrub guild roles?
 			return true;
 		},
 		async session({ session, user }) {
-			const isAdmin = () => {};
 			// Send properties to the client, like an access_token from a provider.
 			session.user = user;
+			session.roles = doRoles(user);
 			// console.log(session);
 			// session.user.guilds = await findGuilds(user.id);
 			// if (session.user.guilds) {
@@ -114,6 +127,6 @@ export default NextAuth({
 	},
 
 	adapter: MongoDBAdapter(clientPromise),
-	// database: process.env.MONGODB_URI,
+	database: process.env.MONGODB_URI,
 	// debug: true,
 });

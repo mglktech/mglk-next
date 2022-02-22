@@ -1,10 +1,10 @@
-import Layout from '../layouts/Default';
+import { DefaultLayout } from '../layouts/DefaultLayout';
 
 const accessDenied = () => {
 	return (
-		<Layout>
+		<DefaultLayout>
 			<div>No access</div>
-		</Layout>
+		</DefaultLayout>
 	);
 };
 

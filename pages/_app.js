@@ -1,10 +1,25 @@
 //import '../styles/globals.css'
+import '/styles/globals.css';
 import '/styles/github-markdown.css';
 import 'semantic-ui-css/semantic.min.css';
 import { SessionProvider, useSession, getSession } from 'next-auth/react';
 import { useEffect } from 'react';
+import { IsOwner } from '../lib/auth';
+function App({ Component, pageProps: { session, ...pageProps } }) {
+	return (
+		<SessionProvider session={session}>
+			{Component.requireRole ? (
+				<RequireRole role={Component.requireRole}>
+					<Component {...pageProps} />
+				</RequireRole>
+			) : (
+				<Component {...pageProps} />
+			)}
+		</SessionProvider>
+	);
+}
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+function _App({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<SessionProvider session={session}>
 			{Component.auth ? (
@@ -27,20 +42,30 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 // Serverside hooks for checking authentication with fewer lines on other files.
 // Component.auth [true,false] - Verifies AUTH (user is logged in)
 // Component.admin [true, false] - Verifies ADMIN (User is owner of the site)
+
+const RequireRole = ({ role, children }) => {
+	const { data: session, status } = useSession({ required: true });
+	const isRole = !!session?.roles?.includes(role);
+	//console.log(isRole);
+	if (isRole) {
+		return children;
+	}
+	return <div>Loading...</div>;
+};
+
 function Auth({ children }) {
 	const { data: session, status } = useSession({ required: true });
 	const isUser = !!session?.user;
 	if (isUser) {
 		return children;
 	}
-
 	// Session is being fetched, or no user.
 	// If no user, useEffect() will redirect.
 	return <div>Loading...</div>;
 }
 function Admin({ children }) {
 	const { data: session, status } = useSession({ required: true });
-	const isAdmin = !!session?.user?.owner;
+	const isAdmin = !!session?.user?.isOwner;
 	if (isAdmin) {
 		return children;
 	}
@@ -66,4 +91,4 @@ function Admin({ children }) {
 // 	return <div>Loading...</div>;
 // }
 
-export default MyApp;
+export default App;

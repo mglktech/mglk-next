@@ -9,9 +9,11 @@ import {
 	Menu,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
+import { isRole } from '../../lib/auth';
 export default function Component({ fixed, mobile }) {
 	const { data: session } = useSession();
 	const router = useRouter();
+
 	if (mobile) {
 		return (
 			<Image
@@ -44,7 +46,7 @@ export default function Component({ fixed, mobile }) {
 					<Label.Detail>#{session.user.discriminator}</Label.Detail>
 					<Dropdown>
 						<Dropdown.Menu direction="left">
-							{session.user.owner ? (
+							{isRole(session, 'Owner') ? (
 								<>
 									<Dropdown.Header color="teal" icon="shield" content="Admin" />
 									<Dropdown.Divider />
