@@ -45,7 +45,7 @@ export const DesktopContainer = ({ children, hero }) => {
 								background: `linear-gradient(
       rgba(0, 0, 0, 0.3),
       rgba(0, 0, 0, 0.3)
-    ),url('https://lh3.googleusercontent.com/pw/AM-JKLUEPkmmN129rJI0U7plc67djxAceIQy7SWwoIc9ynxNUYoka5X8sgTiWbT3_-yO1oDpZhbxBJuBK2Q5-KMFyUNMGQ5kBnCmEWMj7RcNWbUo1rcbdHPF8P1qDyAQxTaTybHn_APvcx35unUi5PuN1uJqgg=w1411-h937-no?authuser=0') center / cover`,
+    ),url('https://lh3.googleusercontent.com/63MywVwXos7zeS10wB529uFQ0tr1xUybNIY6BmfaujUwGqBqyjR1OV58R-jCK3F_ghcFknqInsX559cByoypBV3HqDk0Ousc6qVVlH8loO_V7CrPcl1JeKOrgM9CULMEMb5BwiMrZvM=w1024') center / cover`,
 								padding: 0,
 								margin: 0,
 							}}
