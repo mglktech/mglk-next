@@ -1,6 +1,6 @@
 // Project file Previews
 // Project File Editor
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeaderIconSub } from './base';
 import CardPreview from './projects/CardPreview';
 import PagePreview from './projects/PagePreview';
@@ -9,16 +9,7 @@ import { Form, Input, Button, Label } from 'semantic-ui-react';
 
 // Project is imported from the page itself, as well as setProject so that the original form can be modified by this component.
 export const ProjectEditor = ({ project, setProject, errorLabel }) => {
-	const [url, setUrl] = useState(project.headerImage_url);
-	const handleUrlChange = (e) => {
-		setUrl(e.target.value);
-	};
-	const ClearUrl = (e) => {
-		setUrl('');
-	};
-	const SetUrl = () => {
-		//setProject();
-	};
+	useEffect(() => {}, []);
 
 	return (
 		<Form className="bg-gray-100 p-4">
@@ -54,33 +45,29 @@ export const ProjectEditor = ({ project, setProject, errorLabel }) => {
 					placeholder="Project Description"
 				/>
 			</Form.Field>
-			<Form.Group>
-				<Form.Input
-					label="Header Image Link"
-					onChange={handleUrlChange}
-					//placeholder={url}
-					value={url}
-					action={
-						<Button
-							name="headerImage_url"
-							icon="arrow right"
-							color="teal"
-							onClick={() => SetUrl()}
-						/>
-					}
-					required
-				></Form.Input>
-				<Form.Input
-					name="headerImage_height"
-					label={`Header Size: ${project.headerImage_height}em `}
-					min={0}
-					max={50}
-					onChange={setProject}
-					step={0.5}
-					type="range"
-					value={project.headerImage_height}
-				/>
-			</Form.Group>
+			<Form.Field>
+				<Form.Group>
+					<Form.Input
+						label="Header Image Link"
+						name="headerImage_url"
+						onChange={setProject}
+						//placeholder={url}
+						//value={url}
+						required
+					></Form.Input>
+					<Form.Input
+						name="headerImage_height"
+						label={`Header Size: ${project.headerImage_height}em `}
+						min={0}
+						max={50}
+						onChange={setProject}
+						step={0.5}
+						type="range"
+						value={project.headerImage_height}
+					/>
+				</Form.Group>
+			</Form.Field>
+
 			<Form.Field>
 				<label>Markdown</label>
 				<Form.TextArea
