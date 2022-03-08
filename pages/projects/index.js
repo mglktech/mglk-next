@@ -1,6 +1,7 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 // import { Container, Header, Button } from 'semantic-ui-react';
 import CardFlow from '../../components/projects/CardFlow';
+import { ComingSoon } from '../../components/base';
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import {
@@ -15,30 +16,17 @@ import {
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 
+const PlaceHolder = () => {
+	return (
+		<DefaultLayout>
+			<ComingSoon />
+		</DefaultLayout>
+	);
+};
+
 const Index = ({ projects }) => {
 	return (
 		<DefaultLayout>
-			<Segment>
-				<Header>Page Goals:</Header>
-				<List>
-					<List.Content>
-						<List.Item>
-							Use react-moment to better organise projects by time posted
-							(Recently Posted, Have you tried:, You might like:,)
-						</List.Item>
-						<List.Item>
-							Projects should be the overall module study with its picture,
-							description and title, but I should be able to make new article
-							posts within the projects themselves, Beefing out the projects to
-							several articles at a time.
-						</List.Item>
-						<List.Item></List.Item>
-						<List.Item></List.Item>
-						<List.Item></List.Item>
-					</List.Content>
-				</List>
-			</Segment>
-
 			<Container>
 				<h1>Projects</h1>
 				{/* <div className="grid grid-flow-col grid-cols-4"> */}
@@ -62,5 +50,5 @@ export async function getServerSideProps(ctx) {
 		},
 	};
 }
-
-export default Index;
+//export default Index;
+export default PlaceHolder; // Index is in development right now so just display the placeholder instead.

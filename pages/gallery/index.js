@@ -1,13 +1,15 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 import { ComingSoon } from '../../components/base';
 import Gallery from '../../components/Gallery';
-import { Segment } from 'semantic-ui-react';
+import { Segment, Container } from 'semantic-ui-react';
 const Index = () => {
 	return (
 		<DefaultLayout>
 			{/* <ComingSoon /> */}
 			<Segment inverted style={{ margin: '0', padding: '0' }}>
-				<Gallery />
+				<Container>
+					<Gallery />
+				</Container>
 			</Segment>
 		</DefaultLayout>
 	);
