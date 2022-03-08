@@ -17,7 +17,55 @@ import {
 	Visibility,
 	Label,
 	Input,
+	Form,
 } from 'semantic-ui-react';
+
+export const RegisterForm = () => (
+	<Container>
+		<Segment>
+			<FormHeader
+				content="Create an Account"
+				icon="user plus"
+				sub="Fill out the form below to create your account"
+			/>
+			<Form className="">
+				<Form.Field name="email" label="Email" control="input" />
+				<Form.Field
+					name="password"
+					label="Password"
+					control="input"
+					type="password"
+				/>
+				<Form.Field
+					name="confirmPassword"
+					label="Confirm Password"
+					control="input"
+					type="password"
+				/>
+				<Button content="Sign Up" type="submit" />
+			</Form>
+		</Segment>
+	</Container>
+);
+
+export const FormHeader = (props) => {
+	const { content, icon, sub } = props;
+	return (
+		<>
+			<div>
+				<Header as="h2">
+					<Icon name={icon} />
+					<Header.Content>
+						{content}
+						<Header.Subheader>{sub}</Header.Subheader>
+					</Header.Content>
+				</Header>
+				<Divider />
+			</div>
+		</>
+	);
+};
+
 import { useRouter } from 'next/router';
 import { DesktopContainer } from './Navigation/Desktop';
 import { MobileContainer } from './Navigation/Mobile';
@@ -109,7 +157,7 @@ export const NavMenuItems = ({ router }) => {
 export const HomepageHeading = ({ mobile }) => (
 	<Container
 		style={{
-			minHeight: mobile ? '30vh' : '30vh',
+			minHeight: mobile ? '70vh' : '60vh',
 		}}
 	>
 		<Header
