@@ -10,6 +10,8 @@ import {
 	List,
 	Divider,
 	Image,
+	Popup,
+	Label,
 } from 'semantic-ui-react';
 export default function Home() {
 	return (
@@ -52,15 +54,55 @@ export default function Home() {
 								</Button>
 							</Grid.Column>
 							<Grid.Column floated="right" width={6}>
-								<Image
-									bordered
-									circular
-									alt="about_photo"
-									src="/bin/about_photo_lg.jpeg"
+								<Popup
+									content="it me"
+									position="bottom center"
+									trigger={
+										<Image
+											bordered
+											circular
+											alt="about_photo"
+											src="/bin/about_photo_lg.jpeg"
+										/>
+									}
 								/>
 							</Grid.Column>
 						</Grid.Row>
 					</Grid>
+				</Segment>
+
+				<Segment style={{ padding: '8em 0em' }} vertical>
+					<Container text>
+						<Header as="h3" style={{ fontSize: '2em' }}>
+							CV
+						</Header>
+						<List bulleted style={{ fontSize: '1.33em' }}>
+							<List.Item>
+								Freelance Software Developer and Web Developer
+							</List.Item>
+							<Label>2019 - Present</Label>
+							<List.Item>
+								Computer Repair Technician for Anglia Computer Solutions
+							</List.Item>
+							<Label>2018 - 2019</Label>
+							<List.Item>
+								Customer Service Representative for Maplin Electronics
+							</List.Item>
+							<Label>2015 - 2018</Label>
+						</List>
+						<Button as="a" size="large">
+							Read More
+						</Button>
+						<Divider
+							as="h4"
+							className="header"
+							horizontal
+							style={{ margin: '3em 0em', textTransform: 'uppercase' }}
+						>
+							<a href="#">Case Studies</a>
+						</Divider>
+						Article Flow goes here
+					</Container>
 				</Segment>
 				<Segment style={{ padding: '0em' }} vertical>
 					<Grid celled="internally" columns="equal" stackable>
@@ -87,51 +129,6 @@ export default function Home() {
 							</Grid.Column>
 						</Grid.Row>
 					</Grid>
-				</Segment>
-				<Segment style={{ padding: '8em 0em' }} vertical>
-					<Container text>
-						<Header as="h3" style={{ fontSize: '2em' }}>
-							Breaking The Grid, Grabs Your Attention
-						</Header>
-						<p style={{ fontSize: '1.33em' }}>
-							Instead of focusing on content creation and hard work, we have
-							learned how to master the art of doing nothing by providing
-							massive amounts of whitespace and generic content that can seem
-							massive, monolithic and worth your attention.
-						</p>
-						<Button as="a" size="large">
-							Read More
-						</Button>
-						<Divider
-							as="h4"
-							className="header"
-							horizontal
-							style={{ margin: '3em 0em', textTransform: 'uppercase' }}
-						>
-							<a href="#">Case Studies</a>
-						</Divider>
-						Article Flow goes here
-					</Container>
-				</Segment>
-				<Segment>
-					<Header>Page Goals:</Header>
-					<List>
-						<List.Content>
-							<List.Item>
-								Find better profile photo more suited to the page design
-							</List.Item>
-							<List.Item>
-								Create better parageraph text in profile section
-							</List.Item>
-							<List.Item>Link Buttons to sections of the site</List.Item>
-							<List.Item>Sort Footer</List.Item>
-							<List.Item>Sort Gaming section</List.Item>
-							<List.Item>Sort Spotify Section</List.Item>
-							<List.Item>
-								Decide whether Case Studies is really necessary right now.
-							</List.Item>
-						</List.Content>
-					</List>
 				</Segment>
 			</DefaultLayout>
 		</div>

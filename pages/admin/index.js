@@ -4,6 +4,7 @@ import { Container } from 'semantic-ui-react';
 import { DiscordBot } from '../../components/admin/DiscordBot';
 import { ProjectEditor } from '../../components/admin/projects';
 import NodeModules from '../../components/admin/NodeModules';
+import PhotoManager from '../../components/admin/PhotoManager';
 
 const Page = () => {
 	return (
@@ -12,7 +13,8 @@ const Page = () => {
 				<Container className="flex space-y-5">
 					<ProjectEditor />
 					{/* <DiscordBot /> */}
-					{/* <NodeModules /> */}
+					<NodeModules />
+					<PhotoManager />
 				</Container>
 			</DefaultLayout>
 		</>

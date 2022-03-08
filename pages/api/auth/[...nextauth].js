@@ -1,7 +1,10 @@
 import NextAuth from 'next-auth';
 //import DiscordProvider from 'next-auth/providers/discord';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
+import dbConnect from '../../../lib/dbConnect';
+import Users from '../../../models/User';
 //import Account from '../../../models/Account';
 //import Article from '../../../models/Article';
 //import { ObjectId } from 'mongodb';
@@ -20,7 +23,7 @@ const doRoles = (user) => {
 const NewDiscordProvider = (options) => {
 	return {
 		id: 'discord',
-		name: 'Discord',
+		name: 'Custom Discord Provider',
 		type: 'oauth',
 		authorization: 'https://discord.com/api/oauth2/authorize',
 		token: 'https://discord.com/api/oauth2/token',
@@ -84,6 +87,32 @@ export default NextAuth({
 		updateAge: 0, // Always keep the database updated.
 	},
 	providers: [
+		CredentialsProvider({
+			async authorize(credentials) {
+				await dbConnect();
+
+				const user = await Users.findOne({
+					email: credentials.email,
+				});
+				if (!user) {
+					//client.close();
+					throw new Error('No user found!');
+				}
+
+				const isValid = await verifyPassword(
+					credentials.password,
+					user.password
+				);
+
+				if (!isValid) {
+					//client.close();
+					throw new Error('Could not log you in!');
+				}
+
+				//client.close();
+				return { email: user.email };
+			},
+		}),
 		// DiscordProvider({
 		// 	clientId: process.env.DISCORD_CLIENT_ID,
 		// 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
