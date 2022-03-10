@@ -6,16 +6,19 @@ import { ProjectEditor } from '../../components/admin/projects';
 import NodeModules from '../../components/admin/NodeModules';
 import PhotoManager from '../../components/admin/PhotoManager';
 
+import { AdminComponent } from '../../components/admin';
+
 const Page = () => {
 	return (
 		<>
 			<DefaultLayout>
-				<Container className="flex space-y-5">
+				{/* <Container className="flex space-y-5">
 					<ProjectEditor />
-					{/* <DiscordBot /> */}
+					
 					<NodeModules />
 					<PhotoManager />
-				</Container>
+				</Container> */}
+				<AdminComponent />
 			</DefaultLayout>
 		</>
 	);

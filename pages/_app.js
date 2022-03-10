@@ -45,7 +45,7 @@ function _App({ Component, pageProps: { session, ...pageProps } }) {
 
 const RequireRole = ({ role, children }) => {
 	const { data: session, status } = useSession({ required: true });
-	const isRole = !!session?.roles?.includes(role);
+	const isRole = !!session?.user?.roles?.includes(role);
 	//console.log(isRole);
 	if (isRole) {
 		return children;

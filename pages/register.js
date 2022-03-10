@@ -1,9 +1,9 @@
 import { DefaultLayout } from '../layouts/DefaultLayout';
-import { ComingSoon, RegisterForm } from '../components/base';
+import { ComingSoon } from '../components/base';
+import { RegisterForm } from '../components/forms/RegisterForm';
 const Index = () => {
 	return (
 		<DefaultLayout>
-			<ComingSoon />
 			<RegisterForm />
 		</DefaultLayout>
 	);

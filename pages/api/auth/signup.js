@@ -27,7 +27,9 @@ const handler = async (req, res) => {
 			try {
 				const existingUser = await Users.findOne({ email: email });
 				if (existingUser) {
-					res.status(422).json({ message: 'User exists already!' });
+					res
+						.status(422)
+						.json({ message: 'User with that email address exists already!' });
 					return;
 				}
 				const hashedPassword = await hashPassword(password);

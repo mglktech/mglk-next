@@ -1,9 +1,93 @@
-import { Form, Checkbox, Button, Label, Icon } from 'semantic-ui-react';
+import {
+	Form,
+	Checkbox,
+	Button,
+	Label,
+	Icon,
+	Container,
+	Segment,
+	Grid,
+	Header,
+	Menu,
+} from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 // https://discord.com/api/oauth2/authorize?response_type=code&client_id=157730590492196864&scope=identify%20guilds&redirect_uri=https%3A%2F%2Fnicememe.website&prompt=consent
 // HvzPi0oGvvqMQjBCGo5J4duhfq016I
+
+import { FormHeader } from './forms/FormComponents';
+import { ProjectEditor } from './admin/projects';
+import NodeModules from './admin/NodeModules';
+const AdminMenu = ({ activeItem, handleItemClick }) => {
+	return (
+		<Menu>
+			<Menu.Item
+				name="telemetry"
+				active={activeItem === 'telemetry'}
+				onClick={handleItemClick}
+			>
+				Site Telemetry
+			</Menu.Item>
+			<Menu.Item
+				name="usermgmt"
+				active={activeItem === 'usermgmt'}
+				onClick={handleItemClick}
+			>
+				User Management
+			</Menu.Item>
+			<Menu.Item
+				name="projects"
+				active={activeItem === 'projects'}
+				onClick={handleItemClick}
+			>
+				Projects
+			</Menu.Item>
+
+			<Menu.Item
+				name="nodemodules"
+				active={activeItem === 'nodemodules'}
+				onClick={handleItemClick}
+			>
+				Node Modules
+			</Menu.Item>
+		</Menu>
+	);
+};
+const AdminComponentFrame = ({ activeItem }) => {
+	switch (activeItem) {
+		case 'projects':
+			return <ProjectEditor />;
+		case 'nodemodules':
+			return <NodeModules />;
+	}
+	return <></>; // to ensure something is returned if case is not hit
+};
+export const AdminComponent = () => {
+	const [activeItem, setActiveItem] = useState('1');
+	const handleItemClick = (e, { name }) => {
+		console.log(e);
+		setActiveItem(name);
+	};
+	return (
+		<Container>
+			<Segment>
+				<FormHeader
+					content="Administrator Panel"
+					sub={
+						<AdminMenu
+							activeItem={activeItem}
+							handleItemClick={handleItemClick}
+						/>
+					}
+					icon="shield alternate"
+				/>
+
+				<AdminComponentFrame activeItem={activeItem} />
+			</Segment>
+		</Container>
+	);
+};
 
 export const DemoComponent = () => {
 	const [bot, setBot] = useState();

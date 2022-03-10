@@ -1,4 +1,4 @@
-import User from './User';
+import { User } from './User';
 import { createMedia } from '@artsy/fresnel';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

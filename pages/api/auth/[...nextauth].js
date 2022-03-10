@@ -69,48 +69,47 @@ const NewDiscordProvider = (options) => {
 export default NextAuth({
 	// Configure one or more authentication providers
 	secret: 'this-is-not-a-very-secure-secret',
-	session: {
-		// Choose how you want to save the user session.
-		// The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
-		// If you use an `adapter` however, we default it to `"database"` instead.
-		// You can still force a JWT session by explicitly defining `"jwt"`.
-		// When using `"database"`, the session cookie will only contain a `sessionToken` value,
-		// which is used to look up the session in the database.
-		strategy: 'database',
-
-		// Seconds - How long until an idle session expires and is no longer valid.
-		maxAge: 86400000, // 24 hours
-
-		// Seconds - Throttle how frequently to write to database to extend a session.
-		// Use it to limit write operations. Set to 0 to always update the database.
-		// Note: This option is ignored if using JSON Web Tokens
-		updateAge: 0, // Always keep the database updated.
+	jwt: {
+		secret: 'test',
+		encryption: true,
 	},
+
 	providers: [
 		CredentialsProvider({
+			name: 'credentials',
+			credentials: {
+				email: {
+					label: 'Email',
+					type: 'email',
+					placeholder: 'example@example.com',
+				},
+				password: { label: 'Password', type: 'password' },
+			},
 			async authorize(credentials) {
 				await dbConnect();
-
 				const user = await Users.findOne({
 					email: credentials.email,
 				});
 				if (!user) {
 					//client.close();
+					return null;
 					throw new Error('No user found!');
 				}
 
-				const isValid = await verifyPassword(
-					credentials.password,
-					user.password
-				);
+				// const isValid = await verifyPassword(
+				// 	credentials.password,
+				// 	user.password
+				// );
 
-				if (!isValid) {
-					//client.close();
-					throw new Error('Could not log you in!');
-				}
+				// if (!isValid) {
+				// 	//client.close();
+				// 	throw new Error('Could not log you in!');
+				// }
 
 				//client.close();
-				return { email: user.email };
+				const { _id, email, roles } = user;
+				//console.log(user);
+				return { _id, email, roles };
 			},
 		}),
 		// DiscordProvider({
@@ -118,44 +117,56 @@ export default NextAuth({
 		// 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
 		// 	authorization: { params: { scope: 'identify guilds' } },
 		// }),
-		NewDiscordProvider({
-			clientId: process.env.DISCORD_CLIENT_ID,
-			clientSecret: process.env.DISCORD_CLIENT_SECRET,
-			authorization: {
-				params: { scope: 'identify guilds' },
-			},
-		}),
+		// NewDiscordProvider({
+		// 	clientId: process.env.DISCORD_CLIENT_ID,
+		// 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
+		// 	authorization: {
+		// 		params: { scope: 'identify guilds' },
+		// 	},
+		// }),
 	],
 	callbacks: {
-		async signIn({ user, account, profile }) {
-			console.log(`User Signed in - ${user.username}`);
-			// Scrub their guilds
-			// Scrub guild roles?
-			return true;
+		jwt: async ({ token, user }) => {
+			if (user) {
+				token.user = user;
+			}
+			return token;
 		},
-		async session({ session, user }) {
-			// Send properties to the client, like an access_token from a provider.
-			session.user = user;
-			session.roles = doRoles(user);
-			// console.log(session);
-			// session.user.guilds = await findGuilds(user.id);
-			// if (session.user.guilds) {
-			// 	//console.log(session.user.guilds);
-			// 	const serverGuild = session.user.guilds.find(
-			// 		(guild) => guild.id === process.env.DISCORD_SERVER_ID
-			// 	);
-			// 	if (serverGuild.owner) {
-			// 		session.user.serverOwner = true;
-			// 	} else {
-			// 		session.user.serverOwner = false;
-			// 	}
-			// }
+		session: async ({ session, token }) => {
+			if (token) {
+				session.user = token.user;
+			}
+			return session;
+		},
+		// async signIn({ user, account, profile }) {
+		// 	console.log(`User Signed in - ${user.username}`);
+		// 	// Scrub their guilds
+		// 	// Scrub guild roles?
+		// 	return true;
+		// },
+		// async session({ session, user }) {
+		// 	// Send properties to the client, like an access_token from a provider.
+		// 	session.user = user;
+		// 	session.roles = doRoles(user);
+		// 	// console.log(session);
+		// 	// session.user.guilds = await findGuilds(user.id);
+		// 	// if (session.user.guilds) {
+		// 	// 	//console.log(session.user.guilds);
+		// 	// 	const serverGuild = session.user.guilds.find(
+		// 	// 		(guild) => guild.id === process.env.DISCORD_SERVER_ID
+		// 	// 	);
+		// 	// 	if (serverGuild.owner) {
+		// 	// 		session.user.serverOwner = true;
+		// 	// 	} else {
+		// 	// 		session.user.serverOwner = false;
+		// 	// 	}
+		// 	// }
 
-			return Promise.resolve(session);
-		},
+		// 	return Promise.resolve(session);
+		// },
 	},
 
-	adapter: MongoDBAdapter(clientPromise),
-	database: process.env.MONGODB_URI,
+	// adapter: MongoDBAdapter(clientPromise),
+	// database: process.env.MONGODB_URI,
 	// debug: true,
 });
