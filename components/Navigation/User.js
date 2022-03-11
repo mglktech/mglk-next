@@ -39,7 +39,8 @@ export const User = ({ fixed, mobile }) => {
 			return (
 				<>
 					<Label
-						color="green"
+						size="large"
+
 						// onClick={() => router.push('/account')}
 					>
 						{session.user?.email}

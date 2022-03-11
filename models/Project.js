@@ -19,7 +19,6 @@ const ProjectSchema = new Schema(
 		},
 		headerImage_height: {
 			type: Number,
-			required: true,
 		},
 		content: {
 			type: String,
