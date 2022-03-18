@@ -1,15 +1,15 @@
 import docModel from '../../../models/documents/Document';
 import dbConnect from '../../../lib/dbConnect';
-import docIndexModel from '../../../models/documents/Index';
+//import docIndexModel from '../../../models/documents/Index';
 
-const Page = async (res, res) => {
+const Page = async (req, res) => {
 	const { method } = req;
 	await dbConnect();
 	switch (method) {
 		case 'GET':
 			try {
 				const docs = await docModel.find();
-				res.status(200).json({ data: docs });
+				res.status(200).json(docs);
 			} catch (error) {
 				res.status(422).json({ message: error });
 			}
@@ -17,7 +17,7 @@ const Page = async (res, res) => {
 		case 'POST':
 			try {
 				const doc = await docModel.create(req.body);
-				res.status(201).json({ data: doc });
+				res.status(201).json(doc);
 			} catch (error) {
 				console.log(error);
 				res.status(422).json({ message: error });

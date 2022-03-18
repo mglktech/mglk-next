@@ -1,10 +1,9 @@
 //import '../../../models/User';
-import docIndexModel from '../../../models/documents/Index';
+//import docIndexModel from '../../../models/documents/Index';
 import docModel from '../../../models/documents/Document';
 import dbConnect from '../../../lib/dbConnect';
 import { getSession } from 'next-auth/react';
 import { isRole } from '../../../lib/auth';
-
 
 const Page = async (req, res) => {
 	const session = await getSession({ req });
@@ -14,14 +13,13 @@ const Page = async (req, res) => {
 	} = req;
 	await dbConnect();
 	switch (method) {
-		case "GET":
+		case 'GET':
 			// Return document index with default selectedVersion document attached
 			// if ?version=, return index with populated document matching index id and version.
-		try {
-			let index = await docIndexModel.findById(id);
-			version ? version : index.selectedVersion;
-			index.document = await docModel.findOne({ mdDocIndexId: id, version });
-				res.status(200).json({ data: index });
+			try {
+				let document = await docModel.findById(id);
+				//index.document = await docModel.findOne({ mdDocIndexId: id, version });
+				res.status(200).json(document);
 			} catch (error) {
 				res.status(422).json({ message: error });
 			}
@@ -29,11 +27,12 @@ const Page = async (req, res) => {
 		case 'PUT':
 			//
 			try {
-				const index = await docIndexModel.findByIdAndUpdate(id, req.body, {
+				//console.log(req.body);
+				const updatedDocument = await docModel.findByIdAndUpdate(id, req.body, {
 					new: true,
 					runValidators: true,
 				});
-				res.status(201).json({ data: doc });
+				res.status(201).json(updatedDocument);
 			} catch (error) {
 				res.status(422).json({ message: error });
 			}
@@ -41,8 +40,7 @@ const Page = async (req, res) => {
 		case 'DELETE':
 			// Delete document index and archive it's connected documents.
 			try {
-
-			}
+			} catch {}
 	}
 };
 

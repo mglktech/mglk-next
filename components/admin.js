@@ -18,10 +18,18 @@ import 'moment-timezone';
 
 import { FormHeader } from './forms/FormComponents';
 import { ProjectEditor } from './admin/projects';
+import { DocumentManager } from './admin/documents';
 import NodeModules from './admin/NodeModules';
 const AdminMenu = ({ activeItem, handleItemClick }) => {
 	return (
 		<Menu>
+			<Menu.Item
+				name="documents"
+				active={activeItem === 'documents'}
+				onClick={handleItemClick}
+			>
+				Documents
+			</Menu.Item>
 			<Menu.Item
 				name="telemetry"
 				active={activeItem === 'telemetry'}
@@ -36,13 +44,6 @@ const AdminMenu = ({ activeItem, handleItemClick }) => {
 			>
 				User Management
 			</Menu.Item>
-			<Menu.Item
-				name="projects"
-				active={activeItem === 'projects'}
-				onClick={handleItemClick}
-			>
-				Projects
-			</Menu.Item>
 
 			<Menu.Item
 				name="nodemodules"
@@ -56,8 +57,8 @@ const AdminMenu = ({ activeItem, handleItemClick }) => {
 };
 const AdminComponentFrame = ({ activeItem }) => {
 	switch (activeItem) {
-		case 'projects':
-			return <ProjectEditor />;
+		case 'documents':
+			return <DocumentManager />;
 		case 'nodemodules':
 			return <NodeModules />;
 	}

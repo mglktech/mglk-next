@@ -112,7 +112,7 @@ export const MarkdownPreview = ({ form }) => {
 						compact
 						as="a"
 						content="Modify"
-						href={`/projects/${form._id}/edit`}
+						href={`/documents/${form._id}/edit`}
 						color="teal"
 						floated="right"
 						icon="edit outline"
@@ -156,17 +156,17 @@ const CardPreview = ({ form }) => {
 	);
 };
 
-const ArticleMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
+const DocumentMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
 	const router = useRouter();
 	const deleteForm = async () => {
-		const result = await fetch(`/api/projects/${form._id}`, {
+		const result = await fetch(`/api/documents/${form._id}`, {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 			},
 		});
-		router.push('/admin?initctx=projects');
+		router.push('/admin?initctx=documents');
 		return;
 	};
 	//console.log('form', form, 'initialForm', initialForm);
@@ -209,7 +209,7 @@ const ArticleMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
 				<Button.Group>
 					<Button
 						as="a"
-						href="/admin?initctx=projects"
+						href="/admin?initctx=documents"
 						content="Back"
 						labelPosition="left"
 						icon="arrow left"
@@ -259,7 +259,7 @@ const formDefault = {
 Example Text`,
 };
 
-export const ArticleEditor = ({ id }) => {
+export const DocumentEditor = ({ id }) => {
 	const [activeItem, setActiveItem] = useState('cardeditor');
 	const [formFetched, setFormFetched] = useState(false);
 	const [initialForm, setInitialForm] = useState(formDefault);
@@ -305,10 +305,9 @@ export const ArticleEditor = ({ id }) => {
 	};
 	useEffect(() => {
 		const fetchForm = async () => {
-			const { success, data } = await fetch(`/api/projects/${id}`).then((res) =>
-				res.json()
-			);
-			if (success) {
+			const res = await fetch(`/api/documents/${id}`);
+			const data = await res.json();
+			if (res.ok) {
 				setInitialForm(data);
 				setForm(data);
 			}
@@ -316,7 +315,7 @@ export const ArticleEditor = ({ id }) => {
 		const saveForm = async () => {
 			const res = {};
 			if (id) {
-				res = await fetch(`/api/projects/${id ? id : ''}`, {
+				res = await fetch(`/api/documents/${id ? id : ''}`, {
 					method: 'PUT',
 					headers: {
 						Accept: 'application/json',
@@ -326,7 +325,7 @@ export const ArticleEditor = ({ id }) => {
 				});
 			}
 			if (!id) {
-				res = await fetch('/api/projects', {
+				res = await fetch('/api/documents', {
 					method: 'POST',
 					headers: {
 						Accept: 'application/json',
@@ -336,13 +335,14 @@ export const ArticleEditor = ({ id }) => {
 				});
 			}
 			const response = await res.json();
+			console.log('OK: ', res.ok, 'Response Data: ', response);
 			if (res.ok) {
 				setLastSaved(true);
 				setForm(response);
 				setInitialForm(response); // Sync current form and initial form data (so save button disables)
 				//console.log(response);
 				if (!id) {
-					router.push(`/projects/${response._id}/edit`);
+					router.push(`/documents/${response._id}/edit`);
 					return;
 				}
 			}
@@ -367,19 +367,19 @@ export const ArticleEditor = ({ id }) => {
 			<Container>
 				<Segment basic>
 					<FormHeader
-						content="Article Editor"
+						content="Document Editor"
 						sub={
 							id ? (
 								<Label color="black" content="_id:" detail={id} />
 							) : (
-								<Label color="black" content="New Article" />
+								<Label color="black" content="New Document" />
 							)
 						}
 						icon="wrench"
 					/>
 
 					<Form onSubmit={handleSubmit}>
-						<ArticleMenu
+						<DocumentMenu
 							activeItem={activeItem}
 							handleItemClick={handleItemClick}
 							form={form}
@@ -404,7 +404,7 @@ const NotFound = () => {
 	return <>Page Not Found</>;
 };
 
-export const _ArticleEditor = () => {
+export const _DocumentEditor = () => {
 	const [form, setForm] = useState({});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submissionSuccessful, setSubmissionSuccessful] = useState(false);
