@@ -36,10 +36,6 @@ export const DefaultHead = ({ title }) => (
 		{title ? <title>{title}</title> : <title>Mglk.tech</title>}
 		<meta name="description" content="By mglk" />
 		<link rel="icon" href="/favicon.ico" />
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-		/>
 	</Head>
 );
 
@@ -146,7 +142,88 @@ HomepageHeading.propTypes = {
 	mobile: PropTypes.bool,
 };
 
-export const DefaultFooter = () => (
+export const FooterData = [
+	{
+		columnWidth: 3,
+		headerContent: 'About',
+		listItems: [
+			{
+				link: '#',
+				content: 'Site Map',
+			},
+			{
+				link: '#',
+				content: 'Contact',
+			},
+			{
+				link: '#',
+				content: 'CV',
+			},
+			{
+				link: '#',
+				content: 'Music',
+			},
+		],
+	},
+	{
+		columnWidth: 3,
+		headerContent: 'Services',
+		listItems: [
+			{
+				link: '#',
+				content: 'Site Map',
+			},
+			{
+				link: '#',
+				content: 'Contact',
+			},
+			{
+				link: '#',
+				content: 'CV',
+			},
+			{
+				link: '#',
+				content: 'Music',
+			},
+		],
+	},
+	{
+		columnWidth: 7,
+		headerContent: 'Large Footer Header',
+		children: (
+			<p>
+				Extra space for a call to action inside the footer that could help
+				re-engage users.
+			</p>
+		),
+	},
+];
+
+export const DefaultFooter = (data) => (
+	<Segment inverted vertical style={{ padding: '5em 0em' }}>
+		<Container>
+			<Grid divided inverted stackable>
+				<Grid.Row>
+					{/* Map each column giving it's width
+							Include headerContent and map listItems */}
+					{FooterData.map((c, index) => (
+						<Grid.Column key={index} width={c.columnWidth}>
+							<Header inverted as="h4" content={c.headerContent} />
+							<List link inverted>
+								{c.listItems?.map(({ link, content }, index) => (
+									<List.Item key={index} as="a" href={link} content={content} />
+								))}
+							</List>
+							{c.children ? c.children : <></>}
+						</Grid.Column>
+					))}
+				</Grid.Row>
+			</Grid>
+		</Container>
+	</Segment>
+);
+
+export const _DefaultFooter = () => (
 	<Segment inverted vertical style={{ padding: '5em 0em' }}>
 		<Container>
 			<Grid divided inverted stackable>

@@ -63,10 +63,10 @@ const AdminComponentFrame = ({ activeItem }) => {
 	}
 	return <></>; // to ensure something is returned if case is not hit
 };
-export const AdminComponent = () => {
-	const [activeItem, setActiveItem] = useState('1');
+export const AdminComponent = ({ ctx }) => {
+	const [activeItem, setActiveItem] = useState(ctx);
 	const handleItemClick = (e, { name }) => {
-		console.log(e);
+		//console.log(e);
 		setActiveItem(name);
 	};
 	return (
@@ -236,7 +236,7 @@ export const GuildComponent = ({ botProps }) => {
 			body: JSON.stringify(data),
 		}).then((res) => res.json());
 		//const json = await res.json();
-		console.log(res);
+		//console.log(res);
 	};
 	const checkBotConnection = () => {
 		setBotCon('Refresh Clicked');
@@ -253,7 +253,7 @@ export const GuildComponent = ({ botProps }) => {
 						//disabled={botProps.bot ? true : false}
 						compact
 						onClick={(e) => {
-							console.log(e);
+							//console.log(e);
 							router.push(
 								`https://discord.com/api/oauth2/authorize?response_type=code&client_id=${botProps.client_id}&scope=bot&guild_id=${botProps.guild_id}&redirect_uri=${botProps.redir_uri}&prompt=consent`
 							);

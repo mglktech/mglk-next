@@ -12,7 +12,6 @@ import {
 	Label,
 	Segment,
 	List,
-	Divider,
 } from 'semantic-ui-react';
 import Preview from '../../../components/projects/PagePreview';
 import { MarkdownPreview } from '../../../components/article/ArticleEditor';
@@ -35,11 +34,24 @@ const Project = ({ id }) => {
 	}, []);
 	return (
 		<Style title={project?.title}>
-			<Segment basic padded="very">
-				<Container>
-					<MarkdownPreview form={project} />
-				</Container>
-			</Segment>
+			{project?.archived ? (
+				<div className=" bg-red-700 text-white min-w-full text-center p-1">
+					This project is Archived
+				</div>
+			) : (
+				<></>
+			)}
+			{project && !project.published ? (
+				<div className=" bg-yellow-600 text-white min-w-full text-center p-1">
+					This project is Not Published (yet)
+				</div>
+			) : (
+				<></>
+			)}
+
+			<Container>
+				<MarkdownPreview form={project} />
+			</Container>
 		</Style>
 	);
 };

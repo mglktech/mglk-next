@@ -8,7 +8,7 @@ import PhotoManager from '../../components/admin/PhotoManager';
 
 import { AdminComponent } from '../../components/admin';
 
-const Page = () => {
+const Page = ({ ctx }) => {
 	return (
 		<>
 			<DefaultLayout>
@@ -18,10 +18,16 @@ const Page = () => {
 					<NodeModules />
 					<PhotoManager />
 				</Container> */}
-				<AdminComponent />
+				<AdminComponent ctx={ctx} />
 			</DefaultLayout>
 		</>
 	);
+};
+export const getServerSideProps = (context) => {
+	const ctx = context?.query?.initctx ? context?.query?.initctx : null;
+	return {
+		props: { ctx },
+	};
 };
 
 Page.requireRole = 'Owner';

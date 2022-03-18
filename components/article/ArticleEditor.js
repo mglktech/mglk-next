@@ -82,13 +82,12 @@ const MarkdownEditor = ({ form, handleChange }) => {
 				value={form.content}
 			/>
 			<Header>Preview</Header>
-			<Segment raised style={{ padding: '0px', margin: '0px' }}>
-				<MarkdownPreview form={form} />
-			</Segment>
+
+			<MarkdownPreview form={form} />
 		</>
 	);
 };
-const MarkdownPreview = ({ form }) => {
+export const MarkdownPreview = ({ form }) => {
 	const headerImageStyling = (h, url) => {
 		return {
 			width: `100%`,
@@ -100,21 +99,34 @@ const MarkdownPreview = ({ form }) => {
 		return <NotFound />;
 	}
 	return (
-		<div className="markdown-body w-full h-full rounded overflow-auto bg-white">
-			<div
-				style={headerImageStyling(
-					form.headerImage_height,
-					form.headerImage_url
-				)}
-			></div>
-			<ReactMarkdown
-				className="p-5"
-				rehypePlugins={[rehypeHighlight]}
-				remarkPlugins={[remarkGfm]}
-			>
-				{form.content}
-			</ReactMarkdown>
-		</div>
+		<Segment raised style={{ padding: '0px', margin: '0px' }}>
+			<div className="markdown-body w-full h-full rounded overflow-auto bg-white">
+				<div
+					style={headerImageStyling(
+						form.headerImage_height,
+						form.headerImage_url
+					)}
+				></div>
+				<Button.Group floated="right">
+					<Button
+						compact
+						as="a"
+						content="Modify"
+						href={`/projects/${form._id}/edit`}
+						color="teal"
+						floated="right"
+						icon="edit outline"
+					/>
+				</Button.Group>
+				<ReactMarkdown
+					className="p-5"
+					rehypePlugins={[rehypeHighlight]}
+					remarkPlugins={[remarkGfm]}
+				>
+					{form.content}
+				</ReactMarkdown>
+			</div>
+		</Segment>
 	);
 };
 const CardPreview = ({ form }) => {
@@ -145,6 +157,18 @@ const CardPreview = ({ form }) => {
 };
 
 const ArticleMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
+	const router = useRouter();
+	const deleteForm = async () => {
+		const result = await fetch(`/api/projects/${form._id}`, {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+		});
+		router.push('/admin?initctx=projects');
+		return;
+	};
 	//console.log('form', form, 'initialForm', initialForm);
 	return (
 		<Menu attached="top" tabular>
@@ -182,14 +206,30 @@ const ArticleMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
 				)}
 			</Menu.Item>
 			<Menu.Item position="right">
-				<Button
-					color="green"
-					icon="save"
-					labelPosition="right"
-					content="Save"
-					type="submit"
-					disabled={form === initialForm ? true : false}
-				/>
+				<Button.Group>
+					<Button
+						as="a"
+						href="/admin?initctx=projects"
+						content="Back"
+						labelPosition="left"
+						icon="arrow left"
+					/>
+					<Button
+						color="red"
+						icon="trash"
+						labelPosition="left"
+						content="Delete"
+						onClick={deleteForm}
+					/>
+					<Button
+						color="green"
+						icon="save"
+						labelPosition="right"
+						content="Save"
+						type="submit"
+						disabled={form === initialForm ? true : false}
+					/>
+				</Button.Group>
 			</Menu.Item>
 		</Menu>
 	);
@@ -337,6 +377,7 @@ export const ArticleEditor = ({ id }) => {
 						}
 						icon="wrench"
 					/>
+
 					<Form onSubmit={handleSubmit}>
 						<ArticleMenu
 							activeItem={activeItem}

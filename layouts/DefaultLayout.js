@@ -19,7 +19,7 @@ import {
 	Visibility,
 	Section,
 } from 'semantic-ui-react';
-import { DefaultHead, DefaultFooter } from '../components/base';
+import { DefaultHead, DefaultFooter, FooterData } from '../components/base';
 
 export const DefaultLayout = ({ children, title, hero }) => (
 	<>
@@ -31,7 +31,7 @@ export const DefaultLayout = ({ children, title, hero }) => (
 				</ResponsiveContainer>
 			</div>
 			<div style={{ flexShrink: '0' }}>
-				<DefaultFooter />
+				<DefaultFooter data={FooterData} />
 			</div>
 		</div>
 	</>
