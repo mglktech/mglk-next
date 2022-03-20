@@ -70,8 +70,33 @@ export default function Home() {
 						</Grid.Row>
 					</Grid>
 				</Segment>
-
-				<Segment style={{ padding: '8em 0em' }} vertical>
+				<Segment style={{ padding: '0em' }} vertical>
+					<Grid celled="internally" columns="equal" stackable>
+						<Grid.Row textAlign="center">
+							<Grid.Column
+								color="blue"
+								style={{ paddingBottom: '5em', paddingTop: '5em' }}
+							>
+								<Header as="h3" style={{ fontSize: '2em' }}>
+									Gaming Connections
+								</Header>
+								<p style={{ fontSize: '1.33em' }}>
+									That is what they all say about us
+								</p>
+							</Grid.Column>
+							<Grid.Column
+								color="green"
+								style={{ paddingBottom: '5em', paddingTop: '5em' }}
+							>
+								<Header as="h3" style={{ fontSize: '2em' }}>
+									Spotify Connections
+								</Header>
+								<p style={{ fontSize: '1.33em' }}>Spotify</p>
+							</Grid.Column>
+						</Grid.Row>
+					</Grid>
+				</Segment>
+				<Segment style={{ padding: '8em 0em' }}>
 					<Container text>
 						<Header as="h3" style={{ fontSize: '2em' }}>
 							CV
@@ -103,32 +128,6 @@ export default function Home() {
 						</Divider>
 						Article Flow goes here
 					</Container>
-				</Segment>
-				<Segment style={{ padding: '0em' }} vertical>
-					<Grid celled="internally" columns="equal" stackable>
-						<Grid.Row textAlign="center">
-							<Grid.Column
-								color="blue"
-								style={{ paddingBottom: '5em', paddingTop: '5em' }}
-							>
-								<Header as="h3" style={{ fontSize: '2em' }}>
-									Gaming Connections
-								</Header>
-								<p style={{ fontSize: '1.33em' }}>
-									That is what they all say about us
-								</p>
-							</Grid.Column>
-							<Grid.Column
-								color="green"
-								style={{ paddingBottom: '5em', paddingTop: '5em' }}
-							>
-								<Header as="h3" style={{ fontSize: '2em' }}>
-									Spotify Connections
-								</Header>
-								<p style={{ fontSize: '1.33em' }}>Spotify</p>
-							</Grid.Column>
-						</Grid.Row>
-					</Grid>
 				</Segment>
 			</DefaultLayout>
 		</div>
