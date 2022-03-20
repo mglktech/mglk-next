@@ -174,14 +174,20 @@ const DocumentListItem = ({ document, children }) => (
 
 const Documents = () => {
 	const [documents, setDocuments] = useState();
-	const [filteredDocuments, setFilteredDocuments] = useState();
+	const [publishedDocuments, setPublishedDocuments] = useState();
 	const doFetch = async () => {
 		const res = await fetch('/api/documents');
 		const data = await res.json();
 		//const response = await fetch('/api/documents').then((res) => res.json());
 		if (res.ok) {
-			//const documentsNotArchived = data ? data.filter((p) => !p.archived) : null;
-			setDocuments(data);
+			const WorkingOn = data
+				? data.filter((p) => !p.archived && !p.published)
+				: null;
+			const Published = data
+				? data.filter((p) => !p.archived && p.published)
+				: null;
+			setDocuments(WorkingOn);
+			setPublishedDocuments(Published);
 			//setFilteredDocuments(documentsNotArchived);
 			return;
 		}
@@ -189,18 +195,18 @@ const Documents = () => {
 	useEffect(() => {
 		doFetch();
 	}, []);
-	// const TogglePublish = async ({ _id, published }) => {
-	// 	const isPublished = !!!published;
-	// 	await fetch(`/api/documents/${_id}`, {
-	// 		method: 'PUT',
-	// 		headers: {
-	// 			Accept: 'application/json',
-	// 			'Content-Type': 'application/json',
-	// 		},
-	// 		body: JSON.stringify({ published: isPublished }),
-	// 	});
-	// 	doFetch();
-	// };
+	const doPublish = async ({ _id, published }) => {
+		const isPublished = !!!published;
+		await fetch(`/api/documents/${_id}`, {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ published: isPublished }),
+		});
+		doFetch();
+	};
 	// const MarkForArchive = async ({ _id }) => {
 	// 	await fetch(`/api/documents/${_id}`, {
 	// 		method: 'PUT',
@@ -227,51 +233,52 @@ const Documents = () => {
 	// 		</>
 	// 	);
 	// };
-
-	return (
-		<>
-			<Form.Field>{/* <ArchivedDocuments /> */}</Form.Field>
-			<List divided relaxed>
-				{documents?.map((document) => (
-					<DocumentListItem key={document._id} document={document}>
-						{/* <DocumentModal document={document} doRefresh={doFetch} /> */}
-						{document.published ? (
-							<Button
-								compact
-								color="yellow"
-								floated="right"
-								icon="paper plane outline"
-								onClick={() => TogglePublish(document)}
-							/>
-						) : (
-							<Button
-								compact
-								color="green"
-								floated="right"
-								icon="paper plane outline"
-								onClick={() => TogglePublish(document)}
-							/>
-						)}
-
+	const DocumentList = ({ documents }) => (
+		<List divided relaxed>
+			{documents?.map((document) => (
+				<DocumentListItem key={document._id} document={document}>
+					{/* <DocumentModal document={document} doRefresh={doFetch} /> */}
+					<Button.Group compact>
 						<Button
-							compact
 							as="a"
 							href={`/documents/${document._id}/edit`}
 							color="teal"
-							floated="right"
+							basic
+							labelPosition="right"
 							icon="edit outline"
+							content="Edit"
 						/>
 
 						<Button
-							compact
+							color={document.published ? 'orange' : 'green'}
+							icon="bullhorn"
+							labelPosition="right"
+							basic
+							content={document.published ? 'Unpublish' : 'Publish'}
+							onClick={() => doPublish(document)}
+						/>
+						<Button
 							color="black"
-							floated="right"
 							icon="archive"
+							basic
 							onClick={() => MarkForArchive(document)}
 						/>
-					</DocumentListItem>
-				))}
-			</List>
+					</Button.Group>
+				</DocumentListItem>
+			))}
+		</List>
+	);
+	return (
+		<>
+			<Form.Field>{/* <ArchivedDocuments /> */}</Form.Field>
+			<Form.Field>
+				<Header>Still Working On...</Header>
+			</Form.Field>
+			<DocumentList documents={documents} />
+			<Form.Field>
+				<Header>Recently Published</Header>
+			</Form.Field>
+			<DocumentList documents={publishedDocuments} />
 		</>
 	);
 };
@@ -293,7 +300,6 @@ export const DocumentManager = () => {
 				/>
 			</Form.Field>
 
-			<Form.Field></Form.Field>
 			<Form.Field>
 				<Documents />
 			</Form.Field>

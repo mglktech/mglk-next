@@ -30,6 +30,45 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 
 const CardEditor = ({ form, handleChange }) => {
+	const router = useRouter();
+	const deleteDocument = async () => {
+		const result = await fetch(`/api/documents/${form._id}`, {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+		});
+		router.push('/admin?initctx=documents');
+		return;
+	};
+	// const PublishButton = ({ published }) => {
+	// 	switch (published) {
+	// 		case true:
+	// 			return (
+	// 				<Button
+	// 					name="published"
+	// 					value={false}
+	// 					onClick={handleChange}
+	// 					content="Unpublish"
+	// 				/>
+	// 			);
+	// 		case false:
+	// 			return (
+	// 				<Button
+	// 					name="published"
+	// 					value={true}
+	// 					onClick={handleChange}
+	// 					color="blue"
+	// 					icon="book"
+	// 					labelPosition="Right"
+	// 					content="Publish"
+	// 					// onClick={publishDocument}
+	// 				/>
+	// 			);
+	// 	}
+	// 	return <Button>Unknown Publish State</Button>;
+	// };
 	return (
 		<>
 			<Grid>
@@ -50,8 +89,16 @@ const CardEditor = ({ form, handleChange }) => {
 							value={form.description}
 							placeholder={formDefault.description}
 							onChange={handleChange}
-							rows={15}
+							rows={10}
 						/>
+						<Button
+							color="red"
+							icon="trash"
+							labelPosition="left"
+							content="Delete"
+							onClick={deleteDocument}
+						/>
+						{/* <PublishButton published={form.published} /> */}
 					</Grid.Column>
 					<Grid.Column>
 						<Form.Field
@@ -107,17 +154,14 @@ export const MarkdownPreview = ({ form }) => {
 						form.headerImage_url
 					)}
 				></div>
-				<Button.Group floated="right">
-					<Button
-						compact
-						as="a"
-						content="Modify"
-						href={`/documents/${form._id}/edit`}
-						color="teal"
-						floated="right"
-						icon="edit outline"
-					/>
-				</Button.Group>
+				{form.published ? (
+					<></>
+				) : (
+					<Label attached="top" color="black">
+						This document is Not Published. You can only see this because you
+						are logged in.
+					</Label>
+				)}
 				<ReactMarkdown
 					className="p-5"
 					rehypePlugins={[rehypeHighlight]}
@@ -129,7 +173,7 @@ export const MarkdownPreview = ({ form }) => {
 		</Segment>
 	);
 };
-const CardPreview = ({ form }) => {
+export const CardPreview = ({ form }) => {
 	const headerImageStyling = {
 		width: '100%',
 		minHeight: '8.75em',
@@ -150,26 +194,34 @@ const CardPreview = ({ form }) => {
 				<p className="text-lg">{form.description}</p>
 			</Card.Content>
 			<Card.Content extra className="flex justify-center">
-				<Button disabled content="Read More"></Button>
+				<Button
+					disabled={form._id ? false : true}
+					content="Read More"
+					as="a"
+					href={`/documents/${form._id}`}
+				></Button>
 			</Card.Content>
 		</Card>
 	);
 };
 
-const DocumentMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
-	const router = useRouter();
-	const deleteForm = async () => {
-		const result = await fetch(`/api/documents/${form._id}`, {
-			method: 'DELETE',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		});
-		router.push('/admin?initctx=documents');
-		return;
-	};
+const DocumentMenu = ({
+	activeItem,
+	handleItemClick,
+	form,
+	initialForm,
+	handleChange,
+}) => {
 	//console.log('form', form, 'initialForm', initialForm);
+	const PublishedLabel = ({ published }) => {
+		switch (published) {
+			case true:
+				return <Label>Published</Label>;
+			case false:
+				return <Label>Not published</Label>;
+		}
+		return <Label>Unknown Published</Label>;
+	};
 	return (
 		<Menu attached="top" tabular>
 			<Menu.Item
@@ -205,6 +257,9 @@ const DocumentMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
 					<></>
 				)}
 			</Menu.Item>
+			<Menu.Item>
+				<PublishedLabel published={form.published} />
+			</Menu.Item>
 			<Menu.Item position="right">
 				<Button.Group>
 					<Button
@@ -214,13 +269,7 @@ const DocumentMenu = ({ activeItem, handleItemClick, form, initialForm }) => {
 						labelPosition="left"
 						icon="arrow left"
 					/>
-					<Button
-						color="red"
-						icon="trash"
-						labelPosition="left"
-						content="Delete"
-						onClick={deleteForm}
-					/>
+
 					<Button
 						color="green"
 						icon="save"
@@ -292,6 +341,7 @@ export const DocumentEditor = ({ id }) => {
 			...form,
 			[e.target.name]: e.target.value,
 		});
+		//console.log(form);
 		setErrors({
 			...errors,
 			[e.target.name]: '',
@@ -335,7 +385,7 @@ export const DocumentEditor = ({ id }) => {
 				});
 			}
 			const response = await res.json();
-			console.log('OK: ', res.ok, 'Response Data: ', response);
+			//console.log('OK: ', res.ok, 'Response Data: ', response);
 			if (res.ok) {
 				setLastSaved(true);
 				setForm(response);
@@ -382,6 +432,7 @@ export const DocumentEditor = ({ id }) => {
 						<DocumentMenu
 							activeItem={activeItem}
 							handleItemClick={handleItemClick}
+							handleChange={handleChange}
 							form={form}
 							initialForm={initialForm}
 						/>

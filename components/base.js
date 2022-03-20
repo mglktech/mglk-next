@@ -77,9 +77,9 @@ export const NavMenuItems = ({ router }) => {
 			/>
 			<Menu.Item
 				as="a"
-				content="Projects"
-				href="/projects"
-				active={setActive('/projects')}
+				content="Documents"
+				href="/documents"
+				active={setActive('/documents')}
 			/>
 			<Menu.Item
 				as="a"

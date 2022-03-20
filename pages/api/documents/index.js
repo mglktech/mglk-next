@@ -1,14 +1,26 @@
 import docModel from '../../../models/documents/Document';
 import dbConnect from '../../../lib/dbConnect';
+
+import { getAuthor } from '../../../utils/author';
 //import docIndexModel from '../../../models/documents/Index';
 
 const Page = async (req, res) => {
-	const { method } = req;
+	const author = await getAuthor(req);
+	const {
+		query: { published, author_id, version },
+		method,
+	} = req;
+
 	await dbConnect();
 	switch (method) {
 		case 'GET':
 			try {
-				const docs = await docModel.find();
+				let docs;
+				if (published) {
+					docs = await docModel.find({ published: true });
+				} else {
+					docs = await docModel.find({ author });
+				}
 				res.status(200).json(docs);
 			} catch (error) {
 				res.status(422).json({ message: error });
@@ -16,7 +28,9 @@ const Page = async (req, res) => {
 			break;
 		case 'POST':
 			try {
-				const doc = await docModel.create(req.body);
+				let body = req.body;
+				body.author = author;
+				const doc = await docModel.create(body);
 				res.status(201).json(doc);
 			} catch (error) {
 				console.log(error);

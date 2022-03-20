@@ -1,9 +1,9 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 // import { Container, Header, Button } from 'semantic-ui-react';
-import CardFlow from '../../components/projects/CardFlow';
 import { ComingSoon } from '../../components/base';
+import { CardPreview } from '../../components/document/DocumentEditor';
 import Link from 'next/link';
-import fetch from 'isomorphic-unfetch';
+
 import {
 	Button,
 	Card,
@@ -16,7 +16,7 @@ import {
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 
-const PlaceHolder = () => {
+const _Index = () => {
 	return (
 		<DefaultLayout>
 			<ComingSoon />
@@ -24,14 +24,23 @@ const PlaceHolder = () => {
 	);
 };
 
-const Index = ({ projects }) => {
+const CardFlow = ({ documents }) => {
+	return (
+		<>
+			{documents?.map((document) => (
+				<CardPreview key={document._id} form={document}></CardPreview>
+			))}
+		</>
+	);
+};
+const Index = ({ documents }) => {
 	return (
 		<DefaultLayout>
 			<Container>
-				<h1>Projects</h1>
+				<h1>Documents</h1>
 				{/* <div className="grid grid-flow-col grid-cols-4"> */}
 				<Card.Group itemsPerRow={3} className="justify-center">
-					<CardFlow projects={projects} />
+					<CardFlow documents={documents} />
 				</Card.Group>
 			</Container>
 		</DefaultLayout>
@@ -40,15 +49,15 @@ const Index = ({ projects }) => {
 
 export async function getServerSideProps(ctx) {
 	const res = await fetch(
-		`http://${ctx.req.headers.host}/api/projects/published`
+		`http://${ctx.req.headers.host}/api/documents?published=true`
 	);
-	const { data } = await res.json();
+	const data = await res.json();
 	//console.log(data);
 	return {
 		props: {
-			projects: data,
+			documents: data,
 		},
 	};
 }
 //export default Index;
-export default PlaceHolder; // Index is in development right now so just display the placeholder instead.
+export default Index; // Index is in development right now so just display the placeholder instead.

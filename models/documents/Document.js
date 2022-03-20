@@ -38,6 +38,13 @@ const modelSchema = new Schema(
 			type: Boolean,
 		},
 		archived: Boolean,
+		author: {
+			_id: {
+				type: Schema.Types.ObjectId,
+				ref: 'User',
+			},
+			email: String,
+		},
 	},
 	{ timestamps: true }
 );

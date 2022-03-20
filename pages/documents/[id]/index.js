@@ -13,44 +13,30 @@ import {
 	Segment,
 	List,
 } from 'semantic-ui-react';
-import Preview from '../../../components/projects/PagePreview';
-import { MarkdownPreview } from '../../../components/article/ArticleEditor';
 
-const Project = ({ id }) => {
+import { MarkdownPreview } from '../../../components/document/DocumentEditor';
+
+const Document = ({ id }) => {
 	const router = useRouter();
-	const [project, setProject] = useState();
-	// Project data needs to be fetched Client-side so that the fetch request can use the client's session.
-	const getProject = async () => {
-		const res = await fetch(`/api/projects/${id}`);
-		const { success, data } = await res.json();
-		if (success) {
-			setProject(data);
+	const [document, setDocument] = useState();
+	// Document data needs to be fetched Client-side so that the fetch request can use the client's session.
+	const getDocument = async () => {
+		const res = await fetch(`/api/documents/${id}`);
+		//console.log(res);
+		if (res.ok) {
+			const data = await res.json();
+			setDocument(data);
 			return;
 		}
-		//router.push('/');
+		//router.push('/404');
 	};
 	useEffect(() => {
-		getProject();
+		getDocument();
 	}, []);
 	return (
-		<Style title={project?.title}>
-			{project?.archived ? (
-				<div className=" bg-red-700 text-white min-w-full text-center p-1">
-					This project is Archived
-				</div>
-			) : (
-				<></>
-			)}
-			{project && !project.published ? (
-				<div className=" bg-yellow-600 text-white min-w-full text-center p-1">
-					This project is Not Published (yet)
-				</div>
-			) : (
-				<></>
-			)}
-
+		<Style title={document?.title}>
 			<Container>
-				<MarkdownPreview form={project} />
+				<MarkdownPreview form={document} />
 			</Container>
 		</Style>
 	);
@@ -66,4 +52,4 @@ export async function getServerSideProps(ctx) {
 	};
 }
 
-export default Project;
+export default Document;
