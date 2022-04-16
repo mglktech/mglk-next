@@ -308,7 +308,7 @@ const formDefault = {
 Example Text`,
 };
 
-export const DocumentEditor = ({ id }) => {
+export const DocumentComponent = ({ id }) => {
 	const [activeItem, setActiveItem] = useState('cardeditor');
 	const [formFetched, setFormFetched] = useState(false);
 	const [initialForm, setInitialForm] = useState(formDefault);
@@ -455,7 +455,7 @@ const NotFound = () => {
 	return <>Page Not Found</>;
 };
 
-export const _DocumentEditor = () => {
+export const _DocumentComponent = () => {
 	const [form, setForm] = useState({});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submissionSuccessful, setSubmissionSuccessful] = useState(false);

@@ -14,7 +14,7 @@ import {
 	List,
 } from 'semantic-ui-react';
 
-import { MarkdownPreview } from '../../../components/document/DocumentEditor';
+import { MarkdownPreview } from '../../../components/document/DocumentComponent';
 
 const Document = ({ id }) => {
 	const router = useRouter();

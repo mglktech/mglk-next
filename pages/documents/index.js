@@ -1,7 +1,7 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 // import { Container, Header, Button } from 'semantic-ui-react';
 import { ComingSoon } from '../../components/base';
-import { CardPreview } from '../../components/document/DocumentEditor';
+import { CardPreview } from '../../components/document/DocumentComponent';
 import Link from 'next/link';
 
 import {
@@ -13,6 +13,8 @@ import {
 	Segment,
 	List,
 	Header,
+	Divider,
+	Label,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 
@@ -25,6 +27,13 @@ const _Index = () => {
 };
 
 const CardFlow = ({ documents }) => {
+	if (!documents) {
+		return (
+			<>
+				<Header as="h6">No documents exist in this context.</Header>
+			</>
+		);
+	}
 	return (
 		<>
 			{documents?.map((document) => (
@@ -34,14 +43,37 @@ const CardFlow = ({ documents }) => {
 	);
 };
 const Index = ({ documents }) => {
+	// TODO: create a filter for documents that are less than 6 months old
+	//console.log(documents);
+	const filteredDocs = documents.filter((doc) => {
+		const dateUpdated = new Date(doc.updatedAt);
+		const sixMonthsAgo = new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000);
+		console.log(`${dateUpdated} ${sixMonthsAgo} ${dateUpdated > sixMonthsAgo}`);
+		if (dateUpdated > sixMonthsAgo) {
+			return doc;
+		}
+	});
+
+	//console.log(filteredDocs);
 	return (
 		<DefaultLayout>
 			<Container>
-				<h1>Documents</h1>
+				<Segment>
+					<Header as="h1">Documents</Header>
+					<Divider />
+					<Header as="h3">
+						Recently Published <Label>Past 6 Months</Label>
+					</Header>
+					<Card.Group itemsPerRow={3} className="">
+						<CardFlow documents={filteredDocs} />
+					</Card.Group>
+					<Header as="h3">Archive</Header>
+					<Card.Group itemsPerRow={3} className="">
+						<CardFlow documents={documents} />
+					</Card.Group>
+				</Segment>
+
 				{/* <div className="grid grid-flow-col grid-cols-4"> */}
-				<Card.Group itemsPerRow={3} className="justify-center">
-					<CardFlow documents={documents} />
-				</Card.Group>
 			</Container>
 		</DefaultLayout>
 	);

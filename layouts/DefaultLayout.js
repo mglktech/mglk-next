@@ -21,7 +21,7 @@ import {
 } from 'semantic-ui-react';
 import { DefaultHead, DefaultFooter, FooterData } from '../components/base';
 
-export const DefaultLayout = ({ children, title, hero }) => (
+export const StickyNavLayout = ({ children, title, hero }) => (
 	<>
 		<DefaultHead title={title} />
 		<div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -29,6 +29,20 @@ export const DefaultLayout = ({ children, title, hero }) => (
 				<ResponsiveContainer hero={hero ? true : false}>
 					{children}
 				</ResponsiveContainer>
+			</div>
+			<div style={{ flexShrink: '0' }}>
+				<DefaultFooter data={FooterData} />
+			</div>
+		</div>
+	</>
+);
+
+export const DefaultLayout = ({ children, title, hero }) => (
+	<>
+		<DefaultHead title={title} />
+		<div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+			<div style={{ flex: '1 0 auto' }}>
+				<ResponsiveContainer>{children}</ResponsiveContainer>
 			</div>
 			<div style={{ flexShrink: '0' }}>
 				<DefaultFooter data={FooterData} />

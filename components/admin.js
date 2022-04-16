@@ -31,6 +31,13 @@ const AdminMenu = ({ activeItem, handleItemClick }) => {
 				Documents
 			</Menu.Item>
 			<Menu.Item
+				name="gallery"
+				active={activeItem === 'gallery'}
+				onClick={handleItemClick}
+			>
+				Gallery
+			</Menu.Item>
+			<Menu.Item
 				name="telemetry"
 				active={activeItem === 'telemetry'}
 				onClick={handleItemClick}

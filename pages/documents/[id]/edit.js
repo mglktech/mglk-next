@@ -1,6 +1,6 @@
 import { DefaultLayout } from '../../../layouts/DefaultLayout';
 import { ArticleEditor } from '../../../components/article/ArticleEditor';
-import { DocumentEditor } from '../../../components/document/DocumentEditor';
+import { DocumentComponent } from '../../../components/document/DocumentComponent';
 import { ProjectEditor, ProjectPreview } from '../../../components/projects';
 import { Grid, Segment, Button } from 'semantic-ui-react';
 import { useSession, getSession } from 'next-auth/react';
@@ -10,7 +10,7 @@ const Page = ({ id }) => {
 	return (
 		<>
 			<DefaultLayout>
-				<DocumentEditor id={id} />
+				<DocumentComponent id={id} />
 			</DefaultLayout>
 		</>
 	);

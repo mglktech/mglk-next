@@ -16,10 +16,14 @@ const Page = async (req, res) => {
 		case 'GET':
 			try {
 				let docs;
+
 				if (published) {
 					docs = await docModel.find({ published: true });
 				} else {
-					docs = await docModel.find({ author });
+					//console.log(author);
+					docs = await docModel.find({
+						author,
+					});
 				}
 				res.status(200).json(docs);
 			} catch (error) {

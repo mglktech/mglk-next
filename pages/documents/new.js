@@ -6,12 +6,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { ArticleEditor } from '../../components/article/ArticleEditor';
-import { DocumentEditor } from '../../components/document/DocumentEditor';
+import { DocumentComponent } from '../../components/document/DocumentComponent';
 
 const _Page = () => {
 	return (
 		<DefaultLayout>
-			<DocumentEditor />
+			<DocumentComponent />
 		</DefaultLayout>
 	);
 };

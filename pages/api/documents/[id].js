@@ -18,13 +18,23 @@ const Page = async (req, res) => {
 			// Return document index with default selectedVersion document attached
 			// if ?version=, return index with populated document matching index id and version.
 			try {
-				let document = await docModel.findOne({ _id: id, author });
+				let document = await docModel.findOne({ _id: id });
+
 				//index.document = await docModel.findOne({ mdDocIndexId: id, version });
 				//console.log(`Query ID:`, id, `Document:`, document);
 				if (!document) {
 					res.status(422).json({ message: 'No such document' });
 					return;
 				}
+				if (!document.published) {
+					if (document.author.email === author.email) {
+						res.status(200).json(document);
+						return;
+					}
+					res.status(422).json({ message: 'Not published' });
+					return;
+				}
+
 				res.status(200).json(document);
 			} catch (error) {
 				res.status(422).json({ message: error });

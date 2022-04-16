@@ -20,7 +20,7 @@ import {
 	Form,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import { DesktopContainer } from './Navigation/Desktop';
+import { DesktopContainer, DefaultContainer } from './Navigation/Desktop';
 import { MobileContainer } from './Navigation/Mobile';
 
 const { MediaContextProvider, Media } = createMedia({
@@ -31,9 +31,62 @@ const { MediaContextProvider, Media } = createMedia({
 	},
 });
 
+export const FrontPageHero = () => (
+	<div
+		style={{
+			background: `linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3)
+    ),url('/bin/landing.JPG') center / cover`,
+			padding: 0,
+			margin: 0,
+			backgroundAttachment: 'fixed',
+			minHeight: '100vh',
+			minWidth: '100vw',
+		}}
+	>
+		<Container
+			style={{
+				padding: '10em',
+				textAlign: 'center',
+				position: 'absolute',
+				left: '50%',
+				top: '50%',
+				transform: 'translate(-50%, -50%)',
+			}}
+		>
+			<Header
+				inverted
+				as="h1"
+				content={`"I Like to Dance with Fire...`}
+				style={{
+					fontSize: '4em',
+					fontWeight: 'normal',
+					textShadow: '0 0 2px black',
+					marginBottom: 0,
+				}}
+			/>
+			<Header
+				as="h2"
+				content={`... and Build things for the Internet."`}
+				inverted
+				style={{
+					fontSize: '1.7em',
+					fontWeight: 'normal',
+					marginTop: '1.5em',
+				}}
+			/>
+
+			<Button size="large" as="a" href="/about" inverted>
+				Learn More
+			</Button>
+		</Container>
+	</div>
+);
+
 export const DefaultHead = ({ title }) => (
 	<Head>
-		{title ? <title>{title}</title> : <title>Mglk.tech</title>}
+		{title ? <title>{title}</title> : <title>mglk.tech</title>}
 		<meta name="description" content="By mglk" />
 		<link rel="icon" href="/favicon.ico" />
 	</Head>
@@ -46,7 +99,8 @@ export const ResponsiveContainer = ({ children, hero }) => {
 				<MobileContainer hero={hero}>{children}</MobileContainer>
 			</Media>
 			<Media greaterThan="mobile">
-				<DesktopContainer hero={hero}>{children}</DesktopContainer>
+				{/* <DesktopContainer hero={hero}>{children}</DesktopContainer> */}
+				<DefaultContainer>{children}</DefaultContainer>
 			</Media>
 		</MediaContextProvider>
 	);
@@ -132,8 +186,8 @@ export const HomepageHeading = ({ mobile }) => (
 			}}
 		/>
 
-		<Button size="large" as="a" href="/contact" inverted>
-			Get in Contact
+		<Button size="large" as="a" href="/register" inverted>
+			Start Your Journey
 		</Button>
 	</Container>
 );
@@ -149,19 +203,19 @@ export const FooterData = [
 		listItems: [
 			{
 				link: '#',
-				content: 'Site Map',
-			},
-			{
-				link: '#',
-				content: 'Contact',
-			},
-			{
-				link: '#',
 				content: 'CV',
 			},
 			{
 				link: '#',
-				content: 'Music',
+				content: 'Site Resources',
+			},
+			{
+				link: '#',
+				content: 'Licences',
+			},
+			{
+				link: '#',
+				content: 'Contact',
 			},
 		],
 	},
@@ -171,33 +225,40 @@ export const FooterData = [
 		listItems: [
 			{
 				link: '#',
-				content: 'Site Map',
-			},
-			{
-				link: '#',
-				content: 'Contact',
-			},
-			{
-				link: '#',
-				content: 'CV',
-			},
-			{
-				link: '#',
 				content: 'Music',
+			},
+			{
+				link: '#',
+				content: 'Source Code',
+			},
+			{
+				link: '#',
+				content: 'Documentation',
+			},
+
+			{
+				link: '#',
+				content: 'Gaming Services',
 			},
 		],
 	},
 	{
 		columnWidth: 7,
-		headerContent: 'Large Footer Header',
+		headerContent: 'Social',
 		children: (
-			<p>
-				Extra space for a call to action inside the footer that could help
-				re-engage users.
-			</p>
+			<>
+				<Label>Facebook</Label>
+				<Label>Instagram</Label>
+				<Label>Spotify</Label>
+				<Label>LinkedIn</Label>
+				<Label>Discord</Label>
+				<Label>GitHub</Label>
+			</>
 		),
 	},
 ];
+
+export const SocialMediaFooterIcon = () => <></>;
 
 export const DefaultFooter = (data) => (
 	<Segment inverted vertical style={{ padding: '5em 0em' }}>

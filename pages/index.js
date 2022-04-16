@@ -1,5 +1,5 @@
 import { DefaultLayout } from '../layouts/DefaultLayout';
-
+import { FrontPageHero } from '../components/base';
 import {
 	Button,
 	Container,
@@ -16,7 +16,8 @@ import {
 export default function Home() {
 	return (
 		<div className="App">
-			<DefaultLayout title="Michael Kendall" hero={true}>
+			<DefaultLayout title="Michael Kendall">
+				<FrontPageHero />
 				<Segment inverted vertical style={{ padding: '5em 0em' }}>
 					<Grid container stackable verticalAlign="middle">
 						<Grid.Row>
@@ -46,11 +47,11 @@ export default function Home() {
 									Full Stack Web Developer
 								</Header>
 								<p style={{ fontSize: '1.33em' }}>
-									Why is it so difficult to find something to write for this
-									section? I hate talking about myself.
+									I have created my own Bespoke Web Service for managing my
+									Projects and Online Portfolio.
 								</p>
 								<Button color="blue" size="big" as="a" href="/projects">
-									View Projects
+									View Documentation
 								</Button>
 							</Grid.Column>
 							<Grid.Column floated="right" width={6}>

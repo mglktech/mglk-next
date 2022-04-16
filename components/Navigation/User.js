@@ -44,6 +44,10 @@ export const User = ({ fixed, mobile }) => {
 						// onClick={() => router.push('/account')}
 					>
 						{session.user?.email}
+						{` `}
+						{session?.user?.roles?.map((role) => (
+							<span key="role">({role})</span>
+						))}
 
 						<Dropdown>
 							<Dropdown.Menu direction="left">
