@@ -125,28 +125,11 @@ export const NavMenuItems = ({ router }) => {
 			</Menu.Item>
 			<Menu.Item
 				as="a"
-				content="Gallery"
-				href="/gallery"
-				active={setActive('/gallery')}
+				content="About Us"
+				href="/about"
+				active={setActive('/about')}
 			/>
-			<Menu.Item
-				as="a"
-				content="Documents"
-				href="/documents"
-				active={setActive('/documents')}
-			/>
-			<Menu.Item
-				as="a"
-				content="Gaming"
-				href="/gaming"
-				active={setActive('/gaming')}
-			/>
-			<Menu.Item
-				as="a"
-				content="Music"
-				href="/music"
-				active={setActive('/music')}
-			/>
+
 			<Menu.Item
 				as="a"
 				content="Contact"
