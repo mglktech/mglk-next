@@ -68,6 +68,7 @@ const NewDiscordProvider = (options) => {
 
 export default NextAuth({
 	// Configure one or more authentication providers
+
 	secret: 'this-is-not-a-very-secure-secret',
 	jwt: {
 		secret: 'test',
@@ -92,10 +93,9 @@ export default NextAuth({
 				});
 				if (!user) {
 					//client.close();
-					return null;
 					throw new Error('No user found!');
+					return null;
 				}
-
 				// const isValid = await verifyPassword(
 				// 	credentials.password,
 				// 	user.password
@@ -125,6 +125,13 @@ export default NextAuth({
 		// 	},
 		// }),
 	],
+	pages: {
+		signIn: '/account/signin', // TODO
+		signOut: '/account/signout', // TODO
+		//error: '/auth/error', // Error code passed in query string as ?error=
+		//verifyRequest: '/auth/verify-request', // (used for check email message)
+		//newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+	},
 	callbacks: {
 		jwt: async ({ token, user }) => {
 			if (user) {
@@ -138,12 +145,12 @@ export default NextAuth({
 			}
 			return session;
 		},
-		// async signIn({ user, account, profile }) {
-		// 	console.log(`User Signed in - ${user.username}`);
-		// 	// Scrub their guilds
-		// 	// Scrub guild roles?
-		// 	return true;
-		// },
+		async signIn({ user, account, profile }) {
+			//console.log(`User Signed in - ${user.username}`);
+			// 	// Scrub their guilds
+			// 	// Scrub guild roles?
+			return true;
+		},
 		// async session({ session, user }) {
 		// 	// Send properties to the client, like an access_token from a provider.
 		// 	session.user = user;
