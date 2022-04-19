@@ -99,11 +99,14 @@ export const ResponsiveContainer = ({ children, hero }) => {
 				<MobileContainer hero={hero}>{children}</MobileContainer>
 			</Media>
 			<Media greaterThan="mobile">
-				{/* <DesktopContainer hero={hero}>{children}</DesktopContainer> */}
 				<DefaultContainer>{children}</DefaultContainer>
 			</Media>
 		</MediaContextProvider>
 	);
+};
+
+export const BasicContainer = ({ children }) => {
+	return <DefaultContainer>{children}</DefaultContainer>;
 };
 
 ResponsiveContainer.propTypes = {

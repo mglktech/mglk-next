@@ -87,7 +87,7 @@ export const User = ({ fixed, mobile }) => {
 										content="Sign Out"
 										icon="sign-in"
 										labelPosition="right"
-										onClick={() => signOut()}
+										onClick={() => router.push('/account/signout')}
 									/>
 								</Dropdown.Item>
 							</Dropdown.Menu>

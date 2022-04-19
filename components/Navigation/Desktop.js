@@ -28,7 +28,7 @@ export const DefaultContainer = ({ children }) => {
 				activeItem={activeItem}
 				changeActiveItem={changeActiveItem}
 			/>
-			{/* <Header as="h1" content="Some Content" /> */}
+
 			{children}
 		</>
 	);
@@ -74,21 +74,25 @@ export const BasicDesktopNav = ({}) => {
 	const router = useRouter();
 	const color = 'black';
 	return (
-		<Segment>
-			<Menu inverted={true} fixed={'top'}>
-				<Menu.Item>
-					<Header as="h3" inverted>
-						mglk.tech
-					</Header>
-				</Menu.Item>
-				<Container>
-					<NavMenuItems router={router} />
-					<Menu.Item position="right">
-						<User />
-					</Menu.Item>
-				</Container>
-			</Menu>
-		</Segment>
+		<Menu
+			inverted
+			fluid
+			compact
+			className="rounded-none"
+			fixed="top"
+			style={{ height: '50px' }}
+		>
+			<Menu.Item>
+				<Header as="h3" inverted>
+					mglk.tech
+				</Header>
+			</Menu.Item>
+
+			<NavMenuItems router={router} />
+			<Menu.Item position="right">
+				<User />
+			</Menu.Item>
+		</Menu>
 	);
 };
 
