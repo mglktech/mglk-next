@@ -1,8 +1,22 @@
 import docModel from '../../../models/documents/Document';
 import dbConnect from '../../../lib/dbConnect';
-
-import { getAuthor } from '../../../utils/author';
+//import { getAuthor } from "../../../lib/auth";
 //import docIndexModel from '../../../models/documents/Index';
+import { getSession } from 'next-auth/react';
+import { ObjectId } from 'mongodb';
+import Users from '../../../models/User';
+const getAuthor = async (req) => {
+	const session = await getSession({ req });
+	if (!session) {
+		return null;
+	}
+	// translate session uuid into mongo id
+	const user = await Users.findOne({ uuid: session.user.uuid }, { _id: 1 });
+	return {
+		_id: ObjectId(user._id),
+		email: session.user.email,
+	};
+};
 
 const Page = async (req, res) => {
 	const author = await getAuthor(req);

@@ -43,6 +43,7 @@ const modelSchema = new Schema(
 				type: Schema.Types.ObjectId,
 				ref: 'User',
 			},
+			uuid: String,
 			email: String,
 		},
 	},

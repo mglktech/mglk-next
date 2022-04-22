@@ -31,7 +31,8 @@
     "remark-gfm": "^3.0.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.4",
-    "url-search-params": "^1.1.0"
+    "url-search-params": "^1.1.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "8.6.0",

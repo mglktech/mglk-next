@@ -16,7 +16,16 @@ import {
 	Label,
 } from 'semantic-ui-react';
 import ListItem from '../../components/account/IndexListItem';
+
 const Page = () => {
+	return (
+		<>
+			<Layout>Account</Layout>
+		</>
+	);
+};
+
+const _Page = () => {
 	const { data: session } = useSession();
 	return (
 		<>
@@ -26,7 +35,6 @@ const Page = () => {
 					icon="settings"
 					sub="For all your account needs"
 				/>
-
 				<Container className="p-3 border-indigo-500 border bg-gray-100">
 					<div>
 						<Header as="h2">
@@ -64,22 +72,6 @@ const Page = () => {
 		</>
 	);
 };
-// export async function getServerSideProps(ctx) {
-// 	const session = await getSession(ctx);
-// 	//console.log(session);
-// 	if (!session) {
-// 		return {
-// 			redirect: {
-// 				destination: '/accessDenied',
-// 				permanent: false,
-// 			},
-// 		};
-// 	}
-// 	return {
-// 		props: {
-// 			session,
-// 		},
-// 	};
-// }
+
 Page.auth = true;
 export default Page;

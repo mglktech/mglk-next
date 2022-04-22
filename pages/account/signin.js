@@ -7,7 +7,8 @@ import {
 
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 import { ComingSoon } from '../../components/base';
-
+import { FormHeader } from '../../components/forms/FormComponents';
+import Link from 'next/link';
 import {
 	Button,
 	Container,
@@ -28,16 +29,36 @@ import {
 	Loader,
 } from 'semantic-ui-react';
 
-export default function SignIn({ providers, csrfToken }) {
+export default function SignIn({ providers, csrfToken, error }) {
 	return (
 		<DefaultLayout>
-			<Container className="object">
-				<Segment padded="very">
-					<Form method="POST" action="/api/auth/callback/credentials">
+			<Container text className="pt-10">
+				<Segment padded>
+					<FormHeader
+						content="Sign In"
+						icon="sign in"
+						sub="Sign in to your account"
+						divider
+					/>
+					<Label>
+						{'Need to create an account? Sign up for one '}
+						<Link href="/account/create">here</Link>
+					</Label>
+
+					<Form
+						error={error}
+						method="POST"
+						action="/api/auth/callback/credentials"
+					>
 						<Form.Input
 							type="hidden"
 							name="csrfToken"
 							defaultValue={csrfToken}
+						/>
+						<Message
+							error
+							header="Error"
+							content="Incorrect Username / Password Combination"
 						/>
 						<Form.Input name="email" label="Email" placeholder="Email" />
 						<Form.Input
@@ -46,8 +67,13 @@ export default function SignIn({ providers, csrfToken }) {
 							placeholder="Password"
 							type="password"
 						/>
+
 						<Form.Button type="submit">Sign in</Form.Button>
 					</Form>
+					<Label attached="bottom right">
+						Forgot Password? Recover Your Account{' '}
+						<Link href="/account/recover">here</Link>.
+					</Label>
 				</Segment>
 			</Container>
 		</DefaultLayout>
@@ -67,9 +93,10 @@ export async function getServerSideProps(context) {
 			},
 		};
 	}
+	const error = context?.query?.error ? true : false;
 	const csrfToken = await getCsrfToken({ req: context.req });
 	const providers = await getProviders();
 	return {
-		props: { providers, csrfToken },
+		props: { providers, csrfToken, error },
 	};
 }

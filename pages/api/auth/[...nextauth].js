@@ -10,7 +10,8 @@ import Users from '../../../models/User';
 //import { ObjectId } from 'mongodb';
 import { findGuilds } from '../../../utils/discord';
 import { ServerSession } from 'mongoose/node_modules/mongodb';
-
+import { verifyPassword } from '../../../lib/auth';
+import { v4 as uuidv4 } from 'uuid';
 const doRoles = (user) => {
 	const roles = [];
 	const isOwner = user.discord_id === process.env.DISCORD_SITE_OWNER_ID;
@@ -93,23 +94,29 @@ export default NextAuth({
 				});
 				if (!user) {
 					//client.close();
-					throw new Error('No user found!');
 					return null;
 				}
-				// const isValid = await verifyPassword(
-				// 	credentials.password,
-				// 	user.password
-				// );
+				const isValid = await verifyPassword(
+					credentials.password,
+					user.password
+				);
 
-				// if (!isValid) {
-				// 	//client.close();
-				// 	throw new Error('Could not log you in!');
-				// }
+				if (!isValid) {
+					//client.close();
+					return null;
+				}
 
 				//client.close();
-				const { _id, email, roles } = user;
+				let { _id, uuid, email, roles } = user;
+				if (!uuid) {
+					console.log('User has no uuid, generating one');
+					uuid = uuidv4();
+					await Users.findByIdAndUpdate(_id, {
+						uuid,
+					});
+				}
 				//console.log(user);
-				return { _id, email, roles };
+				return { uuid, email, roles };
 			},
 		}),
 		// DiscordProvider({
@@ -135,20 +142,20 @@ export default NextAuth({
 	callbacks: {
 		jwt: async ({ token, user }) => {
 			if (user) {
-				token.user = user;
+				token.user = user; // Add the user object to the payload
 			}
 			return token;
 		},
 		session: async ({ session, token }) => {
 			if (token) {
-				session.user = token.user;
+				session.user = token.user; // Add the user object to the session
 			}
 			return session;
 		},
 		async signIn({ user, account, profile }) {
-			//console.log(`User Signed in - ${user.username}`);
-			// 	// Scrub their guilds
-			// 	// Scrub guild roles?
+			// We can use this section to apply "hotfixes" to the accounts as they signing in.
+
+			//console.log('user', user, 'account', account, 'profile', profile);
 			return true;
 		},
 		// async session({ session, user }) {
