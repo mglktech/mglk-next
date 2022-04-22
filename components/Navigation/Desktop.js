@@ -20,13 +20,14 @@ import {
 import { useRouter } from 'next/router';
 import { HomepageHeading, NavMenuItems } from '../base';
 
-export const DefaultContainer = ({ children }) => {
+export const DefaultContainer = ({ mediaContext, children }) => {
 	const [activeItem, changeActiveItem] = useState();
 	return (
 		<>
 			<BasicDesktopNav
 				activeItem={activeItem}
 				changeActiveItem={changeActiveItem}
+				mediaContext={mediaContext}
 			/>
 
 			{children}
@@ -70,7 +71,7 @@ DesktopContainer.propTypes = {
 	children: PropTypes.node,
 };
 
-export const BasicDesktopNav = ({}) => {
+export const BasicDesktopNav = ({ mediaContext }) => {
 	const router = useRouter();
 	const color = 'black';
 	return (
@@ -89,6 +90,11 @@ export const BasicDesktopNav = ({}) => {
 			</Menu.Item>
 
 			<NavMenuItems router={router} />
+			<Header as="h6" inverted>
+				context:
+				{mediaContext}
+			</Header>
+
 			<Menu.Item position="right">
 				<User />
 			</Menu.Item>
@@ -109,7 +115,7 @@ export const DesktopNav = ({ fixed }) => {
 		>
 			<Menu.Item>
 				<Header as="h3" inverted>
-					Michael Kendall
+					mglk.tech
 				</Header>
 			</Menu.Item>
 			<Container>

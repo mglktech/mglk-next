@@ -12,12 +12,14 @@ import {
 	Image,
 	Popup,
 	Label,
+	ListHeader,
 } from 'semantic-ui-react';
 export default function Home() {
 	return (
 		<div className="App">
-			<DefaultLayout title="Michael Kendall">
+			<DefaultLayout title="mglk.tech">
 				<FrontPageHero />
+
 				<Segment inverted vertical style={{ padding: '5em 0em' }}>
 					<Grid container stackable verticalAlign="middle">
 						<Grid.Row>
@@ -35,9 +37,7 @@ export default function Home() {
 									thing! Whats more, I have transformed this innate fascination
 									into something truly Beautiful.
 								</p>
-								<Button color="orange" size="big" as="a" href="/gallery">
-									View Gallery
-								</Button>
+
 								<Header
 									inverted
 									color="blue"
@@ -47,87 +47,68 @@ export default function Home() {
 									Full Stack Web Developer
 								</Header>
 								<p style={{ fontSize: '1.33em' }}>
-									I have created my own Bespoke Web Service for managing my
-									Projects and Online Portfolio.
+									Frontend, Backend, and Database, I created this site to act as
+									a host for my portfolio.
 								</p>
-								<Button color="blue" size="big" as="a" href="/projects">
-									View Documentation
-								</Button>
 							</Grid.Column>
 							<Grid.Column floated="right" width={6}>
-								<Popup
-									content="it me"
-									position="bottom center"
-									trigger={
-										<Image
-											bordered
-											circular
-											alt="about_photo"
-											src="/bin/about_photo_lg.jpeg"
-										/>
-									}
+								<Image
+									bordered
+									circular
+									alt="about_photo"
+									src="/bin/about_photo_lg.jpeg"
 								/>
 							</Grid.Column>
 						</Grid.Row>
 					</Grid>
 				</Segment>
-				<Segment style={{ padding: '0em' }} vertical>
-					<Grid celled="internally" columns="equal" stackable>
-						<Grid.Row textAlign="center">
-							<Grid.Column
-								color="blue"
-								style={{ paddingBottom: '5em', paddingTop: '5em' }}
-							>
-								<Header as="h3" style={{ fontSize: '2em' }}>
-									Gaming Connections
-								</Header>
-								<p style={{ fontSize: '1.33em' }}>
-									That is what they all say about us
-								</p>
-							</Grid.Column>
-							<Grid.Column
-								color="green"
-								style={{ paddingBottom: '5em', paddingTop: '5em' }}
-							>
-								<Header as="h3" style={{ fontSize: '2em' }}>
-									Spotify Connections
-								</Header>
-								<p style={{ fontSize: '1.33em' }}>Spotify</p>
-							</Grid.Column>
-						</Grid.Row>
-					</Grid>
-				</Segment>
+
 				<Segment style={{ padding: '8em 0em' }}>
 					<Container text>
-						<Header as="h3" style={{ fontSize: '2em' }}>
-							CV
-						</Header>
-						<List bulleted style={{ fontSize: '1.33em' }}>
-							<List.Item>
-								Freelance Software Developer and Web Developer
-							</List.Item>
-							<Label>2019 - Present</Label>
-							<List.Item>
-								Computer Repair Technician for Anglia Computer Solutions
-							</List.Item>
-							<Label>2018 - 2019</Label>
-							<List.Item>
-								Customer Service Representative for Maplin Electronics
-							</List.Item>
-							<Label>2015 - 2018</Label>
-						</List>
-						<Button as="a" size="large">
-							Read More
-						</Button>
 						<Divider
 							as="h4"
 							className="header"
 							horizontal
 							style={{ margin: '3em 0em', textTransform: 'uppercase' }}
 						>
-							<a href="#">Case Studies</a>
+							<a href="#">Abilities</a>
 						</Divider>
-						Article Flow goes here
+						<List style={{ fontSize: '1.33em' }}>
+							<List.Item>
+								<List.Icon name="code"></List.Icon>
+								<List.Content>
+									<List.Header>Ambitious Web Developer</List.Header>
+									<List.Description>
+										Self-Motivated, Self-Driven, 10+ Years of Experience working
+										with HTML, CSS, JS, React, Node, Express, MongoDB, MySQL,
+										and more.
+									</List.Description>
+								</List.Content>
+							</List.Item>
+							<List.Item>
+								<List.Icon name="computer"></List.Icon>
+								<List.Content>
+									<List.Header>
+										Experienced Computer Hardware Technician
+									</List.Header>
+									<List.Description>
+										Specialist in PC Hardware, Networking, and IT Support. Also
+										proficient with <b>Internet of Things (IoT)450</b> devices.
+									</List.Description>
+								</List.Content>
+							</List.Item>
+
+							<Divider section />
+							{/* Split two seperate profession fields using a divider */}
+
+							<List.Item>
+								<List.Icon name="fire"></List.Icon>
+								<List.Content>
+									<List.Header>Professional Fire Performer</List.Header>
+									<List.Description>Some kind of description</List.Description>
+								</List.Content>
+							</List.Item>
+						</List>
 					</Container>
 				</Segment>
 			</DefaultLayout>

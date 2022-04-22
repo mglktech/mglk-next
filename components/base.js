@@ -17,72 +17,177 @@ import {
 	Visibility,
 	Label,
 	Input,
+	Checkbox,
 	Form,
+	Dropdown,
 } from 'semantic-ui-react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { DesktopContainer, DefaultContainer } from './Navigation/Desktop';
+import { User as UserComponent } from './Navigation/User';
 import { MobileContainer } from './Navigation/Mobile';
+import { MediaContextProvider, Media } from './media/artsyfresnel';
 
-const { MediaContextProvider, Media } = createMedia({
-	breakpoints: {
-		mobile: 0,
-		tablet: 768,
-		computer: 1024,
-	},
-});
+export const PageContent = ({ children }) => {
+	const [activeItem, changeActiveItem] = useState();
+	return (
+		<>
+			<NavBar />
+			{children}
+		</>
+	);
+};
+PageContent.propTypes = {
+	children: PropTypes.node,
+};
+
+export const NavBar = () => {
+	// This NavBar needs to know the context under which it is rendering.
+	// It can be either a mobile or desktop context.
+	return (
+		<MediaContextProvider>
+			<Media lessThan="md">
+				<NavbarMobile />
+			</Media>
+			<Media greaterThanOrEqual="md">
+				<NavbarDesktop />
+			</Media>
+		</MediaContextProvider>
+	);
+};
+
+const MobileNav = ({ handleToggle }) => (
+	<Menu inverted pointing secondary size="large">
+		<Menu.Item>mglk.tech</Menu.Item>
+		<Menu.Item position="right">
+			<Menu.Item onClick={handleToggle}>
+				<Icon name="sidebar" />
+			</Menu.Item>
+			<UserComponent />
+		</Menu.Item>
+	</Menu>
+);
+
+const NavbarMobile = () => {
+	const [visible, setVisible] = useState(false);
+
+	return (
+		<Menu
+			inverted
+			fluid
+			compact
+			className="rounded-none"
+			fixed="top"
+			style={{ height: '50px' }}
+		>
+			<Menu.Item>
+				<Header as="a" href="/" inverted>
+					mglk.tech
+				</Header>
+			</Menu.Item>
+			<Menu.Item>
+				<Dropdown icon="sidebar">
+					<Dropdown.Menu>
+						<NavMenuItems />
+					</Dropdown.Menu>
+				</Dropdown>
+			</Menu.Item>
+			{/* <NavMenuItems /> */}
+			<Menu.Item position="right">
+				<UserComponent mobile />
+			</Menu.Item>
+		</Menu>
+	);
+};
+
+const NavbarDesktop = () => {
+	return (
+		<Menu
+			inverted
+			fluid
+			compact
+			className="rounded-none"
+			fixed="top"
+			style={{ height: '50px' }}
+		>
+			<Menu.Item>
+				<Header as="a" href="/" inverted>
+					mglk.tech <Label color="black" content="Desktop" />
+				</Header>
+			</Menu.Item>
+
+			<NavMenuItems />
+			<Menu.Item position="right">
+				<UserComponent />
+			</Menu.Item>
+		</Menu>
+	);
+};
 
 export const FrontPageHero = () => (
-	<div
-		style={{
-			background: `linear-gradient(
+	<MediaContextProvider>
+		<Media lessThan="md">
+			<HeroComponent mobile />
+		</Media>
+		<Media greaterThanOrEqual="md">
+			<HeroComponent />
+		</Media>
+	</MediaContextProvider>
+);
+const HeroComponent = ({ mobile = null }) => {
+	return (
+		<div
+			style={{
+				background: `linear-gradient(
       rgba(0, 0, 0, 0.3),
       rgba(0, 0, 0, 0.3)
     ),url('/bin/landing.JPG') center / cover`,
-			padding: 0,
-			margin: 0,
-			backgroundAttachment: 'fixed',
-			minHeight: '100vh',
-			minWidth: '100vw',
-		}}
-	>
-		<Container
-			style={{
-				padding: '10em',
-				textAlign: 'center',
-				position: 'absolute',
-				left: '50%',
-				top: '50%',
-				transform: 'translate(-50%, -50%)',
+				padding: 0,
+				margin: 0,
+				backgroundAttachment: 'fixed',
+				minHeight: '150vh',
+				minWidth: '100vw',
 			}}
 		>
-			<Header
-				inverted
-				as="h1"
-				content={`"I Like to Dance with Fire...`}
+			<Container
 				style={{
-					fontSize: '4em',
-					fontWeight: 'normal',
-					textShadow: '0 0 2px black',
-					marginBottom: 0,
+					padding: mobile ? '0em' : '10em',
+					textAlign: 'center',
+					position: 'absolute',
+					left: '50%',
+					top: '50%',
+					transform: 'translate(-50%, -50%)',
 				}}
-			/>
-			<Header
-				as="h2"
-				content={`... and Build things for the Internet."`}
-				inverted
-				style={{
-					fontSize: '1.7em',
-					fontWeight: 'normal',
-					marginTop: '1.5em',
-				}}
-			/>
+			>
+				<Header
+					inverted
+					as="h1"
+					content={`"I Like to Dance with Fire...`}
+					style={{
+						fontSize: mobile ? '2em' : '4em',
+						fontWeight: 'normal',
+						textShadow: '0 0 2px black',
+						marginBottom: 0,
+					}}
+				/>
+				<Header
+					as="h2"
+					content={`... and Build things for the Internet."`}
+					inverted
+					style={{
+						fontSize: '1.7em',
+						fontWeight: 'normal',
+						marginTop: '1.5em',
+					}}
+				/>
 
-			<Button size="large" as="a" href="/about" inverted>
-				Learn More
-			</Button>
-		</Container>
-	</div>
-);
+				<Button size="large" as="a" href="/about" inverted>
+					Learn More
+				</Button>
+			</Container>
+		</div>
+	);
+};
 
 export const DefaultHead = ({ title }) => (
 	<Head>
@@ -93,6 +198,9 @@ export const DefaultHead = ({ title }) => (
 );
 
 export const ResponsiveContainer = ({ children, hero }) => {
+	// Defunct atm
+	// Send Media Context to Container to determine which to render
+	// Display Media Context in Nav Bar
 	return (
 		<MediaContextProvider>
 			<Media as={Sidebar.Pushable} at="mobile">
@@ -106,14 +214,24 @@ export const ResponsiveContainer = ({ children, hero }) => {
 };
 
 export const BasicContainer = ({ children }) => {
-	return <DefaultContainer>{children}</DefaultContainer>;
+	return (
+		<MediaContextProvider>
+			<Media lessThan="md">
+				<DefaultContainer mediaContext="mobile">{children}</DefaultContainer>
+			</Media>
+			<Media greaterThanOrEqual="md">
+				<DefaultContainer mediaContext="desktop">{children}</DefaultContainer>
+			</Media>
+		</MediaContextProvider>
+	);
 };
 
 ResponsiveContainer.propTypes = {
 	children: PropTypes.node,
 };
 
-export const NavMenuItems = ({ router }) => {
+export const NavMenuItems = () => {
+	const router = useRouter();
 	const setActive = (path) => (router.pathname.startsWith(path) ? true : false);
 	return (
 		<>

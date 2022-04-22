@@ -88,12 +88,13 @@ export const RegisterForm = () => {
 	}, [errors, form, isSubmitting]);
 
 	return (
-		<Container>
+		<Container text className="pt-10">
 			<Segment>
 				<FormHeader
 					content="Create an Account"
 					icon="user plus"
 					sub="Fill out the form below to create your account"
+					divider
 				/>
 				{submissionSuccessful ? (
 					<>

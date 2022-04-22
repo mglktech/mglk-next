@@ -7,6 +7,7 @@ import {
 	Icon,
 	Dropdown,
 	Menu,
+	Segment,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 import { isRole } from '../../lib/auth';
@@ -14,6 +15,7 @@ import { isRole } from '../../lib/auth';
 
 export const User = ({ fixed, mobile }) => {
 	const { data: session, status } = useSession();
+	//console.log('session', session);
 	const router = useRouter();
 	switch (status) {
 		case 'loading':
@@ -25,74 +27,88 @@ export const User = ({ fixed, mobile }) => {
 		case 'unauthenticated':
 			return (
 				<>
-					<Button.Group basic={!fixed} inverted>
-						<Button onClick={() => signIn()} color="primary">
-							Sign In
-						</Button>
-						<Button onClick={() => router.push('/register')}>
-							Create Account
-						</Button>
-					</Button.Group>
+					<Dropdown
+						floating
+						labeled
+						icon="user circle"
+						button
+						className="icon"
+						text="Login"
+					>
+						<Dropdown.Menu direction="left">
+							<Dropdown.Header>Account Management</Dropdown.Header>
+							<Menu.Item onClick={() => signIn()}>
+								<Button
+									content="Sign In"
+									color="teal"
+									icon="right arrow"
+									labelPosition="right"
+								/>
+							</Menu.Item>
+
+							<Menu.Item onClick={() => router.push('/account/create')}>
+								<Header as="h6">{"Don't have an account yet?"}</Header>
+								<Button
+									content="Join Us"
+									basic
+									color="violet"
+									icon="right arrow"
+									labelPosition="right"
+								/>
+							</Menu.Item>
+						</Dropdown.Menu>
+					</Dropdown>
 				</>
 			);
 		case 'authenticated':
 			return (
 				<>
-					<Label
-						size="large"
-
-						// onClick={() => router.push('/account')}
+					<Dropdown
+						floating
+						labeled
+						icon="user circle"
+						button
+						className="icon"
+						text={mobile ? null : session.user?.email}
 					>
-						{session.user?.email}
-						{` `}
-						{session?.user?.roles?.map((role) => (
-							<span key="role">({role})</span>
-						))}
-
-						<Dropdown>
-							<Dropdown.Menu direction="left">
-								{isRole(session, 'Owner') ? (
-									<>
-										<Dropdown.Header
-											color="teal"
-											icon="shield"
-											content="Admin"
-										/>
-										<Dropdown.Divider />
-										<Dropdown.Item
-											text="Admin Menu"
-											description=""
-											onClick={() => router.push('/admin')}
-										/>
-									</>
-								) : (
-									<></>
-								)}
-								<Dropdown.Header icon="user" content="Account" />
-								<Dropdown.Divider />
-								<Dropdown.Item
-									text="Profile"
-									description=""
-									onClick={() => router.push('/account')}
-								/>
-								<Dropdown.Header icon="book" content="Modules" />
-								<Dropdown.Divider />
-								<Dropdown.Item text="Articles" description="" />
-								<Dropdown.Divider />
-								<Dropdown.Item>
-									<Button
-										className=""
-										compact
-										color="purple"
-										content="Sign Out"
-										icon="sign-in"
-										labelPosition="right"
-										onClick={() => router.push('/account/signout')}
+						<Dropdown.Menu direction="left">
+							{isRole(session, 'Owner') ? (
+								<>
+									<Dropdown.Header icon="shield" content="Admin" />
+									<Dropdown.Divider />
+									<Dropdown.Item
+										text="Admin Menu"
+										description=""
+										onClick={() => router.push('/admin')}
 									/>
-								</Dropdown.Item>
-							</Dropdown.Menu>
-						</Dropdown>
-					</Label>
+								</>
+							) : (
+								<></>
+							)}
+							<Dropdown.Header icon="user" content="Account" />
+							<Dropdown.Divider />
+							<Dropdown.Item
+								text="Profile"
+								description=""
+								onClick={() => router.push('/account')}
+							/>
+							<Dropdown.Header icon="book" content="Modules" />
+							<Dropdown.Divider />
+							<Dropdown.Item text="Articles" description="" />
+							<Dropdown.Divider />
+							<Dropdown.Item>
+								<Button
+									className=""
+									compact
+									color="purple"
+									content="Sign Out"
+									icon="sign-in"
+									labelPosition="right"
+									onClick={() => router.push('/account/signout')}
+								/>
+							</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
 				</>
 			);
 	}

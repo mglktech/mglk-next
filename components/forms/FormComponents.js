@@ -16,20 +16,17 @@ import {
 	Form,
 } from 'semantic-ui-react';
 
-export const FormHeader = (props) => {
-	const { content, icon, sub } = props;
+export const FormHeader = ({ content, icon, sub, divider = false }) => {
 	return (
 		<>
-			<div>
-				<Header as="h2">
-					<Icon name={icon} />
-					<Header.Content>
-						{content}
-						<Header.Subheader>{sub}</Header.Subheader>
-					</Header.Content>
-				</Header>
-				<Divider />
-			</div>
+			<Header as="h2">
+				<Icon name={icon} />
+				<Header.Content>
+					{content}
+					<Header.Subheader>{sub}</Header.Subheader>
+				</Header.Content>
+			</Header>
+			{divider ? <Divider /> : null}
 		</>
 	);
 };

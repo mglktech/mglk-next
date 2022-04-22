@@ -75,7 +75,7 @@ export const MobileContainer = ({ children, hero }) => {
 
 export const MobileNav = ({ handleToggle }) => (
 	<Menu inverted pointing secondary size="large">
-		<Menu.Item>Michael Kendall</Menu.Item>
+		<Menu.Item>mglk.tech</Menu.Item>
 		<Menu.Item position="right">
 			<Menu.Item onClick={handleToggle}>
 				<Icon name="sidebar" />

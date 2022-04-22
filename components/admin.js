@@ -73,13 +73,15 @@ const AdminComponentFrame = ({ activeItem }) => {
 };
 export const AdminComponent = ({ ctx }) => {
 	const [activeItem, setActiveItem] = useState(ctx);
+	activeItem = activeItem || 'documents';
 	const handleItemClick = (e, { name }) => {
 		//console.log(e);
 		setActiveItem(name);
 	};
+
 	return (
-		<Container>
-			<Segment>
+		<Container className="pt-10">
+			<Segment padded>
 				<FormHeader
 					content="Administrator Panel"
 					sub={

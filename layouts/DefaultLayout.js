@@ -19,7 +19,13 @@ import {
 	Visibility,
 	Section,
 } from 'semantic-ui-react';
-import { DefaultHead, DefaultFooter, FooterData } from '../components/base';
+import {
+	DefaultHead,
+	DefaultFooter,
+	FooterData,
+	BasicContainer,
+	NavBar,
+} from '../components/base';
 import {
 	DefaultContainer,
 	BasicDesktopNav,
@@ -44,9 +50,8 @@ export const StickyNavLayout = ({ children, title, hero }) => (
 export const DefaultLayout = ({ children, title, hero }) => (
 	<>
 		<DefaultHead title={title} />
-		<div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-			<BasicDesktopNav />
-
+		<div style={{ height: '100vh', display: 'flex', flexDirection: 'Column' }}>
+			<NavBar style={{ display: 'block' }} />
 			<div style={{ flex: '1 0 auto' }}>
 				<div style={{ height: '50px' }}></div>
 				{children}
