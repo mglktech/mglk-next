@@ -138,14 +138,15 @@ const HeroComponent = ({ mobile = null }) => {
 	return (
 		<div
 			style={{
+				backgroundColor: `black`,
 				background: `linear-gradient(
       rgba(0, 0, 0, 0.3),
       rgba(0, 0, 0, 0.3)
-    ),url('/bin/landing.JPG') center / cover`,
+    ),url('/bin/landing.JPG') center / cover no-repeat`,
 				padding: 0,
 				margin: 0,
 				backgroundAttachment: 'fixed',
-				minHeight: '150vh',
+				minHeight: '50vh',
 				minWidth: '100vw',
 			}}
 		>
@@ -155,7 +156,7 @@ const HeroComponent = ({ mobile = null }) => {
 					textAlign: 'center',
 					position: 'absolute',
 					left: '50%',
-					top: '50%',
+					top: '30%',
 					transform: 'translate(-50%, -50%)',
 				}}
 			>
@@ -462,7 +463,7 @@ export const HeaderIconSub = (props) => {
 	);
 };
 
-export const InputInitiallyHidden = ({ pre, text }) => {
+export const InputInitiallyHidden = ({ pre, text, fluid = false }) => {
 	const [inputType, toggleInputType] = useState('password');
 	const [btnText, setBtnText] = useState('Show');
 	const toggleHidden = () => {
@@ -482,7 +483,9 @@ export const InputInitiallyHidden = ({ pre, text }) => {
 				size="small"
 				type={inputType}
 				label={pre}
+				fluid={fluid}
 				action={{
+					size: 'tiny',
 					content: btnText,
 					onClick: toggleHidden,
 				}}

@@ -1,14 +1,15 @@
 import { hashPassword } from '../../../lib/auth';
 import Users from '../../../models/User';
 import dbConnect from '../../../lib/dbConnect';
+import { v4 as uuidv4 } from 'uuid';
+const newUser = (options) => {};
 
 const handler = async (req, res) => {
-	const {
-		query: { id },
-		method,
-	} = req;
-	const data = req.body;
-	const { email, password } = data;
+	const { method } = req;
+
+	const { firstName, lastName, password } = req.body;
+	let { email } = req.body;
+	email = email?.toLowerCase();
 	if (
 		!email ||
 		!email.includes('@') ||
@@ -33,12 +34,19 @@ const handler = async (req, res) => {
 					return;
 				}
 				const hashedPassword = await hashPassword(password);
-				const newUser = new Users({ email: email, password: hashedPassword });
+				const uuid = uuidv4();
+				const newUser = new Users({
+					uuid,
+					firstName,
+					lastName,
+					email,
+					password: hashedPassword,
+				});
 				await newUser.save();
 				res.status(201).json({ message: 'Created User!' });
 				return;
-			} catch {
-				res.status(500).json({ message: 'Internal Server Error' });
+			} catch (error) {
+				res.status(500).json({ message: 'Internal Server Error', error });
 			}
 	}
 };
@@ -49,7 +57,6 @@ async function _handler(req, res) {
 	}
 
 	const data = req.body;
-
 	const { email, password } = data;
 
 	if (

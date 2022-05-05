@@ -32,7 +32,7 @@ export default function logout({ csrfToken }) {
 				<Segment className="flex flex-col justify-center text-center">
 					<Header as="h1">
 						<Icon name="plug"></Icon>
-						Before you go...
+						Signing Out...
 					</Header>
 					<Header as="h4" block>
 						You are about to end your session with mglk.tech <br />

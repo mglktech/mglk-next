@@ -32,6 +32,13 @@ export const RegisterForm = () => {
 	const soft_validate = () => {
 		// Clientside validation
 		let err = {};
+		if (!form.firstName) {
+			err.firstName = 'First Name is required';
+		}
+		if (!form.lastName) {
+			err.lastName = 'Last Name is required';
+		}
+
 		if (!form.email || !form.email.includes('@')) {
 			err.email = 'Please enter a valid Email Address';
 		}
@@ -121,33 +128,56 @@ export const RegisterForm = () => {
 							error={errors.form ? true : false}
 						>
 							<Message error content={errors.form} />
+							<Form.Group widths="equal">
+								<Form.Field
+									name="firstName"
+									label="First Name"
+									control="input"
+									onChange={handleChange}
+									error={
+										errors.firstName ? { content: errors.firstName } : false
+									}
+								/>
+								<Form.Field
+									name="lastName"
+									label="Last Name"
+									control="input"
+									onChange={handleChange}
+									error={errors.lastName ? { content: errors.lastName } : false}
+								/>
+							</Form.Group>
+
 							<Form.Field
+								// TODO: Add email validation (lowercase, etc)
 								name="email"
 								label="Email"
 								control="input"
 								onChange={handleChange}
 								error={errors.email ? { content: errors.email } : false}
 							/>
-							<Form.Field
-								name="password"
-								label="Password"
-								control="input"
-								type="password"
-								onChange={handleChange}
-								error={errors.password ? { content: errors.password } : false}
-							/>
-							<Form.Field
-								name="confirmPassword"
-								label="Confirm Password"
-								control="input"
-								type="password"
-								onChange={handleChange}
-								error={
-									errors.confirmPassword
-										? { content: errors.confirmPassword }
-										: false
-								}
-							/>
+							<Form.Group widths="equal">
+								<Form.Field
+									name="password"
+									label="Password"
+									control="input"
+									type="password"
+									onChange={handleChange}
+									error={errors.password ? { content: errors.password } : false}
+								/>
+								<Form.Field
+									name="confirmPassword"
+									label="Confirm Password"
+									control="input"
+									type="password"
+									onChange={handleChange}
+									error={
+										errors.confirmPassword
+											? { content: errors.confirmPassword }
+											: false
+									}
+								/>
+							</Form.Group>
+
 							<Button
 								content="Create Account"
 								type="submit"

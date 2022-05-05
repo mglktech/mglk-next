@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/react';
 import { ObjectId } from 'mongodb';
-import Users from '../../../models/User';
+import Users from '../models/User';
 export const getAuthor = async (req) => {
 	const session = await getSession({ req });
 	if (!session) {
