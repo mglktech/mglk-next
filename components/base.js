@@ -68,6 +68,10 @@ const MobileNav = ({ handleToggle }) => (
 	</Menu>
 );
 
+export const Uuid = ({ uuid }) => {
+	return <b className="px-2 bg-gray-500 text-white tracking-wider">{uuid}</b>;
+};
+
 const NavbarMobile = () => {
 	const [visible, setVisible] = useState(false);
 
@@ -112,7 +116,7 @@ const NavbarDesktop = () => {
 		>
 			<Menu.Item>
 				<Header as="a" href="/" inverted>
-					mglk.tech <Label color="black" content="Desktop" />
+					mglk.tech
 				</Header>
 			</Menu.Item>
 
@@ -145,8 +149,9 @@ const HeroComponent = ({ mobile = null }) => {
     ),url('/bin/landing.JPG') center / cover no-repeat`,
 				padding: 0,
 				margin: 0,
+				marginTop: '-50px',
 				backgroundAttachment: 'fixed',
-				minHeight: '50vh',
+				minHeight: '100vh',
 				minWidth: '100vw',
 			}}
 		>
@@ -156,7 +161,7 @@ const HeroComponent = ({ mobile = null }) => {
 					textAlign: 'center',
 					position: 'absolute',
 					left: '50%',
-					top: '30%',
+					top: '50%',
 					transform: 'translate(-50%, -50%)',
 				}}
 			>
@@ -308,18 +313,18 @@ export const FooterData = [
 		listItems: [
 			{
 				link: '#',
-				content: 'CV',
+				content: <span className="line-through">Download CV</span>,
 			},
 			{
 				link: '#',
-				content: 'Site Resources',
+				content: <span className="line-through">Site Resources</span>,
 			},
 			{
 				link: '#',
-				content: 'Licences',
+				content: <span className="line-through">Licenses</span>,
 			},
 			{
-				link: '#',
+				link: '/contact',
 				content: 'Contact',
 			},
 		],
@@ -329,21 +334,16 @@ export const FooterData = [
 		headerContent: 'Services',
 		listItems: [
 			{
-				link: '#',
+				link: 'https://www.last.fm/user/mglkdottech',
 				content: 'Music',
 			},
 			{
-				link: '#',
+				link: 'https://github.com/mglktech/mglk-next',
 				content: 'Source Code',
 			},
 			{
 				link: '#',
-				content: 'Documentation',
-			},
-
-			{
-				link: '#',
-				content: 'Gaming Services',
+				content: <span className="line-through">Documentation</span>,
 			},
 		],
 	},
@@ -352,18 +352,54 @@ export const FooterData = [
 		headerContent: 'Social',
 		children: (
 			<>
-				<Label>Facebook</Label>
-				<Label>Instagram</Label>
-				<Label>Spotify</Label>
-				<Label>LinkedIn</Label>
-				<Label>Discord</Label>
-				<Label>GitHub</Label>
+				<Icon
+					name="facebook"
+					size="big"
+					link
+					onClick={() => window.open('https://www.facebook.com/mglkdottech')}
+				/>
+				<Icon
+					name="github"
+					size="big"
+					onClick={() => window.open('https://github.com/mglktech/')}
+				/>
+				<Icon
+					name="discord"
+					size="big"
+					onClick={() => window.open('https://discord.gg/bcUZnhdQPY')}
+				/>
+				<Icon
+					name="spotify"
+					size="big"
+					onClick={() =>
+						window.open(
+							'https://open.spotify.com/playlist/072lTgoY9w50QCJFw0B6DO?si=bb98660eb21e446e'
+						)
+					}
+				/>
 			</>
 		),
 	},
 ];
 
-export const SocialMediaFooterIcon = () => <></>;
+const SocialMediaFooterIcon = ({ typeName }) => {
+	switch (typeName) {
+		case 'facebook':
+			return <Icon name="facebook" />;
+		case 'instagram':
+			return <Icon name="instagram" />;
+		case 'spotify':
+			return <Icon name="spotify" />;
+		case 'linkedin':
+			return <Icon name="linkedin" />;
+		case 'discord':
+			return <Icon name="discord" />;
+		case 'github':
+			return <Icon name="github" />;
+		default:
+			return null;
+	}
+};
 
 export const DefaultFooter = (data) => (
 	<Segment inverted vertical style={{ padding: '5em 0em' }}>

@@ -21,7 +21,7 @@ export const User = ({ fixed, mobile }) => {
 		case 'loading':
 			return (
 				<>
-					<Button loading basic={!fixed} color="purple" />
+					<Button loading basic={!fixed} />
 				</>
 			);
 		case 'unauthenticated':
@@ -64,18 +64,27 @@ export const User = ({ fixed, mobile }) => {
 			return (
 				<>
 					<Dropdown
-						floating
-						labeled
-						icon="user circle"
-						button
-						className="icon"
-						text={mobile ? null : session.user?.email}
+						icon={
+							<div className="flex flex-row items-center space-x-2 pr-2">
+								<div
+									style={{
+										background: `url('${session?.user?.avatar}') center / cover no-repeat`,
+										height: '30px',
+										aspectRatio: '1/1',
+									}}
+								/>
+								<span className="font-bold tracking-wide">
+									{session?.user?.email}
+								</span>
+							</div>
+						}
+						className="icon bg-purple-700 rounded"
 					>
 						<Dropdown.Menu direction="left">
 							{isRole(session, 'Owner') ? (
 								<>
 									<Dropdown.Header icon="shield" content="Admin" />
-									<Dropdown.Divider />
+
 									<Dropdown.Item
 										text="Admin Menu"
 										description=""
@@ -85,16 +94,16 @@ export const User = ({ fixed, mobile }) => {
 							) : (
 								<></>
 							)}
-							<Dropdown.Header icon="user" content="Account" />
 							<Dropdown.Divider />
+							<Dropdown.Header icon="user" content="Account" />
 							<Dropdown.Item
 								text="Profile"
 								description=""
 								onClick={() => router.push('/account')}
 							/>
-							<Dropdown.Header icon="book" content="Modules" />
 							<Dropdown.Divider />
-							<Dropdown.Item text="Articles" description="" />
+							<Dropdown.Header icon="book" content="Modules" />
+							<Dropdown.Item>(No Modules)</Dropdown.Item>
 							<Dropdown.Divider />
 							<Dropdown.Item>
 								<Button

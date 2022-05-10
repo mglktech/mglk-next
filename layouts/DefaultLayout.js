@@ -47,7 +47,7 @@ export const StickyNavLayout = ({ children, title, hero }) => (
 	</>
 );
 
-export const DefaultLayout = ({ children, title, hero }) => (
+export const DefaultLayout = ({ children, title, footer = true }) => (
 	<>
 		<DefaultHead title={title} />
 		<div style={{ height: '100vh', display: 'flex', flexDirection: 'Column' }}>
@@ -57,7 +57,7 @@ export const DefaultLayout = ({ children, title, hero }) => (
 				{children}
 			</div>
 			<div style={{ flexShrink: '0' }}>
-				<DefaultFooter data={FooterData} />
+				{footer ? <DefaultFooter data={FooterData} /> : null}
 			</div>
 		</div>
 	</>

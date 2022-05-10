@@ -34,26 +34,12 @@ const UserSchema = new Schema( // TODO: Not implemented yet.
 				type: String,
 			},
 		],
-		settings: {
-			displayNameOption: {
-				type: String,
-				enum: [
-					'FirstNameOnly',
-					'LastNameOnly',
-					'FirstNameAndLastName',
-					'Custom',
-				],
-				default: 'FirstNameOnly',
-			},
+		displayName: {
+			type: String,
+			default: '',
 		},
-		profile: {
-			displayName: {
-				type: String,
-				default: '',
-			},
-			avatar: {
-				type: String,
-			},
+		avatar: {
+			type: String,
 		},
 	},
 	{ timestamps: true, strict: true }

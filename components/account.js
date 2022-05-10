@@ -23,7 +23,7 @@ import {
 	Divider,
 } from 'semantic-ui-react';
 
-import { HeaderIconSub, InputInitiallyHidden } from './base';
+import { HeaderIconSub, InputInitiallyHidden, Uuid } from './base';
 
 const displayNameOptions = [
 	{
@@ -47,21 +47,18 @@ const displayNameOptions = [
 export const AccountCard = ({ user }) => {
 	return (
 		<Card>
-			<Image square size="small" src={user?.profile?.avatar} />
+			<div
+				style={{
+					background: `url('${user?.avatar}') center / cover no-repeat`,
+					width: '100%',
+					aspectRatio: '1/1',
+				}}
+			/>
+			{/* <Image square style={{width:"300px", height:"300px"}} src={user?.avatar} /> */}
 			<Card.Content>
-				<Card.Header>
-					<Placeholder>
-						<Placeholder.Header>Display Name</Placeholder.Header>
-					</Placeholder>
-				</Card.Header>
-				<Card.Meta>
-					<Placeholder>Roles</Placeholder>
-				</Card.Meta>
-				<Card.Description>
-					<Placeholder>
-						<Placeholder.Paragraph>Short Biography</Placeholder.Paragraph>
-					</Placeholder>
-				</Card.Description>
+				<Card.Header>{user.displayName}</Card.Header>
+				<Card.Meta>(No Roles)</Card.Meta>
+				<Card.Description></Card.Description>
 			</Card.Content>
 		</Card>
 	);
@@ -122,45 +119,39 @@ export const AccountCard = ({ user }) => {
 
 const ModalEditDisplayPictureButton = ({ user, handleChange }) => {
 	const [open, setOpen] = useState(false);
-	const [avatar, setAvatar] = useState(user?.profile?.avatar);
+	const [avatar, setAvatar] = useState(user?.avatar);
 	const submit = (e) => {
 		e.preventDefault();
 		setOpen(false);
 		handleChange({
-			profile: {
-				avatar,
-			},
+			avatar,
 		});
 	};
 	return (
 		<Modal
-			size="tiny"
-			classname="flex flex-col justify-center "
+			size="mini"
+			className="flex flex-col justify-center "
 			onClose={() => setOpen(false)}
 			onOpen={() => setOpen(true)}
 			open={open}
-			trigger={<Button>Show Modal</Button>}
+			trigger={<Button size="small">Change</Button>}
 		>
 			<Modal.Header>Select a Photo</Modal.Header>
 			<Modal.Content>
 				<Modal.Description>
-					<Image
-						centered
-						alt="avatar"
-						icon={'user'}
-						size="medium"
-						src={
-							avatar ||
-							user?.profile?.avatar ||
-							'/bin/blank-profile-picture.webp'
-						}
-						wrapped
-						rounded
+					<div
+						style={{
+							background: `url('${
+								avatar || user?.avatar || '/bin/blank-profile-picture.webp'
+							}') center / cover no-repeat`,
+							width: '100%',
+							aspectRatio: '1/1',
+						}}
 					/>
 					<Divider />
 					<Input
 						fluid
-						placeholder={user?.profile?.avatar || 'Enter URL'}
+						placeholder={user?.avatar || 'Enter URL'}
 						onChange={(e) => {
 							setAvatar(e.target.value);
 						}}
@@ -170,10 +161,10 @@ const ModalEditDisplayPictureButton = ({ user, handleChange }) => {
 
 			<Modal.Actions>
 				<Button color="black" onClick={() => setOpen(false)}>
-					Nope
+					Back
 				</Button>
 				<Button
-					content="Yep, that's me"
+					content="Update"
 					labelPosition="right"
 					icon="checkmark"
 					onClick={submit}
@@ -235,14 +226,12 @@ const ModalEditDisplayPictureButton = ({ user, handleChange }) => {
 
 const ModifyDisplayName = ({ user, handleChange }) => {
 	const [editing, setEditing] = useState(false);
-	const [displayName, setDisplayName] = useState(user?.profile?.displayName);
+	const [displayName, setDisplayName] = useState(user?.displayName);
 	const submit = (e) => {
 		e.preventDefault();
 		setEditing(false);
 		handleChange({
-			profile: {
-				displayName,
-			},
+			displayName,
 		});
 	};
 	switch (editing) {
@@ -250,7 +239,7 @@ const ModifyDisplayName = ({ user, handleChange }) => {
 			return (
 				<>
 					<Input
-						placeholder={user?.profile?.displayName}
+						placeholder={user?.displayName}
 						onChange={(e) => setDisplayName(e.target.value)}
 					/>
 					<Button content="save" onClick={submit} />
@@ -259,7 +248,7 @@ const ModifyDisplayName = ({ user, handleChange }) => {
 		case false:
 			return (
 				<>
-					<span>{user?.profile?.displayName}</span>
+					<span>{user?.displayName}</span>
 					<Button onClick={() => setEditing(true)} basic icon="wrench" />
 				</>
 			);
@@ -320,9 +309,7 @@ export const UserInformation = ({ user, handleChange }) => {
 								<b>User ID:</b>
 							</Table.Cell>
 							<Table.Cell>
-								<b className="px-2 bg-gray-500 text-white tracking-wider">
-									{user?.uuid}
-								</b>
+								<Uuid uuid={user?.uuid} />
 							</Table.Cell>
 						</Table.Row>
 
@@ -359,7 +346,6 @@ export const UserInformation = ({ user, handleChange }) => {
 								<ModalEditDisplayPictureButton
 									user={user}
 									handleChange={handleChange}
-									trigger={<Button size="small">Change Avatar</Button>}
 								/>
 							</Table.Cell>
 						</Table.Row>

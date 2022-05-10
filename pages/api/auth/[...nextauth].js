@@ -74,6 +74,7 @@ export default NextAuth({
 	jwt: {
 		secret: 'test',
 		encryption: true,
+		maxAge: 0,
 	},
 
 	providers: [
@@ -107,15 +108,7 @@ export default NextAuth({
 				}
 
 				//client.close();
-				let {
-					_id,
-					uuid,
-					email,
-					roles,
-					firstName,
-					lastName,
-					displayNameOption,
-				} = user;
+				let { _id, uuid, email, roles, displayName, avatar } = user;
 				if (!uuid) {
 					console.log('User has no uuid, generating one');
 					uuid = uuidv4();
@@ -124,7 +117,7 @@ export default NextAuth({
 					});
 				}
 				//console.log(user);
-				return { uuid, email, roles, firstName, lastName, displayNameOption };
+				return { uuid, email, roles, displayName, avatar };
 			},
 		}),
 		// DiscordProvider({
