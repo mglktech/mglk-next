@@ -66,7 +66,6 @@ const Index = () => {
 								gaining experience through Live Performances, he decided to
 								pursue his passion and create an independant business.
 							</p>
-							{`SOME KIND OF GALLERY MODULE`}
 
 							<Header inverted color="blue" as="h3" style={{ fontSize: '2em' }}>
 								Full Stack Web Developer
