@@ -17,39 +17,216 @@ import {
 	Visibility,
 	Label,
 	Input,
+	Checkbox,
+	Form,
+	Dropdown,
 } from 'semantic-ui-react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { DesktopContainer } from './Navigation/Desktop';
+import { DesktopContainer, DefaultContainer } from './Navigation/Desktop';
+import { User as UserComponent } from './Navigation/User';
 import { MobileContainer } from './Navigation/Mobile';
+import { MediaContextProvider, Media } from './media/artsyfresnel';
 
-const { MediaContextProvider, Media } = createMedia({
-	breakpoints: {
-		mobile: 0,
-		tablet: 768,
-		computer: 1024,
-	},
-});
+export const PageContent = ({ children }) => {
+	const [activeItem, changeActiveItem] = useState();
+	return (
+		<>
+			<NavBar />
+			{children}
+		</>
+	);
+};
+PageContent.propTypes = {
+	children: PropTypes.node,
+};
+
+export const NavBar = () => {
+	// This NavBar needs to know the context under which it is rendering.
+	// It can be either a mobile or desktop context.
+	return (
+		<MediaContextProvider>
+			<Media lessThan="md">
+				<NavbarMobile />
+			</Media>
+			<Media greaterThanOrEqual="md">
+				<NavbarDesktop />
+			</Media>
+		</MediaContextProvider>
+	);
+};
+
+const MobileNav = ({ handleToggle }) => (
+	<Menu inverted pointing secondary size="large">
+		<Menu.Item>mglk.tech</Menu.Item>
+		<Menu.Item position="right">
+			<Menu.Item onClick={handleToggle}>
+				<Icon name="sidebar" />
+			</Menu.Item>
+			<UserComponent />
+		</Menu.Item>
+	</Menu>
+);
+
+export const Uuid = ({ uuid }) => {
+	return <b className="px-2 bg-gray-500 text-white tracking-wider">{uuid}</b>;
+};
+
+const NavbarMobile = () => {
+	const [visible, setVisible] = useState(false);
+
+	return (
+		<Menu
+			inverted
+			fluid
+			compact
+			className="rounded-none"
+			fixed="top"
+			style={{ height: '50px' }}
+		>
+			<Menu.Item>
+				<Header as="a" href="/" inverted>
+					mglk.tech
+				</Header>
+			</Menu.Item>
+			<Menu.Item>
+				<Dropdown icon="sidebar">
+					<Dropdown.Menu>
+						<NavMenuItems />
+					</Dropdown.Menu>
+				</Dropdown>
+			</Menu.Item>
+			{/* <NavMenuItems /> */}
+			<Menu.Item position="right">
+				<UserComponent mobile />
+			</Menu.Item>
+		</Menu>
+	);
+};
+
+const NavbarDesktop = () => {
+	return (
+		<Menu
+			inverted
+			fluid
+			compact
+			className="rounded-none"
+			fixed="top"
+			style={{ height: '50px' }}
+		>
+			<Menu.Item>
+				<Header as="a" href="/" inverted>
+					mglk.tech
+				</Header>
+			</Menu.Item>
+
+			<NavMenuItems />
+			<Menu.Item position="right">
+				<UserComponent />
+			</Menu.Item>
+		</Menu>
+	);
+};
+
+export const FrontPageHero = () => (
+	<MediaContextProvider>
+		<Media lessThan="md">
+			<HeroComponent mobile />
+		</Media>
+		<Media greaterThanOrEqual="md">
+			<HeroComponent />
+		</Media>
+	</MediaContextProvider>
+);
+const HeroComponent = ({ mobile = null }) => {
+	return (
+		<div
+			style={{
+				backgroundColor: `black`,
+				background: `linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3)
+    ),url('/bin/landing.JPG') center / cover no-repeat`,
+				padding: 0,
+				margin: 0,
+				marginTop: '-50px',
+				backgroundAttachment: 'fixed',
+				minHeight: '100vh',
+				minWidth: '100vw',
+			}}
+		>
+			<Container
+				style={{
+					padding: mobile ? '0em' : '10em',
+					textAlign: 'center',
+					position: 'absolute',
+					left: '50%',
+					top: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}
+			>
+				<Header
+					inverted
+					as="h1"
+					content={`"I Like to Dance with Fire...`}
+					style={{
+						fontSize: mobile ? '2em' : '4em',
+						fontWeight: 'normal',
+						textShadow: '0 0 2px black',
+						marginBottom: 0,
+					}}
+				/>
+				<Header
+					as="h2"
+					content={`... and Build things for the Internet."`}
+					inverted
+					style={{
+						fontSize: '1.7em',
+						fontWeight: 'normal',
+						marginTop: '1.5em',
+					}}
+				/>
+
+				<Button size="large" as="a" href="/about" inverted>
+					Learn More
+				</Button>
+			</Container>
+		</div>
+	);
+};
 
 export const DefaultHead = ({ title }) => (
 	<Head>
-		{title ? <title>{title}</title> : <title>Mglk.tech</title>}
+		{title ? <title>{title}</title> : <title>mglk.tech</title>}
 		<meta name="description" content="By mglk" />
 		<link rel="icon" href="/favicon.ico" />
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-		/>
 	</Head>
 );
 
 export const ResponsiveContainer = ({ children, hero }) => {
+	// Defunct atm
+	// Send Media Context to Container to determine which to render
+	// Display Media Context in Nav Bar
 	return (
 		<MediaContextProvider>
 			<Media as={Sidebar.Pushable} at="mobile">
 				<MobileContainer hero={hero}>{children}</MobileContainer>
 			</Media>
 			<Media greaterThan="mobile">
-				<DesktopContainer hero={hero}>{children}</DesktopContainer>
+				<DefaultContainer>{children}</DefaultContainer>
+			</Media>
+		</MediaContextProvider>
+	);
+};
+
+export const BasicContainer = ({ children }) => {
+	return (
+		<MediaContextProvider>
+			<Media lessThan="md">
+				<DefaultContainer mediaContext="mobile">{children}</DefaultContainer>
+			</Media>
+			<Media greaterThanOrEqual="md">
+				<DefaultContainer mediaContext="desktop">{children}</DefaultContainer>
 			</Media>
 		</MediaContextProvider>
 	);
@@ -59,7 +236,8 @@ ResponsiveContainer.propTypes = {
 	children: PropTypes.node,
 };
 
-export const NavMenuItems = ({ router }) => {
+export const NavMenuItems = () => {
+	const router = useRouter();
 	const setActive = (path) => (router.pathname.startsWith(path) ? true : false);
 	return (
 		<>
@@ -74,28 +252,11 @@ export const NavMenuItems = ({ router }) => {
 			</Menu.Item>
 			<Menu.Item
 				as="a"
-				content="Gallery"
-				href="/gallery"
-				active={setActive('/gallery')}
+				content="About Us"
+				href="/about"
+				active={setActive('/about')}
 			/>
-			<Menu.Item
-				as="a"
-				content="Projects"
-				href="/projects"
-				active={setActive('/projects')}
-			/>
-			<Menu.Item
-				as="a"
-				content="Gaming"
-				href="/gaming"
-				active={setActive('/gaming')}
-			/>
-			<Menu.Item
-				as="a"
-				content="Music"
-				href="/music"
-				active={setActive('/music')}
-			/>
+
 			<Menu.Item
 				as="a"
 				content="Contact"
@@ -109,7 +270,7 @@ export const NavMenuItems = ({ router }) => {
 export const HomepageHeading = ({ mobile }) => (
 	<Container
 		style={{
-			minHeight: mobile ? '30vh' : '30vh',
+			minHeight: mobile ? '70vh' : '60vh',
 		}}
 	>
 		<Header
@@ -135,8 +296,8 @@ export const HomepageHeading = ({ mobile }) => (
 			}}
 		/>
 
-		<Button size="large" as="a" href="/contact" inverted>
-			Get in Contact
+		<Button size="large" as="a" href="/register" inverted>
+			Start Your Journey
 		</Button>
 	</Container>
 );
@@ -145,7 +306,126 @@ HomepageHeading.propTypes = {
 	mobile: PropTypes.bool,
 };
 
-export const DefaultFooter = () => (
+export const FooterData = [
+	{
+		columnWidth: 3,
+		headerContent: 'About',
+		listItems: [
+			{
+				link: '#',
+				content: <span className="line-through">Download CV</span>,
+			},
+			{
+				link: '#',
+				content: <span className="line-through">Site Resources</span>,
+			},
+			{
+				link: '#',
+				content: <span className="line-through">Licenses</span>,
+			},
+			{
+				link: '/contact',
+				content: 'Contact',
+			},
+		],
+	},
+	{
+		columnWidth: 3,
+		headerContent: 'Services',
+		listItems: [
+			{
+				link: 'https://www.last.fm/user/mglkdottech',
+				content: 'Music',
+			},
+			{
+				link: 'https://github.com/mglktech/mglk-next',
+				content: 'Source Code',
+			},
+			{
+				link: '#',
+				content: <span className="line-through">Documentation</span>,
+			},
+		],
+	},
+	{
+		columnWidth: 7,
+		headerContent: 'Social',
+		children: (
+			<>
+				<Icon
+					name="facebook"
+					size="big"
+					link
+					onClick={() => window.open('https://www.facebook.com/mglkdottech')}
+				/>
+				<Icon
+					name="github"
+					size="big"
+					onClick={() => window.open('https://github.com/mglktech/')}
+				/>
+				<Icon
+					name="discord"
+					size="big"
+					onClick={() => window.open('https://discord.gg/bcUZnhdQPY')}
+				/>
+				<Icon
+					name="spotify"
+					size="big"
+					onClick={() =>
+						window.open(
+							'https://open.spotify.com/playlist/072lTgoY9w50QCJFw0B6DO?si=bb98660eb21e446e'
+						)
+					}
+				/>
+			</>
+		),
+	},
+];
+
+const SocialMediaFooterIcon = ({ typeName }) => {
+	switch (typeName) {
+		case 'facebook':
+			return <Icon name="facebook" />;
+		case 'instagram':
+			return <Icon name="instagram" />;
+		case 'spotify':
+			return <Icon name="spotify" />;
+		case 'linkedin':
+			return <Icon name="linkedin" />;
+		case 'discord':
+			return <Icon name="discord" />;
+		case 'github':
+			return <Icon name="github" />;
+		default:
+			return null;
+	}
+};
+
+export const DefaultFooter = (data) => (
+	<Segment inverted vertical style={{ padding: '5em 0em' }}>
+		<Container>
+			<Grid divided inverted stackable>
+				<Grid.Row>
+					{/* Map each column giving it's width
+							Include headerContent and map listItems */}
+					{FooterData.map((c, index) => (
+						<Grid.Column key={index} width={c.columnWidth}>
+							<Header inverted as="h4" content={c.headerContent} />
+							<List link inverted>
+								{c.listItems?.map(({ link, content }, index) => (
+									<List.Item key={index} as="a" href={link} content={content} />
+								))}
+							</List>
+							{c.children ? c.children : <></>}
+						</Grid.Column>
+					))}
+				</Grid.Row>
+			</Grid>
+		</Container>
+	</Segment>
+);
+
+export const _DefaultFooter = () => (
 	<Segment inverted vertical style={{ padding: '5em 0em' }}>
 		<Container>
 			<Grid divided inverted stackable>
@@ -219,7 +499,7 @@ export const HeaderIconSub = (props) => {
 	);
 };
 
-export const InputInitiallyHidden = ({ pre, text }) => {
+export const InputInitiallyHidden = ({ pre, text, fluid = false }) => {
 	const [inputType, toggleInputType] = useState('password');
 	const [btnText, setBtnText] = useState('Show');
 	const toggleHidden = () => {
@@ -239,7 +519,9 @@ export const InputInitiallyHidden = ({ pre, text }) => {
 				size="small"
 				type={inputType}
 				label={pre}
+				fluid={fluid}
 				action={{
+					size: 'tiny',
 					content: btnText,
 					onClick: toggleHidden,
 				}}

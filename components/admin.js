@@ -1,9 +1,103 @@
-import { Form, Checkbox, Button, Label, Icon } from 'semantic-ui-react';
+import {
+	Form,
+	Checkbox,
+	Button,
+	Label,
+	Icon,
+	Container,
+	Segment,
+	Grid,
+	Header,
+	Menu,
+} from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 // https://discord.com/api/oauth2/authorize?response_type=code&client_id=157730590492196864&scope=identify%20guilds&redirect_uri=https%3A%2F%2Fnicememe.website&prompt=consent
 // HvzPi0oGvvqMQjBCGo5J4duhfq016I
+
+import { FormHeader } from './forms/FormComponents';
+import { ProjectEditor } from './admin/projects';
+import { DocumentManager } from './admin/documents';
+import NodeModules from './admin/NodeModules';
+const AdminMenu = ({ activeItem, handleItemClick }) => {
+	return (
+		<Menu>
+			<Menu.Item
+				name="documents"
+				active={activeItem === 'documents'}
+				onClick={handleItemClick}
+			>
+				Documents
+			</Menu.Item>
+			<Menu.Item
+				name="gallery"
+				active={activeItem === 'gallery'}
+				onClick={handleItemClick}
+			>
+				Gallery
+			</Menu.Item>
+			<Menu.Item
+				name="telemetry"
+				active={activeItem === 'telemetry'}
+				onClick={handleItemClick}
+			>
+				Site Telemetry
+			</Menu.Item>
+			<Menu.Item
+				name="usermgmt"
+				active={activeItem === 'usermgmt'}
+				onClick={handleItemClick}
+			>
+				User Management
+			</Menu.Item>
+
+			<Menu.Item
+				name="nodemodules"
+				active={activeItem === 'nodemodules'}
+				onClick={handleItemClick}
+			>
+				Node Modules
+			</Menu.Item>
+		</Menu>
+	);
+};
+const AdminComponentFrame = ({ activeItem }) => {
+	switch (activeItem) {
+		case 'documents':
+			return <DocumentManager />;
+		case 'nodemodules':
+			return <NodeModules />;
+	}
+	return <></>; // to ensure something is returned if case is not hit
+};
+export const AdminComponent = ({ ctx }) => {
+	const [activeItem, setActiveItem] = useState(ctx);
+	activeItem = activeItem || 'documents';
+	const handleItemClick = (e, { name }) => {
+		//console.log(e);
+		setActiveItem(name);
+	};
+
+	return (
+		<Container className="pt-10">
+			<Segment padded>
+				<FormHeader
+					content="Administrator Panel"
+					sub={
+						<AdminMenu
+							activeItem={activeItem}
+							handleItemClick={handleItemClick}
+						/>
+					}
+					icon="shield alternate"
+				/>
+
+				<AdminComponentFrame activeItem={activeItem} />
+			</Segment>
+		</Container>
+	);
+};
 
 export const DemoComponent = () => {
 	const [bot, setBot] = useState();
@@ -152,7 +246,7 @@ export const GuildComponent = ({ botProps }) => {
 			body: JSON.stringify(data),
 		}).then((res) => res.json());
 		//const json = await res.json();
-		console.log(res);
+		//console.log(res);
 	};
 	const checkBotConnection = () => {
 		setBotCon('Refresh Clicked');
@@ -169,7 +263,7 @@ export const GuildComponent = ({ botProps }) => {
 						//disabled={botProps.bot ? true : false}
 						compact
 						onClick={(e) => {
-							console.log(e);
+							//console.log(e);
 							router.push(
 								`https://discord.com/api/oauth2/authorize?response_type=code&client_id=${botProps.client_id}&scope=bot&guild_id=${botProps.guild_id}&redirect_uri=${botProps.redir_uri}&prompt=consent`
 							);

@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { SessionProvider, useSession, getSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { IsOwner } from '../lib/auth';
+
 function App({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<SessionProvider session={session}>
@@ -45,7 +46,7 @@ function _App({ Component, pageProps: { session, ...pageProps } }) {
 
 const RequireRole = ({ role, children }) => {
 	const { data: session, status } = useSession({ required: true });
-	const isRole = !!session?.roles?.includes(role);
+	const isRole = !!session?.user?.roles?.includes(role);
 	//console.log(isRole);
 	if (isRole) {
 		return children;

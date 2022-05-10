@@ -4,19 +4,30 @@ import { Container } from 'semantic-ui-react';
 import { DiscordBot } from '../../components/admin/DiscordBot';
 import { ProjectEditor } from '../../components/admin/projects';
 import NodeModules from '../../components/admin/NodeModules';
+import PhotoManager from '../../components/admin/PhotoManager';
 
-const Page = () => {
+import { AdminComponent } from '../../components/admin';
+
+const Page = ({ ctx }) => {
 	return (
 		<>
 			<DefaultLayout>
-				<Container className="flex space-y-5">
+				{/* <Container className="flex space-y-5">
 					<ProjectEditor />
-					{/* <DiscordBot /> */}
-					{/* <NodeModules /> */}
-				</Container>
+					
+					<NodeModules />
+					<PhotoManager />
+				</Container> */}
+				<AdminComponent ctx={ctx} />
 			</DefaultLayout>
 		</>
 	);
+};
+export const getServerSideProps = (context) => {
+	const ctx = context?.query?.initctx ? context?.query?.initctx : null;
+	return {
+		props: { ctx },
+	};
 };
 
 Page.requireRole = 'Owner';

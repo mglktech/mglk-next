@@ -1,10 +1,20 @@
 import { DefaultLayout } from '../../../layouts/DefaultLayout';
+import { ArticleEditor } from '../../../components/article/ArticleEditor';
 import { ProjectEditor, ProjectPreview } from '../../../components/projects';
 import { Grid, Segment, Button } from 'semantic-ui-react';
 import { useSession, getSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 const Page = ({ id }) => {
+	return (
+		<>
+			<DefaultLayout>
+				<ArticleEditor id={id} />
+			</DefaultLayout>
+		</>
+	);
+};
+const _Page = ({ id }) => {
 	const { data: session } = useSession();
 	const router = useRouter();
 	const [project, setProject] = useState({

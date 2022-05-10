@@ -1,13 +1,17 @@
 import NextAuth from 'next-auth';
 //import DiscordProvider from 'next-auth/providers/discord';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
+import dbConnect from '../../../lib/dbConnect';
+import Users from '../../../models/User';
 //import Account from '../../../models/Account';
 //import Article from '../../../models/Article';
 //import { ObjectId } from 'mongodb';
 import { findGuilds } from '../../../utils/discord';
 import { ServerSession } from 'mongoose/node_modules/mongodb';
-
+import { verifyPassword } from '../../../lib/auth';
+import { v4 as uuidv4 } from 'uuid';
 const doRoles = (user) => {
 	const roles = [];
 	const isOwner = user.discord_id === process.env.DISCORD_SITE_OWNER_ID;
@@ -20,7 +24,7 @@ const doRoles = (user) => {
 const NewDiscordProvider = (options) => {
 	return {
 		id: 'discord',
-		name: 'Discord',
+		name: 'Custom Discord Provider',
 		type: 'oauth',
 		authorization: 'https://discord.com/api/oauth2/authorize',
 		token: 'https://discord.com/api/oauth2/token',
@@ -65,68 +69,119 @@ const NewDiscordProvider = (options) => {
 
 export default NextAuth({
 	// Configure one or more authentication providers
+
 	secret: 'this-is-not-a-very-secure-secret',
-	session: {
-		// Choose how you want to save the user session.
-		// The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
-		// If you use an `adapter` however, we default it to `"database"` instead.
-		// You can still force a JWT session by explicitly defining `"jwt"`.
-		// When using `"database"`, the session cookie will only contain a `sessionToken` value,
-		// which is used to look up the session in the database.
-		strategy: 'database',
-
-		// Seconds - How long until an idle session expires and is no longer valid.
-		maxAge: 86400000, // 24 hours
-
-		// Seconds - Throttle how frequently to write to database to extend a session.
-		// Use it to limit write operations. Set to 0 to always update the database.
-		// Note: This option is ignored if using JSON Web Tokens
-		updateAge: 0, // Always keep the database updated.
+	jwt: {
+		secret: 'test',
+		encryption: true,
+		maxAge: 0,
 	},
+
 	providers: [
+		CredentialsProvider({
+			name: 'credentials',
+			credentials: {
+				email: {
+					label: 'Email',
+					type: 'email',
+					placeholder: 'example@example.com',
+				},
+				password: { label: 'Password', type: 'password' },
+			},
+			async authorize(credentials) {
+				await dbConnect();
+				const user = await Users.findOne({
+					email: credentials.email,
+				});
+				if (!user) {
+					//client.close();
+					return null;
+				}
+				const isValid = await verifyPassword(
+					credentials.password,
+					user.password
+				);
+
+				if (!isValid) {
+					//client.close();
+					return null;
+				}
+
+				//client.close();
+				let { _id, uuid, email, roles, displayName, avatar } = user;
+				if (!uuid) {
+					console.log('User has no uuid, generating one');
+					uuid = uuidv4();
+					await Users.findByIdAndUpdate(_id, {
+						uuid,
+					});
+				}
+				//console.log(user);
+				return { uuid, email, roles, displayName, avatar };
+			},
+		}),
 		// DiscordProvider({
 		// 	clientId: process.env.DISCORD_CLIENT_ID,
 		// 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
 		// 	authorization: { params: { scope: 'identify guilds' } },
 		// }),
-		NewDiscordProvider({
-			clientId: process.env.DISCORD_CLIENT_ID,
-			clientSecret: process.env.DISCORD_CLIENT_SECRET,
-			authorization: {
-				params: { scope: 'identify guilds' },
-			},
-		}),
+		// NewDiscordProvider({
+		// 	clientId: process.env.DISCORD_CLIENT_ID,
+		// 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
+		// 	authorization: {
+		// 		params: { scope: 'identify guilds' },
+		// 	},
+		// }),
 	],
+	pages: {
+		signIn: '/account/signin', // TODO
+		signOut: '/account/signout', // TODO
+		//error: '/auth/error', // Error code passed in query string as ?error=
+		//verifyRequest: '/auth/verify-request', // (used for check email message)
+		//newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+	},
 	callbacks: {
+		jwt: async ({ token, user }) => {
+			if (user) {
+				token.user = user; // Add the user object to the payload
+			}
+			return token;
+		},
+		session: async ({ session, token }) => {
+			if (token) {
+				session.user = token.user; // Add the user object to the session
+			}
+			return session;
+		},
 		async signIn({ user, account, profile }) {
-			console.log(`User Signed in - ${user.username}`);
-			// Scrub their guilds
-			// Scrub guild roles?
+			// We can use this section to apply "hotfixes" to the accounts as they signing in.
+
+			//console.log('user', user, 'account', account, 'profile', profile);
 			return true;
 		},
-		async session({ session, user }) {
-			// Send properties to the client, like an access_token from a provider.
-			session.user = user;
-			session.roles = doRoles(user);
-			// console.log(session);
-			// session.user.guilds = await findGuilds(user.id);
-			// if (session.user.guilds) {
-			// 	//console.log(session.user.guilds);
-			// 	const serverGuild = session.user.guilds.find(
-			// 		(guild) => guild.id === process.env.DISCORD_SERVER_ID
-			// 	);
-			// 	if (serverGuild.owner) {
-			// 		session.user.serverOwner = true;
-			// 	} else {
-			// 		session.user.serverOwner = false;
-			// 	}
-			// }
+		// async session({ session, user }) {
+		// 	// Send properties to the client, like an access_token from a provider.
+		// 	session.user = user;
+		// 	session.roles = doRoles(user);
+		// 	// console.log(session);
+		// 	// session.user.guilds = await findGuilds(user.id);
+		// 	// if (session.user.guilds) {
+		// 	// 	//console.log(session.user.guilds);
+		// 	// 	const serverGuild = session.user.guilds.find(
+		// 	// 		(guild) => guild.id === process.env.DISCORD_SERVER_ID
+		// 	// 	);
+		// 	// 	if (serverGuild.owner) {
+		// 	// 		session.user.serverOwner = true;
+		// 	// 	} else {
+		// 	// 		session.user.serverOwner = false;
+		// 	// 	}
+		// 	// }
 
-			return Promise.resolve(session);
-		},
+		// 	return Promise.resolve(session);
+		// },
 	},
 
-	adapter: MongoDBAdapter(clientPromise),
-	database: process.env.MONGODB_URI,
+	// adapter: MongoDBAdapter(clientPromise),
+	// database: process.env.MONGODB_URI,
 	// debug: true,
 });

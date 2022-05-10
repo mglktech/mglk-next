@@ -12,8 +12,10 @@ import {
 	Label,
 	Segment,
 	List,
+	Divider,
 } from 'semantic-ui-react';
 import Preview from '../../../components/projects/PagePreview';
+import { MarkdownPreview } from '../../../components/article/ArticleEditor';
 
 const Project = ({ id }) => {
 	const router = useRouter();
@@ -33,42 +35,11 @@ const Project = ({ id }) => {
 	}, []);
 	return (
 		<Style title={project?.title}>
-			{project?.archived ? (
-				<div className=" bg-red-700 text-white min-w-full text-center p-1">
-					This project is Archived
-				</div>
-			) : (
-				<></>
-			)}
-			{project && !project.published ? (
-				<div className=" bg-yellow-600 text-white min-w-full text-center p-1">
-					This project is Not Published (yet)
-				</div>
-			) : (
-				<></>
-			)}
-			<Segment>
-				<Header>Page Goals:</Header>
-				<List>
-					<List.Content>
-						<List.Item>
-							Create a Loading module for this page and apply it when the
-							project is still waiting for data.
-						</List.Item>
-						<List.Item>
-							Add a Sidebar that enables you to click through the project and
-							see each article attached to it. if no image data exists for a
-							specific article, default to the project image data.
-						</List.Item>
-						<List.Item></List.Item>
-						<List.Item></List.Item>
-						<List.Item></List.Item>
-					</List.Content>
-				</List>
+			<Segment basic padded="very">
+				<Container>
+					<MarkdownPreview form={project} />
+				</Container>
 			</Segment>
-			<Container>
-				<Preview project={project} />
-			</Container>
 		</Style>
 	);
 };

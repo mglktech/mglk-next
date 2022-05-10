@@ -1,6 +1,7 @@
 import { Schema, models, model } from 'mongoose';
+// import rollback from 'mongoose-rollback';
 
-const ProjectSchema = new Schema(
+const modelSchema = new Schema(
 	{
 		title: {
 			type: String,
@@ -19,7 +20,6 @@ const ProjectSchema = new Schema(
 		},
 		headerImage_height: {
 			type: Number,
-			required: true,
 		},
 		content: {
 			type: String,
@@ -36,4 +36,10 @@ const ProjectSchema = new Schema(
 	{ timestamps: true }
 );
 
-export default models.Project || model('Project', ProjectSchema);
+// modelSchema.plugin(rollback, {
+// 	index: true,
+// 	//conn: 'mongodb://localhost/test', required if connection isn't explict
+// 	collectionName: 'Project',
+// });
+
+export default models.Project || model('Project', modelSchema);

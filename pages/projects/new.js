@@ -4,6 +4,17 @@ import { Grid, Segment, Button } from 'semantic-ui-react';
 import { useSession, getSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+
+import { ArticleEditor } from '../../components/article/ArticleEditor';
+
+const _Page = () => {
+	return (
+		<DefaultLayout>
+			<ArticleEditor />
+		</DefaultLayout>
+	);
+};
+export default _Page;
 const Page = () => {
 	const { data: session } = useSession();
 	const router = useRouter();
@@ -72,4 +83,4 @@ const Page = () => {
 
 Page.auth = true;
 Page.admin = true;
-export default Page;
+// export default Page;

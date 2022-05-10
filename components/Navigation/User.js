@@ -7,10 +7,123 @@ import {
 	Icon,
 	Dropdown,
 	Menu,
+	Segment,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 import { isRole } from '../../lib/auth';
-export default function Component({ fixed, mobile }) {
+//import { Component } from 'react/cjs/react.production.min';
+
+export const User = ({ fixed, mobile }) => {
+	const { data: session, status } = useSession();
+	//console.log('session', session);
+	const router = useRouter();
+	switch (status) {
+		case 'loading':
+			return (
+				<>
+					<Button loading basic={!fixed} />
+				</>
+			);
+		case 'unauthenticated':
+			return (
+				<>
+					<Dropdown
+						floating
+						labeled
+						icon="user circle"
+						button
+						className="icon"
+						text="Login"
+					>
+						<Dropdown.Menu direction="left">
+							<Dropdown.Header>Account Management</Dropdown.Header>
+							<Menu.Item onClick={() => signIn()}>
+								<Button
+									content="Sign In"
+									color="teal"
+									icon="right arrow"
+									labelPosition="right"
+								/>
+							</Menu.Item>
+
+							<Menu.Item onClick={() => router.push('/account/create')}>
+								<Header as="h6">{"Don't have an account yet?"}</Header>
+								<Button
+									content="Join Us"
+									basic
+									color="violet"
+									icon="right arrow"
+									labelPosition="right"
+								/>
+							</Menu.Item>
+						</Dropdown.Menu>
+					</Dropdown>
+				</>
+			);
+		case 'authenticated':
+			return (
+				<>
+					<Dropdown
+						icon={
+							<div className="flex flex-row items-center space-x-2 pr-2">
+								<div
+									style={{
+										background: `url('${session?.user?.avatar}') center / cover no-repeat`,
+										height: '30px',
+										aspectRatio: '1/1',
+									}}
+								/>
+								<span className="font-bold tracking-wide">
+									{session?.user?.email}
+								</span>
+							</div>
+						}
+						className="icon bg-purple-700 rounded"
+					>
+						<Dropdown.Menu direction="left">
+							{isRole(session, 'Owner') ? (
+								<>
+									<Dropdown.Header icon="shield" content="Admin" />
+
+									<Dropdown.Item
+										text="Admin Menu"
+										description=""
+										onClick={() => router.push('/admin')}
+									/>
+								</>
+							) : (
+								<></>
+							)}
+							<Dropdown.Divider />
+							<Dropdown.Header icon="user" content="Account" />
+							<Dropdown.Item
+								text="Profile"
+								description=""
+								onClick={() => router.push('/account')}
+							/>
+							<Dropdown.Divider />
+							<Dropdown.Header icon="book" content="Modules" />
+							<Dropdown.Item>(No Modules)</Dropdown.Item>
+							<Dropdown.Divider />
+							<Dropdown.Item>
+								<Button
+									className=""
+									compact
+									color="purple"
+									content="Sign Out"
+									icon="sign-in"
+									labelPosition="right"
+									onClick={() => router.push('/account/signout')}
+								/>
+							</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
+				</>
+			);
+	}
+};
+
+function _Component({ fixed, mobile }) {
 	const { data: session } = useSession();
 	const router = useRouter();
 
@@ -25,7 +138,7 @@ export default function Component({ fixed, mobile }) {
 		);
 	}
 	if (session) {
-		//console.log(session);
+		console.log('session', session);
 		return (
 			<div className="content-center">
 				<Label
@@ -40,10 +153,10 @@ export default function Component({ fixed, mobile }) {
 						avatar
 						alt="profile avatar"
 						spaced="right"
-						src={session.user.image_url}
+						src={session.user?.image_url}
 					/>
-					{session.user.username}
-					<Label.Detail>#{session.user.discriminator}</Label.Detail>
+					{session.user?.username}
+					<Label.Detail>#{session.user?.discriminator}</Label.Detail>
 					<Dropdown>
 						<Dropdown.Menu direction="left">
 							{isRole(session, 'Owner') ? (

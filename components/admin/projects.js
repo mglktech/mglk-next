@@ -18,8 +18,16 @@ import PagePreview from '../../components/projects/PagePreview';
 
 const ArchiveModal = ({ markedProjects, doRefresh }) => {
 	const [open, setOpen] = useState(false);
-	const DeleteProject = () => {
-		return;
+	const DeleteProject = async ({ _id }) => {
+		const result = await fetch(`/api/projects/${_id}`, {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+		});
+		console.log(result);
+		doRefresh();
 	};
 	const RestoreProject = async ({ _id }) => {
 		await fetch(`/api/projects/${_id}`, {
@@ -52,7 +60,11 @@ const ArchiveModal = ({ markedProjects, doRefresh }) => {
 									icon="undo"
 									onClick={() => RestoreProject(project)}
 								/>
-								<Button color="red" icon="trash" />
+								<Button
+									color="red"
+									icon="trash"
+									onClick={() => DeleteProject(project)}
+								/>
 							</ProjectListItem>
 						))}
 					</List>

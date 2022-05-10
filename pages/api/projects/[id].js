@@ -55,6 +55,8 @@ const Page = async (req, res) => {
 				return;
 			}
 			try {
+				await projectModel.findByIdAndDelete(id);
+				sendData(res, { message: 'done' });
 			} catch (error) {
 				sendError(res, error);
 			}
