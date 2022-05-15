@@ -21,7 +21,7 @@ const index = async (req, res) => {
 	if (!user) {
 		handleError('No user found');
 	}
-	if (!user.userType === 'admin') {
+	if (user.userType !== 'admin') {
 		handleError('User is not an admin');
 	}
 	await dbConnect();

@@ -8,6 +8,11 @@ const NoteSchema = new Schema(
 		description: {
 			type: String,
 		},
+		archived: {
+			required: true,
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true, versionKey: false }
 );

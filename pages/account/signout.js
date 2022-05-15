@@ -56,7 +56,7 @@ export default function logout({ csrfToken }) {
 export async function getServerSideProps(context) {
 	const session = await getSession({ req: context.req });
 	if (!session) {
-		console.log('User is already signed out');
+		//console.log('User is already signed out');
 		return {
 			redirect: {
 				destination: '/',

@@ -31,6 +31,6 @@ export const getServerSideProps = (context) => {
 		props: { ctx },
 	};
 };
-
+Page.auth = true;
 Page.admin = true;
 export default Page;

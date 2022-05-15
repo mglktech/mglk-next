@@ -17,6 +17,9 @@ import {
 } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import { FormHeader } from '../forms/FormComponents';
+import Moment from 'react-moment';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 	const [createdNote, setCreatedNote] = useState(note || {});
@@ -152,9 +155,11 @@ const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 	}
 };
 
-export const NotesComponent = () => {
+export const NotesComponent = ({ archived = false }) => {
 	const [notes, setNotes] = useState([]);
 	const [refresh, setRefresh] = useState(false);
+	const [archivedCount, setArchivedCount] = useState(0);
+	const router = useRouter();
 	const createNote = async (body) => {
 		const resp = await fetch('/api/notes', {
 			method: 'POST',
@@ -165,7 +170,12 @@ export const NotesComponent = () => {
 			body: JSON.stringify(body),
 		});
 		const response = await resp.json();
-		console.log(response);
+		//console.log(response);
+		setRefresh(true);
+	};
+	const toggleArchived = async (_id, archived) => {
+		//console.log(`updateNote: ${_id}`);
+		await updateNote({ _id, archived });
 		setRefresh(true);
 	};
 	const updateNote = async (body) => {
@@ -192,38 +202,90 @@ export const NotesComponent = () => {
 		const response = await resp.json();
 		setRefresh(true);
 	};
-
+	const countArchivedNotes = async () => {
+		const archivedCountResp = await fetch(`/api/notes/archive`, {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ count: true }),
+		});
+		const archivedCount = await archivedCountResp.json();
+		setArchivedCount(archivedCount.data);
+	};
 	const fetchNotes = async () => {
-		const resp = await fetch('/api/notes');
+		let resp;
+		if (archived) {
+			resp = await fetch('/api/notes/archive');
+		} else {
+			resp = await fetch('/api/notes/');
+		}
 		const response = await resp.json();
-		console.log(response.data);
+		//console.log(response.data);
 		setNotes(response.data);
 		setRefresh(false);
 	};
 	useEffect(() => {
+		countArchivedNotes();
 		fetchNotes();
 	}, []);
 	if (refresh) {
+		countArchivedNotes();
 		fetchNotes();
 	}
 
 	return (
 		<Form>
-			<Segment>
+			<Segment padded>
 				<Form.Field>
-					<FormHeader content={`Notes`} icon="file" sub="" divider />
+					<FormHeader
+						content={archived ? 'Notes Archive' : 'Active Notes'}
+						icon="file"
+						sub=""
+						divider
+					/>
 				</Form.Field>
 
 				<Form.Field>
-					<NotesEditor mode="create" createNote={createNote} />
+					{archived ? (
+						<>
+							<Button
+								// size="tiny"
+								content="Back"
+								icon="left arrow"
+								labelPosition="left"
+								onClick={() => router.push('/admin/notes')}
+							/>
+						</>
+					) : (
+						<>
+							<NotesEditor mode="create" createNote={createNote} />
+						</>
+					)}
 				</Form.Field>
 				<Form.Field className="pt-2">
 					<NotesList
 						updateNote={updateNote}
 						notes={notes}
 						deleteNote={deleteNote}
+						archived={archived}
+						toggleArchived={toggleArchived}
 					/>
 				</Form.Field>
+				{archived ? (
+					<></>
+				) : (
+					<>
+						<Label>
+							There are <b>{archivedCount}</b> more notes in your archive. (
+							<Link href="/admin/notes/archive">
+								<a>view</a>
+							</Link>
+							)
+						</Label>
+					</>
+				)}
 			</Segment>
 		</Form>
 	);
@@ -273,25 +335,66 @@ const ConfirmNoteDeletion = ({ note, deleteNote }) => {
 	);
 };
 
-const NotesList = ({ notes, deleteNote, updateNote }) => {
+const NotesList = ({
+	notes,
+	deleteNote,
+	updateNote,
+	archived = false,
+	toggleArchived,
+}) => {
 	return (
 		<>
 			{notes.map((note) => {
+				const { _id } = note;
 				return (
-					<Segment key={note._id}>
+					<Segment key={note._id} style={{ paddingBottom: '3em' }}>
 						<Header as="h3">
 							<Header.Content>{note.name}</Header.Content>
 
 							<Header.Subheader>
-								<p>{note.description}</p>
+								<Moment format="DD-MM-YYYY @HH:mm" date={note.createdAt} />
+								{` -> `}
+								<Moment date={note.createdAt} fromNow />
 							</Header.Subheader>
 						</Header>
 						<Label attached="bottom right">
 							_id: <Label.Detail>{note._id}</Label.Detail>
 						</Label>
+						<p>{note.description}</p>
 
-						<NotesEditor mode="update" note={note} updateNote={updateNote} />
-						<ConfirmNoteDeletion note={note} deleteNote={deleteNote} />
+						{archived ? (
+							<>
+								<Button
+									size="tiny"
+									color="green"
+									content="Restore"
+									icon="edit outline"
+									labelPosition="right"
+									onClick={() => {
+										toggleArchived(note._id, !!!note.archived);
+									}}
+								/>
+								<ConfirmNoteDeletion note={note} deleteNote={deleteNote} />
+							</>
+						) : (
+							<>
+								<NotesEditor
+									mode="update"
+									note={note}
+									updateNote={updateNote}
+								/>
+								<Button
+									size="tiny"
+									color="grey"
+									content="Archive"
+									icon="edit outline"
+									labelPosition="right"
+									onClick={() => {
+										toggleArchived(note._id, !!!note.archived);
+									}}
+								/>
+							</>
+						)}
 					</Segment>
 				);
 			})}

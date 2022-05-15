@@ -43,7 +43,7 @@ const index = async (req, res) => {
 	switch (method) {
 		case 'GET':
 			try {
-				const noteData = await Notes.find({ archived: false })
+				const noteData = await Notes.find({ archived: true })
 					.sort({ createdAt: -1 })
 					.lean();
 				res.status(200).json({ success: true, data: noteData });
@@ -53,36 +53,25 @@ const index = async (req, res) => {
 			}
 		case 'POST':
 			try {
-				console.log('/api/notes/[body]:: POST ::', body);
-				await new Notes(body).save();
-				res.status(201).json({ success: true });
-				//console.log(result);
+				let noteData;
+				if (body.count) {
+					noteData = await Notes.countDocuments({ archived: true }).exec();
+				}
+				if (body.find) {
+					noteData = await Notes.find({ archived: true })
+						.sort({ createdAt: -1 })
+						.lean();
+				}
+
+				res.status(200).json({ success: true, data: noteData });
 				return;
 			} catch (error) {
 				handleError(error);
 			}
 		case 'PUT':
-			try {
-				const { _id } = body;
-				console.log('/api/notes/[body]:: PUT ::', body);
-				await Notes.findOneAndUpdate({ _id }, body);
-				res.status(200).json({ success: true });
-				//console.log(result);
-				return;
-			} catch (error) {
-				handleError(error);
-			}
+			handleError('PUT not allowed');
 		case 'DELETE':
-			try {
-				const { _id } = body;
-				console.log('/api/notes/[body]:: DELETE ::', body);
-				await Notes.findOneAndDelete({ _id });
-				res.status(200).json({ success: true });
-				//console.log(result);
-				return;
-			} catch (error) {
-				handleError(error);
-			}
+			handleError('DELETE not allowed');
 		default:
 			res
 				.status(500)

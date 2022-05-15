@@ -4,7 +4,7 @@ import '/styles/github-markdown.css';
 import 'semantic-ui-css/semantic.min.css';
 import { SessionProvider, useSession, getSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { IsOwner } from '../lib/auth';
+import { isAuth, isAdmin } from '../lib/auth';
 
 function _App({ Component, pageProps: { session, ...pageProps } }) {
 	return (
@@ -56,24 +56,23 @@ const RequireRole = ({ role, children }) => {
 
 function Auth({ children }) {
 	const { data: session, status } = useSession({ required: true });
-	const isUser = !!session?.user;
-	if (isUser) {
+
+	if (isAuth(session)) {
 		return children;
 	}
 	// Session is being fetched, or no user.
 	// If no user, useEffect() will redirect.
-	return <div>Loading...</div>;
+	return <div></div>;
 }
 function Admin({ children }) {
 	const { data: session, status } = useSession({ required: true });
-	const isAdmin = !!session?.user?.isOwner;
-	if (isAdmin) {
+	if (isAdmin(session)) {
 		return children;
 	}
 
 	// Session is being fetched, or no user.
 	// If no user, useEffect() will redirect.
-	return <div>Loading...</div>;
+	return <div></div>;
 }
 
 // async function Admin({ children }) {
