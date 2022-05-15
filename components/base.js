@@ -27,6 +27,9 @@ import { DesktopContainer, DefaultContainer } from './Navigation/Desktop';
 import { User as UserComponent } from './Navigation/User';
 import { MobileContainer } from './Navigation/Mobile';
 import { MediaContextProvider, Media } from './media/artsyfresnel';
+import { isAdmin } from '../lib/auth';
+
+import { useSession } from 'next-auth/react';
 
 export const PageContent = ({ children }) => {
 	const [activeItem, changeActiveItem] = useState();
@@ -238,6 +241,7 @@ ResponsiveContainer.propTypes = {
 
 export const NavMenuItems = () => {
 	const router = useRouter();
+	const session = useSession();
 	const setActive = (path) => (router.pathname.startsWith(path) ? true : false);
 	return (
 		<>

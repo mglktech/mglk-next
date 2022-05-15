@@ -6,7 +6,7 @@ import { SessionProvider, useSession, getSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { IsOwner } from '../lib/auth';
 
-function App({ Component, pageProps: { session, ...pageProps } }) {
+function _App({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<SessionProvider session={session}>
 			{Component.requireRole ? (
@@ -20,7 +20,7 @@ function App({ Component, pageProps: { session, ...pageProps } }) {
 	);
 }
 
-function _App({ Component, pageProps: { session, ...pageProps } }) {
+function App({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<SessionProvider session={session}>
 			{Component.auth ? (

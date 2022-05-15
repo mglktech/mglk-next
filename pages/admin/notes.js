@@ -7,6 +7,7 @@ import NodeModules from '../../components/admin/NodeModules';
 import PhotoManager from '../../components/admin/PhotoManager';
 
 import { AdminComponent, QuickLinks } from '../../components/admin';
+import { NotesComponent } from '../../components/admin/notes';
 
 const Page = ({ ctx }) => {
 	return (
@@ -20,17 +21,19 @@ const Page = ({ ctx }) => {
 					<PhotoManager />
 				</Container> */}
 				{/* <QuickLinks /> */}
-				<AdminComponent ctx={ctx} />
+				<Container>
+					<NotesComponent />
+				</Container>
 			</DefaultLayout>
 		</>
 	);
 };
-export const getServerSideProps = (context) => {
-	const ctx = context?.query?.initctx ? context?.query?.initctx : null;
-	return {
-		props: { ctx },
-	};
-};
+// export const getServerSideProps = (context) => {
+// 	const ctx = context?.query?.initctx ? context?.query?.initctx : null;
+// 	return {
+// 		props: { ctx },
+// 	};
+// };
 
 Page.admin = true;
 export default Page;

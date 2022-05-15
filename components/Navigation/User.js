@@ -10,7 +10,7 @@ import {
 	Segment,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import { isRole } from '../../lib/auth';
+import { isAdmin } from '../../lib/auth';
 //import { Component } from 'react/cjs/react.production.min';
 
 export const User = ({ fixed, mobile }) => {
@@ -81,9 +81,14 @@ export const User = ({ fixed, mobile }) => {
 						className="icon bg-purple-700 rounded"
 					>
 						<Dropdown.Menu direction="left">
-							{isRole(session, 'Owner') ? (
+							{isAdmin(session) ? (
 								<>
 									<Dropdown.Header icon="shield" content="Admin" />
+
+									<Dropdown.Item
+										text="Notes"
+										onClick={() => router.push('/admin/notes')}
+									/>
 
 									<Dropdown.Item
 										text="Admin Menu"
