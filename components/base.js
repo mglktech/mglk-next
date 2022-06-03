@@ -256,7 +256,7 @@ export const NavMenuItems = () => {
 			</Menu.Item>
 			<Menu.Item
 				as="a"
-				content="About Us"
+				content="About"
 				href="/about"
 				active={setActive('/about')}
 			/>
