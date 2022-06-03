@@ -14,13 +14,24 @@ const ImagesGallery = () => {
 					original: `${url}=w1024`,
 					thumbnail: `${url}=w100`,
 				}));
-				console.log(theImages);
+				//console.log(theImages);
 				setImages(theImages);
 			}
 		};
 		call();
 		return () => (shouldCancel = true);
 	}, []);
-	return images ? <ImageGallery items={images} /> : null;
+	return images ? (
+		<ImageGallery
+			autoPlay={true}
+			showPlayButton={false}
+			showFullscreenButton={false}
+			disableSwipe={true}
+			showThumbnails={false}
+			items={images}
+			slideInterval={10000}
+			slideDuration={1000}
+		/>
+	) : null;
 };
 export default ImagesGallery;

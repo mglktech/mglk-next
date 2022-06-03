@@ -6,18 +6,20 @@ import { ProjectEditor } from '../../components/admin/projects';
 import NodeModules from '../../components/admin/NodeModules';
 import PhotoManager from '../../components/admin/PhotoManager';
 
-import { AdminComponent } from '../../components/admin';
+import { AdminComponent, QuickLinks } from '../../components/admin';
 
 const Page = ({ ctx }) => {
 	return (
 		<>
 			<DefaultLayout>
+				<div className="pt-10" />
 				{/* <Container className="flex space-y-5">
 					<ProjectEditor />
 					
 					<NodeModules />
 					<PhotoManager />
 				</Container> */}
+				{/* <QuickLinks /> */}
 				<AdminComponent ctx={ctx} />
 			</DefaultLayout>
 		</>
@@ -29,6 +31,6 @@ export const getServerSideProps = (context) => {
 		props: { ctx },
 	};
 };
-
-Page.requireRole = 'Owner';
+Page.auth = true;
+Page.admin = true;
 export default Page;

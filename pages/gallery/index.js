@@ -7,9 +7,7 @@ const Index = () => {
 		<DefaultLayout>
 			{/* <ComingSoon /> */}
 			<Segment inverted style={{ margin: '0', padding: '0' }}>
-				<Container>
-					<Gallery />
-				</Container>
+				<Gallery />
 			</Segment>
 		</DefaultLayout>
 	);

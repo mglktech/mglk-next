@@ -108,7 +108,7 @@ export default NextAuth({
 				}
 
 				//client.close();
-				let { _id, uuid, email, roles, displayName, avatar } = user;
+				let { _id, uuid, email, roles, displayName, avatar, userType } = user;
 				if (!uuid) {
 					console.log('User has no uuid, generating one');
 					uuid = uuidv4();
@@ -117,7 +117,7 @@ export default NextAuth({
 					});
 				}
 				//console.log(user);
-				return { uuid, email, roles, displayName, avatar };
+				return user;
 			},
 		}),
 		// DiscordProvider({

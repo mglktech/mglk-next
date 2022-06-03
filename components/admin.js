@@ -9,20 +9,63 @@ import {
 	Grid,
 	Header,
 	Menu,
+	Placeholder,
+	Modal,
+	Input,
+	Divider,
+	TextArea,
 } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 // https://discord.com/api/oauth2/authorize?response_type=code&client_id=157730590492196864&scope=identify%20guilds&redirect_uri=https%3A%2F%2Fnicememe.website&prompt=consent
 // HvzPi0oGvvqMQjBCGo5J4duhfq016I
-
+import { ModulesComponent } from './admin/ModuleEditor';
 import { FormHeader } from './forms/FormComponents';
 import { ProjectEditor } from './admin/projects';
+// hello world
 import { DocumentManager } from './admin/documents';
 import NodeModules from './admin/NodeModules';
+import { useSession } from 'next-auth/react';
+export const QuickLinks = () => {
+	return (
+		<Container>
+			<Segment>
+				<Header as="h1">Quick Links</Header>
+				<div className="space-y-2">
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+					<Button content="hello" />
+				</div>
+			</Segment>
+		</Container>
+	);
+};
+
 const AdminMenu = ({ activeItem, handleItemClick }) => {
 	return (
-		<Menu>
+		<Menu vertical fluid tabular>
+			<Menu.Item
+				name="modules"
+				active={activeItem === 'modules'}
+				onClick={handleItemClick}
+			>
+				Modules
+			</Menu.Item>
+			<Menu.Item
+				name="roles"
+				active={activeItem === 'roles'}
+				onClick={handleItemClick}
+			>
+				Roles
+			</Menu.Item>
 			<Menu.Item
 				name="documents"
 				active={activeItem === 'documents'}
@@ -62,38 +105,41 @@ const AdminMenu = ({ activeItem, handleItemClick }) => {
 		</Menu>
 	);
 };
+
 const AdminComponentFrame = ({ activeItem }) => {
 	switch (activeItem) {
 		case 'documents':
 			return <DocumentManager />;
 		case 'nodemodules':
 			return <NodeModules />;
+		case 'modules':
+			return <ModulesComponent />;
 	}
 	return <></>; // to ensure something is returned if case is not hit
 };
 export const AdminComponent = ({ ctx }) => {
-	const [activeItem, setActiveItem] = useState(ctx);
-	activeItem = activeItem || 'documents';
+	const [activeItem, setActiveItem] = useState(ctx || 'modules');
+
 	const handleItemClick = (e, { name }) => {
 		//console.log(e);
 		setActiveItem(name);
 	};
 
 	return (
-		<Container className="pt-10">
+		<Container>
 			<Segment padded>
-				<FormHeader
-					content="Administrator Panel"
-					sub={
+				<FormHeader content="Administrator Panel" icon="shield alternate" />
+				<Grid>
+					<Grid.Column width={4}>
 						<AdminMenu
 							activeItem={activeItem}
 							handleItemClick={handleItemClick}
 						/>
-					}
-					icon="shield alternate"
-				/>
-
-				<AdminComponentFrame activeItem={activeItem} />
+					</Grid.Column>
+					<Grid.Column width={12}>
+						<AdminComponentFrame activeItem={activeItem} />
+					</Grid.Column>
+				</Grid>
 			</Segment>
 		</Container>
 	);

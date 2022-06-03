@@ -1,5 +1,6 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 import { ComingSoon } from '../../components/base';
+import Gallery from '../../components/Gallery';
 import {
 	Header,
 	Textbox,
@@ -34,94 +35,108 @@ const Index = () => {
 	return (
 		<DefaultLayout>
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
-				<Grid container stackable verticalAlign="middle">
-					<Grid.Row>
+				<Grid container stackable>
+					<Grid.Row verticalAlign="middle">
 						<Grid.Column className="text-center  text-4xl" width={8}>
 							<Header inverted>{`Hello,`}</Header>
 							<Header inverted>{`I'm Michael.`}</Header>
+							<span className="text-xl">{`Welcome To My Website`}</span>
 						</Grid.Column>
 						<Grid.Column floated="right" width={8}>
 							<Image
 								bordered
 								circular
 								alt="about_photo"
-								src="/bin/about_photo_lg.jpeg"
+								src="/bin/about_photo_lg_unflip_bw.jpeg"
 							/>
 						</Grid.Column>
 					</Grid.Row>
+					<Grid.Row columns={1}>
+						<Grid.Column>
+							<Segment inverted style={{ padding: '5em', textAlign: 'center' }}>
+								<Header
+									inverted
+									color="blue"
+									as="h2"
+									style={{ fontSize: '2em' }}
+								>
+									I Wanted Somewhere To Put Things...
+								</Header>
+								<p style={{ fontSize: '1.33em' }}>
+									{`mglk.tech is a website that I created to help me learn and grow
+								as a developer.`}
+								</p>
+								<p style={{ fontSize: '1.33em' }}>
+									{`I'm a software engineer with a passion for learning and building
+								new things.`}
+								</p>
+							</Segment>
+						</Grid.Column>
+					</Grid.Row>
+					<Grid.Row stretched columns={2}>
+						<Grid.Column style={{ padding: '5em' }} color="blue">
+							<List inverted>
+								<List.Item>
+									<List.Icon name="code" size="huge"></List.Icon>
+									<List.Content>
+										<List.Header as="h2">Ambitious Web Developer</List.Header>
+										<List.Description style={{ fontSize: '1.33em' }}>
+											Self-Motivated, Self-Driven, 10+ Years of Experience
+											working with HTML, CSS, JS, React, Node, Express, MongoDB,
+											MySQL, and more.
+										</List.Description>
+									</List.Content>
+								</List.Item>
+							</List>
+						</Grid.Column>
+						<Grid.Column style={{ padding: '5em' }} color="orange">
+							<List inverted>
+								<List.Item>
+									<List.Icon name="fire" size="huge"></List.Icon>
+									<List.Content>
+										<List.Header as="h2">
+											Professional Fire Performer
+										</List.Header>
+										<List.Description style={{ fontSize: '1.23em' }}>
+											I have Always been Mesmerised by the Power of Fire, Ever
+											since I was Young. This Intense Passion for Heat and Flame
+											has led to me performing in a Diverse assortment of
+											Venues. Everything from Nuanced little Get-Togethers to
+											Large Scale Events.
+										</List.Description>
+									</List.Content>
+								</List.Item>
+							</List>
+						</Grid.Column>
+					</Grid.Row>
+					<Grid.Row>
+						<Grid.Column style={{ padding: '5em' }} width={16} color="violet">
+							<List inverted>
+								<List.Item>
+									<List.Icon name="computer" size="huge"></List.Icon>
+									<List.Content>
+										<List.Header as="h2">
+											Experienced Computer Hardware Technician
+										</List.Header>
+										<List.Description style={{ fontSize: '1.33em' }}>
+											Specialist in PC Hardware, Networking, and IT Support.
+											Also proficient with <b>Internet of Things (IoT)450</b>{' '}
+											devices.
+										</List.Description>
+									</List.Content>
+								</List.Item>
+							</List>
+						</Grid.Column>
+					</Grid.Row>
+					<Divider />
 					<Grid.Row>
 						<Grid.Column width={16}>
-							<Header
-								inverted
-								color="orange"
-								as="h3"
-								style={{ fontSize: '2em' }}
-							>
-								Professional Fire Performer
-							</Header>
-							<p style={{ fontSize: '1.33em' }}>
-								Michael started his career in Fire Performing at the age of 16,
-								training with other young professionals through the Cambridge
-								University Fire Troupe. After learning the essentials and
-								gaining experience through Live Performances, he decided to
-								pursue his passion and create an independant business.
-							</p>
+							<Segment basic vertical>
+								<Header inverted as="h3">
+									Some photos from my Google Album
+								</Header>
 
-							<Header inverted color="blue" as="h3" style={{ fontSize: '2em' }}>
-								Full Stack Web Developer
-							</Header>
-							<p style={{ fontSize: '1.33em' }}>
-								{`Frontend, Backend, and Database, I created this site to act as a
-								host for my portfolio, and to showcase my skills.`}
-							</p>
-							<p style={{ fontSize: '1.33em' }}>
-								{`mglk.tech also works as a secure access portal to handle client access to my services.`}
-							</p>
-
-							<Segment
-								inverted
-								basic
-								style={{
-									padding: '4em 0em',
-								}}
-							>
-								<Container text>
-									<Divider
-										inverted
-										as="h4"
-										className="header"
-										horizontal
-										style={{ margin: '3em 0em', textTransform: 'uppercase' }}
-									>
-										<a href="#">Abilities</a>
-									</Divider>
-									<List inverted style={{ fontSize: '1.33em' }}>
-										<List.Item>
-											<List.Icon name="code"></List.Icon>
-											<List.Content>
-												<List.Header>Ambitious Web Developer</List.Header>
-												<List.Description>
-													Self-Motivated, Self-Driven, 10+ Years of Experience
-													working with HTML, CSS, JS, React, Node, Express,
-													MongoDB, MySQL, and more.
-												</List.Description>
-											</List.Content>
-										</List.Item>
-										<List.Item>
-											<List.Icon name="computer"></List.Icon>
-											<List.Content>
-												<List.Header>
-													Experienced Computer Hardware Technician
-												</List.Header>
-												<List.Description>
-													Specialist in PC Hardware, Networking, and IT Support.
-													Also proficient with{' '}
-													<b>Internet of Things (IoT)450</b> devices.
-												</List.Description>
-											</List.Content>
-										</List.Item>
-									</List>
-								</Container>
+								<Gallery />
 							</Segment>
 						</Grid.Column>
 					</Grid.Row>

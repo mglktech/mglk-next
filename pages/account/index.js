@@ -148,5 +148,5 @@ const Page = () => {
 // 	);
 // };
 
-//Page.isAuth = true;
+Page.auth = true;
 export default Page;

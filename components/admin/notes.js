@@ -17,13 +17,16 @@ import {
 } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import { FormHeader } from '../forms/FormComponents';
+import Moment from 'react-moment';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
-	const [createdModule, setCreatedModule] = useState(module || {});
+const NotesEditor = ({ mode, note, createNote, updateNote }) => {
+	const [createdNote, setCreatedNote] = useState(note || {});
 	const [open, setOpen] = useState(false);
 	const handleChange = (e) => {
-		setCreatedModule({
-			...createdModule,
+		setCreatedNote({
+			...createdNote,
 			[e.target.name]: e.target.value,
 		});
 	};
@@ -45,7 +48,7 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 						/>
 					}
 				>
-					<Modal.Header>Create a Module</Modal.Header>
+					<Modal.Header>Create a Note</Modal.Header>
 					<Modal.Content>
 						<Modal.Description>
 							<Form>
@@ -54,43 +57,16 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 										label="Name"
 										name="name"
 										onChange={handleChange}
-										placeholder="Module Name"
+										placeholder="Note Name"
 										fluid
 									/>
 								</Form.Field>
-								<Form.Field>
-									<Input
-										label="Icon"
-										icon="wrench"
-										name="icon"
-										onChange={handleChange}
-										placeholder="wrench"
-										fluid
-									/>
-								</Form.Field>
+
 								<Form.Field>
 									<TextArea
 										name="description"
 										onChange={handleChange}
-										placeholder="Module Description"
-									/>
-								</Form.Field>
-								<Form.Field>
-									<Input
-										label="Public path"
-										name="path"
-										onChange={handleChange}
-										placeholder={`/`}
-										fluid
-									/>
-								</Form.Field>
-								<Form.Field>
-									<Input
-										label="API path"
-										name="apiPath"
-										onChange={handleChange}
-										placeholder={`/`}
-										fluid
+										placeholder="Note Description"
 									/>
 								</Form.Field>
 							</Form>
@@ -105,7 +81,7 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 							labelPosition="right"
 							icon="checkmark"
 							onClick={() => {
-								createModule(createdModule);
+								createNote(createdNote);
 								setOpen(false);
 							}}
 							positive
@@ -131,7 +107,7 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 						/>
 					}
 				>
-					<Modal.Header>Editing {createdModule.name}</Modal.Header>
+					<Modal.Header>Editing {createdNote.name}</Modal.Header>
 					<Modal.Content>
 						<Modal.Description>
 							<Form>
@@ -140,48 +116,18 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 										label="Name"
 										name="name"
 										onChange={handleChange}
-										placeholder="Module Name"
-										defaultValue={createdModule.name}
+										placeholder="Note Name"
+										defaultValue={createdNote.name}
 										fluid
 									/>
 								</Form.Field>
-								<Form.Field>
-									<Input
-										label="Icon"
-										icon="wrench"
-										name="icon"
-										defaultValue={createdModule.icon}
-										onChange={handleChange}
-										placeholder="wrench"
-										fluid
-									/>
-								</Form.Field>
+
 								<Form.Field>
 									<TextArea
 										name="description"
-										defaultValue={createdModule.description}
+										defaultValue={createdNote.description}
 										onChange={handleChange}
-										placeholder="Module Description"
-									/>
-								</Form.Field>
-								<Form.Field>
-									<Input
-										label="Public path"
-										name="path"
-										defaultValue={createdModule.path}
-										onChange={handleChange}
-										placeholder={`/`}
-										fluid
-									/>
-								</Form.Field>
-								<Form.Field>
-									<Input
-										label="API path"
-										name="apiPath"
-										defaultValue={createdModule.apiPath}
-										onChange={handleChange}
-										placeholder={`/`}
-										fluid
+										placeholder="Note Description"
 									/>
 								</Form.Field>
 							</Form>
@@ -196,7 +142,7 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 							labelPosition="right"
 							icon="checkmark"
 							onClick={() => {
-								updateModule(createdModule);
+								updateNote(createdNote);
 								setOpen(false);
 							}}
 							positive
@@ -209,11 +155,13 @@ const ModulesEditor = ({ mode, module, createModule, updateModule }) => {
 	}
 };
 
-export const ModulesComponent = () => {
-	const [modules, setModules] = useState([]);
+export const NotesComponent = ({ archived = false }) => {
+	const [notes, setNotes] = useState([]);
 	const [refresh, setRefresh] = useState(false);
-	const createModule = async (body) => {
-		const resp = await fetch('/api/modules', {
+	const [archivedCount, setArchivedCount] = useState(0);
+	const router = useRouter();
+	const createNote = async (body) => {
+		const resp = await fetch('/api/notes', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -222,11 +170,16 @@ export const ModulesComponent = () => {
 			body: JSON.stringify(body),
 		});
 		const response = await resp.json();
-		console.log(response);
+		//console.log(response);
 		setRefresh(true);
 	};
-	const updateModule = async (body) => {
-		const resp = await fetch(`/api/modules/${body._id}`, {
+	const toggleArchived = async (_id, archived) => {
+		//console.log(`updateNote: ${_id}`);
+		await updateNote({ _id, archived });
+		setRefresh(true);
+	};
+	const updateNote = async (body) => {
+		const resp = await fetch(`/api/notes/${body._id}`, {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -238,8 +191,8 @@ export const ModulesComponent = () => {
 		//console.log(response);
 		setRefresh(true);
 	};
-	const deleteModule = async (_id) => {
-		const resp = await fetch(`/api/modules/${_id}`, {
+	const deleteNote = async (_id) => {
+		const resp = await fetch(`/api/notes/${_id}`, {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -249,49 +202,96 @@ export const ModulesComponent = () => {
 		const response = await resp.json();
 		setRefresh(true);
 	};
-
-	const fetchModules = async () => {
-		const resp = await fetch('/api/modules');
+	const countArchivedNotes = async () => {
+		const archivedCountResp = await fetch(`/api/notes/archive`, {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ count: true }),
+		});
+		const archivedCount = await archivedCountResp.json();
+		setArchivedCount(archivedCount.data);
+	};
+	const fetchNotes = async () => {
+		let resp;
+		if (archived) {
+			resp = await fetch('/api/notes/archive');
+		} else {
+			resp = await fetch('/api/notes/');
+		}
 		const response = await resp.json();
-		console.log(response.data);
-		setModules(response.data);
+		//console.log(response.data);
+		setNotes(response.data);
 		setRefresh(false);
 	};
 	useEffect(() => {
-		fetchModules();
+		countArchivedNotes();
+		fetchNotes();
 	}, []);
 	if (refresh) {
-		fetchModules();
+		countArchivedNotes();
+		fetchNotes();
 	}
 
 	return (
 		<Form>
-			<Segment>
+			<Segment padded>
 				<Form.Field>
 					<FormHeader
-						content={`Modules`}
-						icon="wrench"
-						sub="The Front End for your content!"
+						content={archived ? 'Notes Archive' : 'Active Notes'}
+						icon="file"
+						sub=""
 						divider
 					/>
 				</Form.Field>
 
 				<Form.Field>
-					<ModulesEditor mode="create" createModule={createModule} />
+					{archived ? (
+						<>
+							<Button
+								// size="tiny"
+								content="Back"
+								icon="left arrow"
+								labelPosition="left"
+								onClick={() => router.push('/admin/notes')}
+							/>
+						</>
+					) : (
+						<>
+							<NotesEditor mode="create" createNote={createNote} />
+						</>
+					)}
 				</Form.Field>
 				<Form.Field className="pt-2">
-					<ModulesList
-						updateModule={updateModule}
-						modules={modules}
-						deleteModule={deleteModule}
+					<NotesList
+						updateNote={updateNote}
+						notes={notes}
+						deleteNote={deleteNote}
+						archived={archived}
+						toggleArchived={toggleArchived}
 					/>
 				</Form.Field>
+				{archived ? (
+					<></>
+				) : (
+					<>
+						<Label>
+							There are <b>{archivedCount}</b> more notes in your archive. (
+							<Link href="/admin/notes/archive">
+								<a>view</a>
+							</Link>
+							)
+						</Label>
+					</>
+				)}
 			</Segment>
 		</Form>
 	);
 };
 
-const ConfirmModuleDeletion = ({ module, deleteModule }) => {
+const ConfirmNoteDeletion = ({ note, deleteNote }) => {
 	const [open, setOpen] = useState(false);
 	return (
 		<Modal
@@ -310,10 +310,10 @@ const ConfirmModuleDeletion = ({ module, deleteModule }) => {
 				/>
 			}
 		>
-			<Modal.Header>Delete Module</Modal.Header>
+			<Modal.Header>Delete Note</Modal.Header>
 			<Modal.Content>
 				<Modal.Description>
-					<p>Are you sure you want to delete this module?</p>
+					<p>Are you sure you want to delete this note?</p>
 				</Modal.Description>
 			</Modal.Content>
 			<Modal.Actions>
@@ -325,7 +325,7 @@ const ConfirmModuleDeletion = ({ module, deleteModule }) => {
 					labelPosition="right"
 					icon="trash"
 					onClick={() => {
-						deleteModule(module._id);
+						deleteNote(note._id);
 						setOpen(false);
 					}}
 					color="red"
@@ -335,52 +335,66 @@ const ConfirmModuleDeletion = ({ module, deleteModule }) => {
 	);
 };
 
-const ModulesList = ({ modules, deleteModule, updateModule }) => {
+const NotesList = ({
+	notes,
+	deleteNote,
+	updateNote,
+	archived = false,
+	toggleArchived,
+}) => {
 	return (
 		<>
-			{modules.map((module) => {
+			{notes.map((note) => {
+				const { _id } = note;
 				return (
-					<Segment key={module._id}>
+					<Segment key={note._id} style={{ paddingBottom: '3em' }}>
 						<Header as="h3">
-							<Icon name={module.icon} />
-							<Header.Content>{module.name}</Header.Content>
+							<Header.Content>{note.name}</Header.Content>
 
 							<Header.Subheader>
-								<p>{module.description}</p>
+								<Moment format="DD-MM-YYYY @HH:mm" date={note.createdAt} />
+								{` -> `}
+								<Moment date={note.createdAt} fromNow />
 							</Header.Subheader>
 						</Header>
 						<Label attached="bottom right">
-							_id: <Label.Detail>{module._id}</Label.Detail>
+							_id: <Label.Detail>{note._id}</Label.Detail>
 						</Label>
-						<Form>
-							<Form.Group>
-								<Label>
-									Client Access Path:<Label.Detail>{module.path}</Label.Detail>
-								</Label>
-								<Label>
-									API Access Path:<Label.Detail>{module.apiPath}</Label.Detail>
-								</Label>
-							</Form.Group>
-						</Form>
-						<Form.Field>
-							<Header as="h5">Roles</Header>
-							(No Roles Assigned)
-						</Form.Field>
-						<Form.Field label="Controls"></Form.Field>
-						<ModulesEditor
-							mode="update"
-							module={module}
-							updateModule={updateModule}
-						/>
-						<ConfirmModuleDeletion
-							module={module}
-							deleteModule={deleteModule}
-						/>
+						<p>{note.description}</p>
 
-						<Grid columns={2}>
-							<Grid.Column width={12}></Grid.Column>
-							<Grid.Column width={4} textAlign="right"></Grid.Column>
-						</Grid>
+						{archived ? (
+							<>
+								<Button
+									size="tiny"
+									color="green"
+									content="Restore"
+									icon="edit outline"
+									labelPosition="right"
+									onClick={() => {
+										toggleArchived(note._id, !!!note.archived);
+									}}
+								/>
+								<ConfirmNoteDeletion note={note} deleteNote={deleteNote} />
+							</>
+						) : (
+							<>
+								<NotesEditor
+									mode="update"
+									note={note}
+									updateNote={updateNote}
+								/>
+								<Button
+									size="tiny"
+									color="grey"
+									content="Archive"
+									icon="edit outline"
+									labelPosition="right"
+									onClick={() => {
+										toggleArchived(note._id, !!!note.archived);
+									}}
+								/>
+							</>
+						)}
 					</Segment>
 				);
 			})}
