@@ -3,9 +3,9 @@
 // https://github.com/theodorusclarence/now-playing-spotify/blob/main/pages/api/spotify.js
 // With special thanks to Theodorus Clarence for the inspiration and code!
 
-import { getNowPlaying, nowPlaying } from '../../../lib/spotify';
+import { nowPlaying } from '../../../lib/spotify';
 
-const Page = async (req, res) => {
+const Page = async (_, res) => {
 	const response = await nowPlaying();
 
 	res.status(200).json(response);
