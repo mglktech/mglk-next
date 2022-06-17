@@ -17,14 +17,19 @@ import {
 	Checkbox,
 	Form,
 	Dropdown,
+	Message,
 } from 'semantic-ui-react';
+import Marquee from 'react-fast-marquee';
+
+const getData = async () => {
+	const res = await fetch('/api/spotify/');
+	return await res.json();
+};
 
 const SpotifyNavWidget = ({ mobile }) => {
 	const [widgetData, setWidgetData] = useState(null);
 	const fetchWidgetData = async () => {
-		const res = await fetch('/api/spotify');
-		const data = await res.json();
-		//console.log(data);
+		const data = await getData();
 		setWidgetData(data);
 	};
 	useEffect(() => {
@@ -74,21 +79,59 @@ const SpotifyNavWidget = ({ mobile }) => {
 };
 
 const SpotifyNavAlert = () => {
-	<div className="flex flex-row items-center space-x-2 pr-2">
-		<div
-			style={{
-				background: `url('${'123'}') center / cover no-repeat`,
-				height: '30px',
-				aspectRatio: '1/1',
-			}}
-		/>
-		<span className="font-bold tracking-wide">{'123'}</span>
-	</div>;
-};
+	const [widgetData, setWidgetData] = useState(null);
+	const fetchWidgetData = async () => {
+		const data = await getData();
+		setWidgetData(data);
+	};
+	useEffect(() => {
+		fetchWidgetData();
+		const interval = setInterval(() => {
+			fetchWidgetData();
+		}, 5000);
 
-const getData = async () => {
-	const res = await fetch('/api/spotify/');
-	return await res.json();
+		return () => clearInterval(interval);
+	}, []);
+	switch (widgetData?.isPlaying) {
+		case true:
+			return (
+				<a target="_blank" rel="noreferrer" href={widgetData?.songUrl}>
+					<div
+						className="flex flex-row items-center align-middle text-white space-x-2 p-1 "
+						style={{ backgroundColor: 'green' }}
+					>
+						<Marquee
+							className="flex flex-row items-center align-middle tracking-wide flex-shrink-0"
+							gradient={false}
+						>
+							<Icon fitted name="spotify" size="big" className="px-2" />
+							{/* This container here should scroll it's contents from left to right */}
+							{`Spotify - Michael is Listening to `}
+							<div
+								style={{
+									marginLeft: `0.5rem`,
+									marginRight: `0.5rem`,
+									background: `url('${widgetData?.albumImageUrl}') center / cover no-repeat`,
+									height: '30px',
+									aspectRatio: '1/1',
+								}}
+							/>
+							{` ` +
+								widgetData?.title +
+								` - ` +
+								widgetData?.artist +
+								` - (Album: ` +
+								widgetData?.album +
+								`)`}
+						</Marquee>
+					</div>
+				</a>
+			);
+		case false:
+			return <></>;
+		default:
+			return <></>;
+	}
 };
 
 export { SpotifyNavWidget, SpotifyNavAlert };
