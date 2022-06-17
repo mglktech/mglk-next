@@ -20,6 +20,7 @@ import {
 	Checkbox,
 	Form,
 	Dropdown,
+	Message,
 } from 'semantic-ui-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -38,10 +39,11 @@ import { useSession } from 'next-auth/react';
 export const PageContent = ({ children }) => {
 	const [activeItem, changeActiveItem] = useState();
 	return (
-		<>
+		<div>
 			<NavBar />
+
 			{children}
-		</>
+		</div>
 	);
 };
 PageContent.propTypes = {
@@ -83,59 +85,54 @@ const NavbarMobile = () => {
 	const [visible, setVisible] = useState(false);
 
 	return (
-		<Menu
-			inverted
-			fluid
-			compact
-			className="rounded-none"
-			fixed="top"
-			style={{ height: '50px' }}
-		>
-			<Menu.Item>
-				<Header as="a" href="/" inverted>
-					mglk.tech
-				</Header>
-			</Menu.Item>
-			<Menu.Item>
-				<Dropdown icon="sidebar">
-					<Dropdown.Menu>
-						<NavMenuItems />
-					</Dropdown.Menu>
-				</Dropdown>
-			</Menu.Item>
-			{/* <NavMenuItems /> */}
+		<div style={{ position: 'fixed', top: '0', width: '100%', zIndex: '1' }}>
+			<Menu inverted fluid compact style={{ borderRadius: '0px' }}>
+				<Menu.Item>
+					<Header as="a" href="/" inverted>
+						mglk.tech
+					</Header>
+				</Menu.Item>
+				<Menu.Item>
+					<Dropdown icon="sidebar">
+						<Dropdown.Menu>
+							<NavMenuItems />
+						</Dropdown.Menu>
+					</Dropdown>
+				</Menu.Item>
+				{/* <NavMenuItems /> */}
 
-			<Menu.Item position="right">
-				<SpotifyNavWidget mobile />
-				<UserComponent mobile />
-			</Menu.Item>
-		</Menu>
+				<Menu.Item position="right">
+					<UserComponent mobile />
+				</Menu.Item>
+			</Menu>
+			<SpotifyNavAlert />
+		</div>
 	);
 };
 
 const NavbarDesktop = () => {
 	return (
-		<Menu
-			inverted
-			fluid
-			compact
-			className="rounded-none"
-			fixed="top"
-			style={{ height: '50px' }}
-		>
-			<Menu.Item>
-				<Header as="a" href="/" inverted>
-					mglk.tech
-				</Header>
-			</Menu.Item>
-
-			<NavMenuItems />
-
-			<Menu.Item position="right">
-				<SpotifyNavWidget />
-				<UserComponent />
-			</Menu.Item>
-		</Menu>
+		<div style={{ position: 'fixed', top: '0', width: '100%', zIndex: '1' }}>
+			<Menu
+				inverted
+				fluid
+				compact
+				className="rounded-none"
+				style={{ borderRadius: '0px' }}
+			>
+				<Menu.Item>
+					<Header as="a" href="/" inverted>
+						mglk.tech
+					</Header>
+				</Menu.Item>
+				<NavMenuItems />
+				<Menu.Item position="right">
+					{/* <SpotifyNavWidget /> */}
+					<UserComponent />
+				</Menu.Item>
+			</Menu>
+			<SpotifyNavAlert />
+		</div>
 	);
 };
 
