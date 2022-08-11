@@ -1,7 +1,9 @@
 //import '../styles/globals.css'
 import '/styles/globals.css';
-import '/styles/github-markdown.css';
+//import '/styles/github-markdown.css';
 import 'semantic-ui-css/semantic.min.css';
+import '@uiw/react-md-editor/markdown-editor.css';
+import '@uiw/react-markdown-preview/markdown.css';
 import { SessionProvider, useSession, getSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { isAuth, isAdmin } from '../lib/auth';

@@ -1,5 +1,6 @@
 import {
 	Form,
+	Card,
 	Checkbox,
 	Button,
 	Label,
@@ -13,6 +14,7 @@ import {
 	Modal,
 	Input,
 	Divider,
+	Dropdown,
 	TextArea,
 } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
@@ -20,6 +22,7 @@ import { FormHeader } from '../forms/FormComponents';
 import Moment from 'react-moment';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { MDEditor, MDPreview } from '../MDEditor';
 
 const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 	const [createdNote, setCreatedNote] = useState(note || {});
@@ -34,7 +37,7 @@ const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 		case 'create':
 			return (
 				<Modal
-					size="mini"
+					// size="mini"
 					className="flex flex-col justify-center "
 					onClose={() => setOpen(false)}
 					onOpen={() => setOpen(true)}
@@ -63,11 +66,18 @@ const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 								</Form.Field>
 
 								<Form.Field>
-									<TextArea
+									<div data-color-mode="light">
+										<MDEditor
+											name="contents"
+											// value={createdNote.description}
+											// onChange={handleChange}
+										/>
+									</div>
+									{/* <TextArea
 										name="description"
 										onChange={handleChange}
 										placeholder="Note Description"
-									/>
+									/> */}
 								</Form.Field>
 							</Form>
 						</Modal.Description>
@@ -92,7 +102,7 @@ const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 		case 'update':
 			return (
 				<Modal
-					size="mini"
+					// size="mini"
 					className="flex flex-col justify-center "
 					onClose={() => setOpen(false)}
 					onOpen={() => setOpen(true)}
@@ -110,27 +120,21 @@ const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 					<Modal.Header>Editing {createdNote.name}</Modal.Header>
 					<Modal.Content>
 						<Modal.Description>
-							<Form>
-								<Form.Field>
-									<Input
-										label="Name"
-										name="name"
-										onChange={handleChange}
-										placeholder="Note Name"
-										defaultValue={createdNote.name}
-										fluid
-									/>
-								</Form.Field>
-
-								<Form.Field>
-									<TextArea
-										name="description"
-										defaultValue={createdNote.description}
-										onChange={handleChange}
-										placeholder="Note Description"
-									/>
-								</Form.Field>
-							</Form>
+							<Input
+								label="Name"
+								name="name"
+								onChange={handleChange}
+								placeholder="Note Name"
+								defaultValue={createdNote.name}
+								fluid
+							/>
+							<div data-color-mode="light">
+								<MDEditor
+									name="description"
+									value={createdNote.description}
+									onChange={handleChange}
+								/>
+							</div>
 						</Modal.Description>
 					</Modal.Content>
 					<Modal.Actions>
@@ -156,7 +160,7 @@ const NotesEditor = ({ mode, note, createNote, updateNote }) => {
 };
 
 export const NotesComponent = ({ archived = false }) => {
-	const [notes, setNotes] = useState([]);
+	const [notes, setNotes] = useState(['']);
 	const [refresh, setRefresh] = useState(false);
 	const [archivedCount, setArchivedCount] = useState(0);
 	const router = useRouter();
@@ -265,7 +269,14 @@ export const NotesComponent = ({ archived = false }) => {
 					)}
 				</Form.Field>
 				<Form.Field className="pt-2">
-					<NotesList
+					{/* <NotesList
+						updateNote={updateNote}
+						notes={notes}
+						deleteNote={deleteNote}
+						archived={archived}
+						toggleArchived={toggleArchived}
+					/> */}
+					<NoteCardGroup
 						updateNote={updateNote}
 						notes={notes}
 						deleteNote={deleteNote}
@@ -335,6 +346,93 @@ const ConfirmNoteDeletion = ({ note, deleteNote }) => {
 	);
 };
 
+const NoteCard = ({ note, children }) => {
+	return (
+		<Card>
+			<Card.Content>
+				<Card.Header className="pr-5">
+					<Header as="h3">{note.name}</Header>
+				</Card.Header>
+				<Card.Meta>
+					<Moment format="DD-MM-YYYY @HH:mm" date={note.createdAt} />
+					{` -> `}
+					<Moment date={note.createdAt} fromNow />
+				</Card.Meta>
+				<Card.Description>
+					<div data-color-mode="light" className="pb-2">
+						<MDPreview source={note.description} />
+					</div>
+				</Card.Description>
+			</Card.Content>
+			{/* <Card.Content extra></Card.Content> */}
+			{children}
+		</Card>
+	);
+};
+
+const NoteCardGroup = ({
+	notes,
+	deleteNote,
+	updateNote,
+	archived = false,
+	toggleArchived,
+}) => {
+	return (
+		<>
+			<Card.Group>
+				{notes.map((note) => {
+					return (
+						<>
+							<NoteCard key={note._id} note={note}>
+								<Label attached="top right" color="white">
+									<Dropdown item icon="bars">
+										<Dropdown.Menu>
+											{archived ? (
+												<>
+													<Dropdown.Item
+														onClick={() => {
+															toggleArchived(note._id, !!!note.archived);
+														}}
+													>
+														Restore
+													</Dropdown.Item>
+													<Dropdown.Item>
+														<ConfirmNoteDeletion
+															note={note}
+															deleteNote={deleteNote}
+														/>
+													</Dropdown.Item>
+												</>
+											) : (
+												<>
+													<Dropdown.Item>
+														<NotesEditor
+															mode="update"
+															note={note}
+															updateNote={updateNote}
+														/>
+													</Dropdown.Item>
+													<Dropdown.Item
+														onClick={() => {
+															toggleArchived(note._id, !!!note.archived);
+														}}
+													>
+														Archive
+													</Dropdown.Item>
+												</>
+											)}
+										</Dropdown.Menu>
+									</Dropdown>
+								</Label>
+							</NoteCard>
+						</>
+					);
+				})}
+			</Card.Group>
+		</>
+	);
+};
+
 const NotesList = ({
 	notes,
 	deleteNote,
@@ -346,6 +444,7 @@ const NotesList = ({
 		<>
 			{notes.map((note) => {
 				const { _id } = note;
+				const desc = 'some kind of general description';
 				return (
 					<Segment key={note._id} style={{ paddingBottom: '3em' }}>
 						<Header as="h3">
@@ -360,7 +459,9 @@ const NotesList = ({
 						<Label attached="bottom right">
 							_id: <Label.Detail>{note._id}</Label.Detail>
 						</Label>
-						<p>{note.description}</p>
+						<div data-color-mode="light" className="pb-2">
+							<MDPreview source={note.description} />
+						</div>
 
 						{archived ? (
 							<>

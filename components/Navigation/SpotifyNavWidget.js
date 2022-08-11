@@ -78,7 +78,7 @@ const SpotifyNavWidget = ({ mobile }) => {
 	);
 };
 
-const SpotifyNavAlert = () => {
+const SpotifyNavAlert = ({ mode }) => {
 	const [widgetData, setWidgetData] = useState(null);
 	const fetchWidgetData = async () => {
 		const data = await getData();
@@ -98,7 +98,7 @@ const SpotifyNavAlert = () => {
 				<a target="_blank" rel="noreferrer" href={widgetData?.songUrl}>
 					<div
 						className="flex flex-row items-center align-middle text-white space-x-2 p-1 "
-						style={{ backgroundColor: 'green' }}
+						style={mode ? {} : { backgroundColor: 'green' }}
 					>
 						<Marquee
 							className="flex flex-row items-center align-middle tracking-wide flex-shrink-0"

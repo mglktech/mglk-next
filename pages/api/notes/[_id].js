@@ -1,4 +1,4 @@
-import Notes from '../../../models/Notes';
+import Notes from '../../../models/notes_model';
 import dbConnect from '../../../lib/dbConnect';
 import { getSession } from 'next-auth/react';
 const index = async (req, res) => {
@@ -21,15 +21,13 @@ const index = async (req, res) => {
 	if (!user) {
 		handleError('No user found');
 	}
-	if (user.userType !== 'admin') {
-		handleError('User is not an admin');
-	}
+	const { _id: userId } = user;
 	await dbConnect();
 	switch (method) {
 		case 'GET':
 			try {
 				console.log(`/api/notes/${_id}:: GET ::`);
-				const noteData = await Notes.findById(_id).lean();
+				const noteData = await Notes.find({ _id, author: userId }).lean();
 				res.status(200).json({ success: true, data: noteData });
 				return;
 			} catch (error) {
@@ -45,7 +43,7 @@ const index = async (req, res) => {
 		case 'PUT':
 			try {
 				console.log(`/api/notes/${_id}:: PUT ::`, body);
-				await Notes.findOneAndUpdate({ _id }, body);
+				await Notes.findOneAndUpdate({ _id, author: userId }, body);
 				res.status(200).json({ success: true });
 				//console.log(result);
 				return;
@@ -55,7 +53,10 @@ const index = async (req, res) => {
 		case 'DELETE':
 			try {
 				console.log(`/api/notes/${_id}:: DELETE ::`);
-				const data = await Notes.findOneAndDelete({ _id }).exec();
+				const data = await Notes.findOneAndDelete({
+					_id,
+					author: userId,
+				}).exec();
 				res.status(200).json({ success: true, data });
 				return;
 			} catch (error) {

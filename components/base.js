@@ -126,12 +126,14 @@ const NavbarDesktop = () => {
 					</Header>
 				</Menu.Item>
 				<NavMenuItems />
+				<Menu.Item>
+					<SpotifyNavAlert mode="desktop" />
+				</Menu.Item>
 				<Menu.Item position="right">
 					{/* <SpotifyNavWidget /> */}
 					<UserComponent />
 				</Menu.Item>
 			</Menu>
-			<SpotifyNavAlert />
 		</div>
 	);
 };

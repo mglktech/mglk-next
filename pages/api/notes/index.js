@@ -17,7 +17,7 @@ delete a note
 Note Object ID can be used in this instance as advanced permissions are required
 */
 
-import Notes from '../../../models/Notes';
+import Notes from '../../../models/notes_model';
 import dbConnect from '../../../lib/dbConnect';
 import { getSession } from 'next-auth/react';
 const index = async (req, res) => {
@@ -36,14 +36,12 @@ const index = async (req, res) => {
 	if (!user) {
 		handleError('No user found');
 	}
-	if (user.userType !== 'admin') {
-		handleError('User is not an admin');
-	}
+	const { _id } = user;
 	await dbConnect();
 	switch (method) {
 		case 'GET':
 			try {
-				const noteData = await Notes.find({ archived: false })
+				const noteData = await Notes.find({ archived: false, author: _id })
 					.sort({ createdAt: -1 })
 					.lean();
 				res.status(200).json({ success: true, data: noteData });
@@ -54,8 +52,8 @@ const index = async (req, res) => {
 		case 'POST':
 			try {
 				console.log('/api/notes/[body]:: POST ::', body);
-				await new Notes(body).save();
-				res.status(201).json({ success: true });
+				const newNote = await new Notes(body).save();
+				res.status(201).json({ success: true, _id: newNote._id });
 				//console.log(result);
 				return;
 			} catch (error) {
@@ -66,7 +64,7 @@ const index = async (req, res) => {
 				const { _id } = body;
 				console.log('/api/notes/[body]:: PUT ::', body);
 				await Notes.findOneAndUpdate({ _id }, body);
-				res.status(200).json({ success: true });
+				res.status(200).json({ success: true, _id });
 				//console.log(result);
 				return;
 			} catch (error) {

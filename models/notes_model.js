@@ -5,7 +5,13 @@ const NoteSchema = new Schema(
 		name: {
 			type: String,
 		},
+		title: {
+			type: String,
+		},
 		description: {
+			type: String,
+		},
+		contents: {
 			type: String,
 		},
 		archived: {
