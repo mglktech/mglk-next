@@ -127,15 +127,17 @@ const NoteCard = ({ note }) => {
 const NoteCardGroup = ({ notes }) => {
 	return (
 		<>
-			<Card.Group centered>
-				{notes.map((note) => {
-					return (
-						<>
-							<NoteCard key={note._id} note={note} />
-						</>
-					);
-				})}
-			</Card.Group>
+			{notes ? (
+				<>
+					<Card.Group centered>
+						{notes.map((note) => {
+							return <NoteCard key={note._id} note={note} />;
+						})}
+					</Card.Group>
+				</>
+			) : (
+				<>loading...</>
+			)}
 		</>
 	);
 };
@@ -238,8 +240,11 @@ const NoteCardGroup = ({ notes }) => {
 const CreateNote = () => {
 	const { data: session, status } = useSession();
 	const router = useRouter();
-	const [createdNote, setCreatedNote] = useState({});
+	const [createdNote, setCreatedNote] = useState({
+		author: session?.user?._id,
+	});
 	const handleChange = (e) => {
+		console.log(e);
 		setCreatedNote({
 			...createdNote,
 			[e.target.name]: e.target.value,
@@ -275,12 +280,7 @@ const CreateNote = () => {
 						placeholder="Enter Title"
 						onChange={handleChange}
 					/>
-					<Form.Input
-						type="hidden"
-						id="author"
-						value={session?.user?._id || ''}
-						onChange={handleChange}
-					/>
+
 					<Form.Button content="Create" onClick={() => doNoteCreation()} />
 				</Form>
 			</Segment>
@@ -403,7 +403,7 @@ const MainMenuItems = ({
 						icon="wrench"
 						content="Edit"
 						as="a"
-						href={`notes?action=edit&id=` + noteData._id}
+						href={`notes?action=edit&id=` + noteData?._id}
 					/>
 				</>
 			);
@@ -422,12 +422,11 @@ const MainMenuItems = ({
 								position="right"
 								icon="save"
 								content={
-									editorContentsValue === noteData.contents ? `Saved!` : `Save`
+									editorContentsValue === noteData?.contents ? `Saved!` : `Save`
 								}
-								disabled={editorContentsValue === noteData.contents}
+								disabled={editorContentsValue === noteData?.contents}
 								onClick={() => {
 									updateNote({
-										_id: noteData._id,
 										contents: editorContentsValue,
 									});
 								}}
@@ -435,7 +434,7 @@ const MainMenuItems = ({
 						}
 					>
 						{` Last Saved -> `}
-						<Moment date={noteData.updatedAt} fromNow />
+						<Moment date={noteData?.updatedAt} fromNow />
 					</Popup>
 				</>
 			);
@@ -503,7 +502,7 @@ const MainContainer = ({ query }) => {
 	const fetchNoteData = async (id) => {
 		const resp = await fetch(`/api/notes/${id}`).then((res) => res.json());
 		// console.log(resp.data[0]);
-		setNoteData(resp.data[0]);
+		setNoteData(resp.data);
 	};
 	const countArchivedNotes = async () => {
 		const r = await fetch(`/api/notes/archive`, {
@@ -517,8 +516,7 @@ const MainContainer = ({ query }) => {
 		setArchivedCount(r.data);
 	};
 	const updateNote = async (updatedNoteData) => {
-		const resp = await fetch(`/api/notes/${noteData._id}`, {
-			// Security measure, don't allow updating other people's notes
+		const resp = await fetch(`/api/notes/${id}`, {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -527,7 +525,7 @@ const MainContainer = ({ query }) => {
 			body: JSON.stringify(updatedNoteData),
 		});
 		const response = await resp.json();
-		// console.log(response);
+		console.log(response);
 		setRefresh(true);
 	};
 
@@ -562,7 +560,6 @@ const MainContainer = ({ query }) => {
 					/>
 				</Menu>
 
-				<Divider />
 				<Main
 					query={query}
 					noteData={noteData}
@@ -572,7 +569,6 @@ const MainContainer = ({ query }) => {
 					setEditorContentsValue={setEditorContentsValue}
 				/>
 				<Divider />
-
 				<Label>
 					There are <b>{archivedCount}</b> more notes in your archive. (
 					<Link href="/account/notes/archive">

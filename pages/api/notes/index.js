@@ -51,25 +51,26 @@ const index = async (req, res) => {
 			}
 		case 'POST':
 			try {
-				console.log('/api/notes/[body]:: POST ::', body);
-				const newNote = await new Notes(body).save();
+				const note = { ...body, author: user._id };
+				console.log('/api/notes/:: POST ::', note);
+				const newNote = await new Notes(note).save();
 				res.status(201).json({ success: true, _id: newNote._id });
 				//console.log(result);
 				return;
 			} catch (error) {
 				handleError(error);
 			}
-		case 'PUT':
-			try {
-				const { _id } = body;
-				console.log('/api/notes/[body]:: PUT ::', body);
-				await Notes.findOneAndUpdate({ _id }, body);
-				res.status(200).json({ success: true, _id });
-				//console.log(result);
-				return;
-			} catch (error) {
-				handleError(error);
-			}
+		// case 'PUT':
+		// 	try {
+		// 		const { _id } = body;
+		// 		console.log('/api/notes/[body]:: PUT ::', body);
+		// 		await Notes.findOneAndUpdate({ _id }, body);
+		// 		res.status(200).json({ success: true, _id });
+		// 		//console.log(result);
+		// 		return;
+		// 	} catch (error) {
+		// 		handleError(error);
+		// 	}
 		case 'DELETE':
 			try {
 				const { _id } = body;

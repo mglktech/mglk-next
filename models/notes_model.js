@@ -19,6 +19,10 @@ const NoteSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		author: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+		},
 	},
 	{ timestamps: true, versionKey: false }
 );
