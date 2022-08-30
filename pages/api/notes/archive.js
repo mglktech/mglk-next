@@ -41,7 +41,7 @@ const index = async (req, res) => {
 	switch (method) {
 		case 'GET':
 			try {
-				const noteData = await Notes.find({ archived: true, author: _id })
+				const noteData = await Notes.find({ archived: true })
 					.sort({ createdAt: -1 })
 					.lean();
 				res.status(200).json({ success: true, data: noteData });

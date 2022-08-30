@@ -337,6 +337,16 @@ const Main = ({
 		const response = await resp.json();
 		setRefresh(true);
 	};
+
+	const ArchiveView = async () => {
+		const notes = await fetch('/api/notes/archive');
+		return (
+			<>
+				<NoteCardGroup notes={notes} />
+			</>
+		);
+	};
+
 	useEffect(() => {
 		if (noteData) {
 			setEditorContentsValue(noteData.contents);
@@ -367,7 +377,11 @@ const Main = ({
 		case 'view':
 			return <ViewContent note={noteData} />;
 		case 'archive':
-			return <></>;
+			return (
+				<>
+					<ArchiveView />
+				</>
+			);
 		default:
 			return (
 				<>
@@ -450,6 +464,7 @@ const MainMenuItems = ({
 					<Menu.Item
 						position="right"
 						as="a"
+						href="?action=archive"
 						icon="archive"
 						content={`Archive (${archivedCount})`}
 					/>
@@ -494,9 +509,13 @@ const MainContainer = ({ query }) => {
 	const [refresh, setRefresh] = useState(false);
 	const [noteData, setNoteData] = useState({});
 	const [notes, setNotes] = useState([]);
-	const fetchNotes = async () => {
-		const response = await fetch('/api/notes/').then((res) => res.json());
-		setNotes(response.data);
+	const fetchNotes = async (archive) => {
+		let res;
+		if (archive) {
+			res = await fetch('/api/notes/archive').then((res) => res.json());
+		}
+		res = await fetch('/api/notes/').then((res) => res.json());
+		setNotes(res.data);
 		setRefresh(false);
 	};
 	const fetchNoteData = async (id) => {

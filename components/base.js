@@ -126,7 +126,7 @@ const NavbarDesktop = () => {
 					</Header>
 				</Menu.Item>
 				<NavMenuItems />
-				<Menu.Item>
+				<Menu.Item className="flex-nowrap">
 					<SpotifyNavAlert mode="desktop" />
 				</Menu.Item>
 				<Menu.Item position="right">
