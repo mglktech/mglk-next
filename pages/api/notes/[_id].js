@@ -28,7 +28,7 @@ const index = async (req, res) => {
 			try {
 				console.log(`/api/notes/${_id}:: GET ::`);
 				const noteData = await Notes.findOne({ _id, author: user._id }).lean();
-				res.status(200).json({ success: true, data: noteData });
+				res.status(200).json(noteData);
 				return;
 			} catch (error) {
 				handleError(error);
@@ -43,8 +43,11 @@ const index = async (req, res) => {
 		case 'PUT':
 			try {
 				console.log(`/api/notes/${_id}:: PUT ::`, body);
-				await Notes.findOneAndUpdate({ _id, author: user._id }, body);
-				res.status(200).json({ success: true });
+				const resp = await Notes.findOneAndUpdate(
+					{ _id, author: user._id },
+					body
+				);
+				res.status(200).json(resp);
 				//console.log(result);
 				return;
 			} catch (error) {
@@ -57,15 +60,13 @@ const index = async (req, res) => {
 					_id,
 					author: user._id,
 				}).exec();
-				res.status(200).json({ success: true, data });
+				res.status(200).json(data);
 				return;
 			} catch (error) {
 				handleError(error);
 			}
 		default:
-			res
-				.status(500)
-				.json({ success: false, message: 'Internal Server Error (500)' });
+			res.status(500).json('Internal Server Error (500)');
 			return;
 	}
 };

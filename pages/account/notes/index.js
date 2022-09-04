@@ -24,14 +24,17 @@ import { useRouter } from 'next/router';
 import { useSession, getSession } from 'next-auth/react';
 import Link from 'next/link';
 import Moment from 'react-moment';
-const MarkdownEditor = dynamic(
+
+import { IndexView } from '../../../components/NoteComponents';
+
+const MarkdownEditorComponent = dynamic(
 	() => import('@uiw/react-md-editor').then((mod) => mod.default),
 	{
 		ssr: false,
 	}
 );
 
-const Markdown = dynamic(
+const MarkdownComponent = dynamic(
 	() => import('@uiw/react-markdown-preview').then((mod) => mod.default),
 	{ ssr: false }
 );
@@ -42,7 +45,7 @@ const MDPreview = ({ source }) => {
 	}
 	return (
 		<div data-color-mode="light">
-			<Markdown source={source} />
+			<MarkdownComponent source={source} />
 		</div>
 	);
 };
@@ -50,7 +53,7 @@ const MDPreview = ({ source }) => {
 const MDEditor = ({ value, onChange }) => {
 	return (
 		<div data-color-mode="light">
-			<MarkdownEditor
+			<MarkdownEditorComponent
 				value={value}
 				onChange={onChange}
 				highlightEnable={true}
@@ -339,7 +342,7 @@ const Main = ({
 	};
 
 	const ArchiveView = async () => {
-		const notes = await fetch('/api/notes/archive');
+		const notes = await fetch('/api/notes/archive').then((res) => res.json());
 		return (
 			<>
 				<NoteCardGroup notes={notes} />
@@ -385,7 +388,8 @@ const Main = ({
 		default:
 			return (
 				<>
-					<NoteCardGroup notes={notes} />
+					<IndexView />
+					{/* <NoteCardGroup notes={notes} /> */}
 				</>
 			);
 	}
@@ -446,10 +450,7 @@ const MainMenuItems = ({
 								}}
 							/>
 						}
-					>
-						{` Last Saved -> `}
-						<Moment date={noteData?.updatedAt} fromNow />
-					</Popup>
+					></Popup>
 				</>
 			);
 		default:
@@ -567,7 +568,8 @@ const MainContainer = ({ query }) => {
 
 	return (
 		<DefaultLayout>
-			<Container fluid className="mt-7 p-5">
+			<IndexView />
+			{/* <Container fluid className="mt-7 p-5">
 				<Header content="Your Notes" as="h1" />
 				<Menu>
 					<MainMenuItems
@@ -595,7 +597,7 @@ const MainContainer = ({ query }) => {
 					</Link>
 					)
 				</Label>
-			</Container>
+			</Container> */}
 		</DefaultLayout>
 	);
 };

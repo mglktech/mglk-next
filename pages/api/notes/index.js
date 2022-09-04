@@ -24,7 +24,7 @@ const index = async (req, res) => {
 	const { method, body } = req;
 
 	const handleError = (err) => {
-		res.status(422).json({ success: false, message: err });
+		res.status(422).json(error);
 		return;
 	};
 
@@ -44,7 +44,7 @@ const index = async (req, res) => {
 				const noteData = await Notes.find({ archived: false, author: _id })
 					.sort({ createdAt: -1 })
 					.lean();
-				res.status(200).json({ success: true, data: noteData });
+				res.status(200).json(noteData);
 				return;
 			} catch (error) {
 				handleError(error);
@@ -54,7 +54,7 @@ const index = async (req, res) => {
 				const note = { ...body, author: user._id };
 				console.log('/api/notes/:: POST ::', note);
 				const newNote = await new Notes(note).save();
-				res.status(201).json({ success: true, _id: newNote._id });
+				res.status(201).json(newNote);
 				//console.log(result);
 				return;
 			} catch (error) {
@@ -75,17 +75,15 @@ const index = async (req, res) => {
 			try {
 				const { _id } = body;
 				console.log('/api/notes/[body]:: DELETE ::', body);
-				await Notes.findOneAndDelete({ _id });
-				res.status(200).json({ success: true });
+				await Notes.findOneAndDelete({ _id, author: user._id });
+				res.status(200);
 				//console.log(result);
 				return;
 			} catch (error) {
 				handleError(error);
 			}
 		default:
-			res
-				.status(500)
-				.json({ success: false, message: 'Internal Server Error (500)' });
+			res.status(500).json('Internal Server Error (500)');
 			return;
 	}
 };
