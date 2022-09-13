@@ -17,6 +17,7 @@ import {
 	Message,
 	Input,
 	Checkbox,
+	Modal,
 } from 'semantic-ui-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -24,7 +25,35 @@ import Moment from 'react-moment';
 import dynamic from 'next/dynamic';
 import useSWR from 'swr';
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = (...args) => {
+	return fetch(...args).then(async (res) => {
+		const json = await res.json();
+		//console.log(json);
+		return json;
+	});
+};
+
+const saver = (body) => {
+	if (body._id) {
+		return fetch(`/api/notes/${body._id}`, {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(body),
+		}).then((res) => res.json());
+	}
+	return fetch('/api/notes', {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(body),
+	}).then((res) => res.json());
+};
+// if body has _id, put in id...
 
 const MarkdownEditorComponent = dynamic(
 	() => import('@uiw/react-md-editor').then((mod) => mod.default),
@@ -40,7 +69,7 @@ const MarkdownComponent = dynamic(
 
 const MDPreview = ({ source }) => {
 	if (typeof source !== 'string') {
-		source = "You didn't pass a string as source";
+		source = '';
 	}
 	return (
 		<div data-color-mode="light">
@@ -63,31 +92,31 @@ const MDEditor = ({ name, value, onChange }) => {
 	);
 };
 
-export const NewNote = () => {
-	const [noteData, setNoteData] = useState({});
+export const NoteEditor = ({ data }) => {
+	const [noteData, setNoteData] = useState(data);
+	//console.log(noteData);
 	const updateNoteData = async (e) => {
 		// console.dir(e);
 		// console.dir({ [e.target.name]: e.target.value });
 		setNoteData({ ...noteData, [e.target.name]: e.target.value });
 	};
+	const performFirstSave = async () => {};
 
 	return (
 		<>
 			<Container text>
 				<Segment>
 					<Form>
-						<Header as="h4">
-							<Icon name="file" />
-							New Note
-						</Header>
+						<NoteOptions noteData={noteData} editMode={true} />
 						<Form.Group grouped>
 							<Form.Field>
 								<Form.Input
 									name="title"
 									label="Title: "
+									value={noteData?.title}
 									onChange={updateNoteData}
 								/>
-								{noteData.title && noteData.title !== '' ? (
+								{noteData?.title && noteData?.title !== '' ? (
 									<></>
 								) : (
 									<>
@@ -109,11 +138,13 @@ export const NewNote = () => {
 									label="Include title in published note"
 									control="input"
 									type="checkbox"
+									disabled
 								/>
 								<Form.Field
 									label="Use encoded note title as publish url"
 									control="input"
 									type="checkbox"
+									disabled
 								/>
 							</Message>
 						</Form.Group>
@@ -121,9 +152,9 @@ export const NewNote = () => {
 					<Header as="h5">Contents:</Header>
 					<div data-color-mode="light">
 						<MarkdownEditorComponent
-							value={noteData.content}
+							value={noteData?.contents}
 							onChange={(e) => {
-								updateNoteData({ target: { name: 'content', value: e } });
+								updateNoteData({ target: { name: 'contents', value: e } });
 							}}
 							highlightEnable={true}
 							height="700px"
@@ -185,65 +216,156 @@ const LibraryView = ({ notes }) => {
 	);
 };
 
-const fetchNotes = async (id) => {
-	if (!id) {
-		const d = await fetch('/api/notes').then((res) => res.json());
-		if (d.success) return d.data;
-	}
-	const d2 = await fetch(`/api/notes/${id}`).then((res) => res.json());
-	if (d2.success) return d2.data;
-	//console.log(json);
-};
-
-const NoteOptions = ({ title, updatedAt }) => {
+const ModalDeleteNote = ({ noteData, trigger }) => {
 	const router = useRouter();
+	const [open, setOpen] = useState(false);
+	const submit = (e) => {
+		e.preventDefault();
+		fetch(`/api/notes/${noteData._id}`, {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(noteData),
+		}).then((res) => res.json());
+		setOpen(false);
+		router.push('/account/notes');
+		// delete this note from the archive
+	};
 	return (
-		<Menu color={`grey`} inverted attached="top" compact secondary>
-			<Menu.Item icon="angle double left" onClick={() => router.back()} />
-			<Menu.Item>
-				<Header as="h2" inverted>
-					{title}
+		<Modal
+			size="mini"
+			className="flex flex-col justify-center "
+			onClose={() => setOpen(false)}
+			onOpen={() => setOpen(true)}
+			open={open}
+			trigger={trigger}
+		>
+			<Modal.Header>Deleting {noteData?.title}</Modal.Header>
+			<Modal.Content>
+				<Modal.Description>
+					Are you sure you want to delete this note?
+					<Divider />
+					Note _id: {noteData?._id}
+				</Modal.Description>
+			</Modal.Content>
 
-					<Header.Subheader>
-						{` Updated `}
-						<Moment date={updatedAt} fromNow />
-					</Header.Subheader>
-				</Header>
-			</Menu.Item>
-			<Menu.Item position="right">
-				<Dropdown item icon="ellipsis horizontal">
-					<Dropdown.Menu>
-						<Dropdown.Item>
-							<Icon name="edit" />
-							{`Modify`}
-						</Dropdown.Item>
-						<Dropdown.Item>
-							<Icon name="archive" />
-							{`Send to Archive`}
-						</Dropdown.Item>
-						<Dropdown.Item>
-							<Icon name="trash" />
-							{`Delete`}
-						</Dropdown.Item>
-					</Dropdown.Menu>
-				</Dropdown>
-			</Menu.Item>
-		</Menu>
+			<Modal.Actions>
+				<Button color="black" onClick={() => setOpen(false)}>
+					No
+				</Button>
+				<Button
+					content="Yes"
+					labelPosition="right"
+					icon="checkmark"
+					onClick={submit}
+					positive
+				/>
+			</Modal.Actions>
+		</Modal>
 	);
 };
 
-export const NoteView = ({ _id }) => {
+const NoteOptions = ({ noteData, editMode }) => {
+	const router = useRouter();
+	const { title, updatedAt, _id } = noteData || '';
+	const saveNote = async () => {
+		console.dir(noteData);
+		const resp = await saver(noteData);
+		console.log(resp);
+		router.push(`/account/notes/${resp._id}/edit`);
+	};
+
+	return (
+		<>
+			<Header as="h4">
+				<Icon name="file" />
+				<Header.Content>
+					{title ? title : 'New Note'}
+					<Header.Subheader>
+						{updatedAt ? (
+							<>
+								{` Updated `}
+								<Moment date={updatedAt} fromNow />{' '}
+							</>
+						) : (
+							<>Not Saved!</>
+						)}
+					</Header.Subheader>
+				</Header.Content>
+			</Header>
+			<Button icon="angle double left" onClick={() => router.back()} />
+			{!editMode ? (
+				<>
+					<Dropdown
+						trigger={<Button icon="ellipsis horizontal"></Button>}
+						direction="left"
+						item
+						icon=""
+					>
+						<Dropdown.Menu>
+							<Dropdown.Item as="a" href={`./${_id}/edit`}>
+								<Icon name="edit" />
+								{`Modify`}
+							</Dropdown.Item>
+							<Dropdown.Item>
+								<Icon name="archive" />
+								{`Send to Archive`}
+							</Dropdown.Item>
+							<ModalDeleteNote
+								noteData={noteData}
+								trigger={
+									<Dropdown.Item>
+										<Icon name="trash" />
+										{`Delete`}
+									</Dropdown.Item>
+								}
+							/>
+						</Dropdown.Menu>
+					</Dropdown>
+
+					<Divider />
+				</>
+			) : (
+				<>
+					<Button
+						floated="right"
+						icon="save"
+						content="Save"
+						onClick={() => saveNote()}
+					/>
+				</>
+			)}
+		</>
+	);
+};
+
+export const NoteEditorView = ({ _id }) => {
+	const { data, error } = useSWR(`/api/notes/${_id ? _id : 'new'}`, fetcher);
+	if (error) return <div>failed to load</div>;
+	if (!data) return <div>loading...</div>;
+	return (
+		<>
+			<NoteEditor data={data} />
+		</>
+	);
+};
+
+export const NoteView = ({ _id = 'undefined' }) => {
 	const { data, error } = useSWR(`/api/notes/${_id}`, fetcher);
 	if (error) return <div>failed to load</div>;
 	if (!data) return <div>loading...</div>;
 	//console.log(data);
 	return (
-		<Container text className="pt-10">
-			<NoteOptions title={data.title} updatedAt={data.updatedAt} />
-			<Segment attached="bottom">
-				<MDPreview source={data.contents} />
-			</Segment>
-		</Container>
+		<>
+			<Container text className="pt-10">
+				<Segment className="overflow-x-scroll">
+					<NoteOptions noteData={data} />
+					<MDPreview source={data.contents} />
+				</Segment>
+			</Container>
+		</>
 	);
 };
 

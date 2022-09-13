@@ -1,12 +1,11 @@
 import { DefaultLayout } from '../../../layouts/DefaultLayout';
-import { NewNote } from '../../../components/NoteComponents';
+import { NoteEditorView } from '../../../components/NoteComponents';
 
 const Page = () => {
 	return (
 		<>
 			<DefaultLayout>
-				<div className="pt-10" />
-				<NewNote />
+				<NoteEditorView />
 			</DefaultLayout>
 		</>
 	);

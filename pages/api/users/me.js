@@ -58,14 +58,7 @@ const index = async (req, res) => {
 
 // Thanks to https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6
 const filterBody = (raw) => {
-	const notAllowed = [
-		'uuid',
-		'email',
-		'password',
-		'__v',
-		'createdAt',
-		'updatedAt',
-	];
+	const notAllowed = ['uuid', 'email', '__v', 'createdAt', 'updatedAt'];
 	const filtered = Object.keys(raw)
 		.filter((key) => !notAllowed.includes(key))
 		.reduce((obj, key) => {

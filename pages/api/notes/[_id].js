@@ -26,6 +26,10 @@ const index = async (req, res) => {
 	switch (method) {
 		case 'GET':
 			try {
+				if (_id == 'new') {
+					res.status(200).json({ title: '', contents: '' });
+					return;
+				}
 				console.log(`/api/notes/${_id}:: GET ::`);
 				const noteData = await Notes.findOne({ _id, author: user._id }).lean();
 				res.status(200).json(noteData);

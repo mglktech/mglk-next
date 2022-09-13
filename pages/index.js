@@ -17,7 +17,7 @@ import {
 export default function Home() {
 	return (
 		<div className="App">
-			<DefaultLayout footer={false} title="mglk.tech">
+			<DefaultLayout title="mglk.tech">
 				<FrontPageHero />
 			</DefaultLayout>
 		</div>
