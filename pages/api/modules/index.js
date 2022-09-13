@@ -17,7 +17,7 @@ delete a module
 Module Object ID can be used in this instance as advanced permissions are required
 */
 
-import Modules from '../../../models/Modules';
+import Modules from '../../../models/modules_model';
 import dbConnect from '../../../lib/dbConnect';
 import { getSession } from 'next-auth/react';
 const index = async (req, res) => {

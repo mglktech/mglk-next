@@ -4,3 +4,5 @@ module.exports = {
 		domains: ['lh3.googleusercontent.com'],
 	},
 };
+const removeImports = require('next-remove-imports')();
+module.exports = removeImports({});

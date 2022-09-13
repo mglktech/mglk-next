@@ -8,7 +8,7 @@ import Users from '../../../models/User';
 //import Account from '../../../models/Account';
 //import Article from '../../../models/Article';
 //import { ObjectId } from 'mongodb';
-import { findGuilds } from '../../../utils/discord';
+//import { findGuilds } from '../../../utils/discord';
 import { ServerSession } from 'mongoose/node_modules/mongodb';
 import { verifyPassword } from '../../../lib/auth';
 import { v4 as uuidv4 } from 'uuid';

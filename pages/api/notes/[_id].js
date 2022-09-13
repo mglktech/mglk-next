@@ -1,4 +1,4 @@
-import Notes from '../../../models/Notes';
+import Notes from '../../../models/notes_model';
 import dbConnect from '../../../lib/dbConnect';
 import { getSession } from 'next-auth/react';
 const index = async (req, res) => {
@@ -21,16 +21,18 @@ const index = async (req, res) => {
 	if (!user) {
 		handleError('No user found');
 	}
-	if (user.userType !== 'admin') {
-		handleError('User is not an admin');
-	}
+
 	await dbConnect();
 	switch (method) {
 		case 'GET':
 			try {
+				if (_id == 'new') {
+					res.status(200).json({ title: '', contents: '' });
+					return;
+				}
 				console.log(`/api/notes/${_id}:: GET ::`);
-				const noteData = await Notes.findById(_id).lean();
-				res.status(200).json({ success: true, data: noteData });
+				const noteData = await Notes.findOne({ _id, author: user._id }).lean();
+				res.status(200).json(noteData);
 				return;
 			} catch (error) {
 				handleError(error);
@@ -45,8 +47,11 @@ const index = async (req, res) => {
 		case 'PUT':
 			try {
 				console.log(`/api/notes/${_id}:: PUT ::`, body);
-				await Notes.findOneAndUpdate({ _id }, body);
-				res.status(200).json({ success: true });
+				const resp = await Notes.findOneAndUpdate(
+					{ _id, author: user._id },
+					body
+				);
+				res.status(200).json(resp);
 				//console.log(result);
 				return;
 			} catch (error) {
@@ -55,16 +60,17 @@ const index = async (req, res) => {
 		case 'DELETE':
 			try {
 				console.log(`/api/notes/${_id}:: DELETE ::`);
-				const data = await Notes.findOneAndDelete({ _id }).exec();
-				res.status(200).json({ success: true, data });
+				const data = await Notes.findOneAndDelete({
+					_id,
+					author: user._id,
+				}).exec();
+				res.status(200).json(data);
 				return;
 			} catch (error) {
 				handleError(error);
 			}
 		default:
-			res
-				.status(500)
-				.json({ success: false, message: 'Internal Server Error (500)' });
+			res.status(500).json('Internal Server Error (500)');
 			return;
 	}
 };

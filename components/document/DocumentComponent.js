@@ -29,6 +29,8 @@ import rehypeHighlight from 'rehype-highlight';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
+import MDEditor from '../MDEditor';
+
 const CardEditor = ({ form, handleChange }) => {
 	const router = useRouter();
 	const deleteDocument = async () => {
@@ -118,19 +120,12 @@ const CardEditor = ({ form, handleChange }) => {
 		</>
 	);
 };
+
 const MarkdownEditor = ({ form, handleChange }) => {
+	const [content, setContent] = useState(form.content);
 	return (
 		<>
-			<Form.Field
-				name="content"
-				control="textarea"
-				rows={25}
-				onChange={handleChange}
-				value={form.content}
-			/>
-			<Header>Preview</Header>
-
-			<MarkdownPreview form={form} />
+			<MDEditor data-color-mode="light" value={content} onChange={setContent} />
 		</>
 	);
 };
@@ -414,7 +409,7 @@ export const DocumentComponent = ({ id }) => {
 	}, [errors, form, formFetched, id, isSaving, router]);
 	return (
 		<>
-			<Container>
+			<Container fluid>
 				<Segment basic>
 					<FormHeader
 						content="Document Editor"
@@ -436,13 +431,12 @@ export const DocumentComponent = ({ id }) => {
 							form={form}
 							initialForm={initialForm}
 						/>
-						<Segment attached="bottom">
-							<EditorContent
-								activeItem={activeItem}
-								form={form}
-								handleChange={handleChange}
-							/>
-						</Segment>
+
+						<EditorContent
+							activeItem={activeItem}
+							form={form}
+							handleChange={handleChange}
+						/>
 					</Form>
 				</Segment>
 			</Container>

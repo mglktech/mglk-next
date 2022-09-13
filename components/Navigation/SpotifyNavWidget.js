@@ -78,7 +78,7 @@ const SpotifyNavWidget = ({ mobile }) => {
 	);
 };
 
-const SpotifyNavAlert = () => {
+const SpotifyNavAlert = ({ mode }) => {
 	const [widgetData, setWidgetData] = useState(null);
 	const fetchWidgetData = async () => {
 		const data = await getData();
@@ -96,35 +96,35 @@ const SpotifyNavAlert = () => {
 		case true:
 			return (
 				<a target="_blank" rel="noreferrer" href={widgetData?.songUrl}>
-					<div
-						className="flex flex-row items-center align-middle text-white space-x-2 p-1 "
-						style={{ backgroundColor: 'green' }}
+					<Marquee
+						as="a"
+						target="_blank"
+						rel="noreferrer"
+						href={widgetData?.songUrl}
+						className="text-white flex flex-row items-center align-middle tracking-wide "
+						gradient={false}
+						style={mode ? {} : { backgroundColor: 'green' }}
 					>
-						<Marquee
-							className="flex flex-row items-center align-middle tracking-wide flex-shrink-0"
-							gradient={false}
-						>
-							<Icon fitted name="spotify" size="big" className="px-2" />
-							{/* This container here should scroll it's contents from left to right */}
-							{`Spotify - Michael is Listening to `}
-							<div
-								style={{
-									marginLeft: `0.5rem`,
-									marginRight: `0.5rem`,
-									background: `url('${widgetData?.albumImageUrl}') center / cover no-repeat`,
-									height: '30px',
-									aspectRatio: '1/1',
-								}}
-							/>
-							{` ` +
-								widgetData?.title +
-								` - ` +
-								widgetData?.artist +
-								` - (Album: ` +
-								widgetData?.album +
-								`)`}
-						</Marquee>
-					</div>
+						<Icon fitted name="spotify" size="big" className="px-2" />
+						{/* This container here should scroll it's contents from left to right */}
+						{`Spotify - Michael is Listening to `}
+						<div
+							style={{
+								marginLeft: `0.5rem`,
+								marginRight: `0.5rem`,
+								background: `url('${widgetData?.albumImageUrl}') center / cover no-repeat`,
+								height: '30px',
+								aspectRatio: '1/1',
+							}}
+						/>
+						{` ` +
+							widgetData?.title +
+							` - ` +
+							widgetData?.artist +
+							` - (Album: ` +
+							widgetData?.album +
+							`)`}
+					</Marquee>
 				</a>
 			);
 		case false:

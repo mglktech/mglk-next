@@ -85,40 +85,41 @@ const NavbarMobile = () => {
 	const [visible, setVisible] = useState(false);
 
 	return (
-		<div style={{ position: 'fixed', top: '0', width: '100%', zIndex: '1' }}>
-			<Menu inverted fluid compact style={{ borderRadius: '0px' }}>
-				<Menu.Item>
-					<Header as="a" href="/" inverted>
-						mglk.tech
-					</Header>
-				</Menu.Item>
-				<Menu.Item>
-					<Dropdown icon="sidebar">
-						<Dropdown.Menu>
-							<NavMenuItems />
-						</Dropdown.Menu>
-					</Dropdown>
-				</Menu.Item>
-				{/* <NavMenuItems /> */}
+		<>
+			<div style={{ position: 'static', top: '0', width: '100%', zIndex: '1' }}>
+				<Menu inverted fluid compact style={{ borderRadius: '0px' }}>
+					<Menu.Item>
+						<Header as="a" href="/" inverted>
+							mglk.tech
+						</Header>
+					</Menu.Item>
+					<Menu.Item>
+						<Dropdown icon="sidebar">
+							<Dropdown.Menu>
+								<NavMenuItems />
+							</Dropdown.Menu>
+						</Dropdown>
+					</Menu.Item>
+					{/* <NavMenuItems /> */}
 
-				<Menu.Item position="right">
-					<UserComponent mobile />
-				</Menu.Item>
-			</Menu>
-			<SpotifyNavAlert />
-		</div>
+					<Menu.Item position="right">
+						<UserComponent mobile />
+					</Menu.Item>
+				</Menu>
+				<SpotifyNavAlert />
+			</div>
+		</>
 	);
 };
 
 const NavbarDesktop = () => {
 	return (
-		<div style={{ position: 'fixed', top: '0', width: '100%', zIndex: '1' }}>
+		<div style={{ top: '0', zIndex: '1', width: '' }}>
 			<Menu
 				inverted
-				fluid
 				compact
 				className="rounded-none"
-				style={{ borderRadius: '0px' }}
+				style={{ borderRadius: '0px', width: '100vw' }}
 			>
 				<Menu.Item>
 					<Header as="a" href="/" inverted>
@@ -126,6 +127,7 @@ const NavbarDesktop = () => {
 					</Header>
 				</Menu.Item>
 				<NavMenuItems />
+
 				<Menu.Item position="right">
 					{/* <SpotifyNavWidget /> */}
 					<UserComponent />
@@ -157,7 +159,7 @@ const HeroComponent = ({ mobile = null }) => {
     ),url('/bin/landing.JPG') center / cover no-repeat`,
 				padding: 0,
 				margin: 0,
-				marginTop: '-50px',
+				// marginTop: '-50px',
 				backgroundAttachment: 'fixed',
 				minHeight: '100vh',
 				minWidth: '100vw',

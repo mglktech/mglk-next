@@ -106,6 +106,10 @@ export const User = ({ fixed, mobile }) => {
 								description=""
 								onClick={() => router.push('/account')}
 							/>
+							<Dropdown.Item
+								text="Notes"
+								onClick={() => router.push('/account/notes')}
+							/>
 							<Dropdown.Divider />
 							<Dropdown.Header icon="book" content="Modules" />
 							<Dropdown.Item>(No Modules)</Dropdown.Item>

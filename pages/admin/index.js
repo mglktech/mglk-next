@@ -1,12 +1,6 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
-import { Container } from 'semantic-ui-react';
 
-import { DiscordBot } from '../../components/admin/DiscordBot';
-import { ProjectEditor } from '../../components/admin/projects';
-import NodeModules from '../../components/admin/NodeModules';
-import PhotoManager from '../../components/admin/PhotoManager';
-
-import { AdminComponent, QuickLinks } from '../../components/admin';
+import ValheimConfigEditor from '../../components/ValheimConfigEditor';
 
 const Page = ({ ctx }) => {
 	return (
@@ -20,7 +14,8 @@ const Page = ({ ctx }) => {
 					<PhotoManager />
 				</Container> */}
 				{/* <QuickLinks /> */}
-				<AdminComponent ctx={ctx} />
+				{/* <AdminComponent ctx={ctx} /> */}
+				<ValheimConfigEditor />
 			</DefaultLayout>
 		</>
 	);

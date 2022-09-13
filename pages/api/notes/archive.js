@@ -17,7 +17,7 @@ delete a note
 Note Object ID can be used in this instance as advanced permissions are required
 */
 
-import Notes from '../../../models/Notes';
+import Notes from '../../../models/notes_model';
 import dbConnect from '../../../lib/dbConnect';
 import { getSession } from 'next-auth/react';
 const index = async (req, res) => {
@@ -36,9 +36,7 @@ const index = async (req, res) => {
 	if (!user) {
 		handleError('No user found');
 	}
-	if (user.userType !== 'admin') {
-		handleError('User is not an admin');
-	}
+	const { _id } = user;
 	await dbConnect();
 	switch (method) {
 		case 'GET':

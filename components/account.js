@@ -22,7 +22,7 @@ import {
 	Modal,
 	Divider,
 } from 'semantic-ui-react';
-
+import { hashPassword } from '../lib/auth';
 import { HeaderIconSub, InputInitiallyHidden, Uuid } from './base';
 
 const displayNameOptions = [
@@ -255,6 +255,38 @@ const ModifyDisplayName = ({ user, handleChange }) => {
 	}
 };
 
+const ChangePassword = ({ user, handleChange }) => {
+	const [editing, setEditing] = useState(false);
+	const [password, setPassword] = useState('');
+
+	const submit = (e) => {
+		e.preventDefault();
+		setEditing(false);
+		handleChange({
+			password: hashPassword(password),
+		});
+	};
+	switch (editing) {
+		case false:
+			return (
+				<Button size="small" onClick={() => setEditing(true)}>
+					Change
+				</Button>
+			);
+		case true:
+			return (
+				<>
+					<Input
+						placeholder={user?.password}
+						type="password"
+						onChange={(e) => setPassword(e.target.value)}
+					/>
+					<Button content="save" onClick={submit} />
+				</>
+			);
+	}
+};
+
 const ModifyFullName = ({ user, handleChange }) => {
 	const [editing, setEditing] = useState(false);
 	const [firstName, setFirstName] = useState(user?.firstName);
@@ -349,6 +381,14 @@ export const UserInformation = ({ user, handleChange }) => {
 								/>
 							</Table.Cell>
 						</Table.Row>
+						{/* <Table.Row>
+							<Table.Cell>
+								<b>Password:</b>
+							</Table.Cell>
+							<Table.Cell>
+								<ChangePassword user={user} handleChange={handleChange} />
+							</Table.Cell>
+						</Table.Row> */}
 					</Table.Body>
 				</Table>
 			</Segment>

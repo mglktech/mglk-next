@@ -1,24 +1,6 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable react/no-multi-comp */
 import { ResponsiveContainer } from '../components/base';
-import { createMedia } from '@artsy/fresnel';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import {
-	Button,
-	Container,
-	Divider,
-	Grid,
-	Header,
-	Icon,
-	Image,
-	List,
-	Menu,
-	Segment,
-	Sidebar,
-	Visibility,
-	Section,
-} from 'semantic-ui-react';
 import {
 	DefaultHead,
 	DefaultFooter,
@@ -26,10 +8,6 @@ import {
 	BasicContainer,
 	NavBar,
 } from '../components/base';
-import {
-	DefaultContainer,
-	BasicDesktopNav,
-} from '../components/Navigation/Desktop';
 
 export const StickyNavLayout = ({ children, title, hero }) => (
 	<>
@@ -50,10 +28,16 @@ export const StickyNavLayout = ({ children, title, hero }) => (
 export const DefaultLayout = ({ children, title, footer = true }) => (
 	<>
 		<DefaultHead title={title} />
-		<div style={{ height: '100vh', display: 'flex', flexDirection: 'Column' }}>
-			<NavBar style={{ display: 'block' }} />
-			<div style={{ flex: '1 0 auto' }}>
-				<div style={{ height: '50px' }}></div>
+		<div
+			style={{
+				height: '100vh',
+				display: 'flex',
+				flexDirection: 'Column',
+			}}
+		>
+			<NavBar />
+
+			<div style={{ position: 'relative', width: '100%', flex: '1 0 auto' }}>
 				{children}
 			</div>
 			<div style={{ flexShrink: '0' }}>
