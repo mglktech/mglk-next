@@ -86,7 +86,14 @@ const NavbarMobile = () => {
 
 	return (
 		<>
-			<div style={{ position: 'static', top: '0', width: '100%', zIndex: '1' }}>
+			<div
+				style={{
+					position: 'relative',
+					top: '0',
+					width: '100vw',
+					zIndex: '1',
+				}}
+			>
 				<Menu inverted fluid compact style={{ borderRadius: '0px' }}>
 					<Menu.Item>
 						<Header as="a" href="/" inverted>

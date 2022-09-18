@@ -62,72 +62,79 @@ export const User = ({ fixed, mobile }) => {
 			);
 		case 'authenticated':
 			return (
-				<>
-					<Dropdown
-						icon={
-							<div className="flex flex-row items-center space-x-2 pr-2">
-								<div
-									style={{
-										background: `url('${session?.user?.avatar}') center / cover no-repeat`,
-										height: '30px',
-										aspectRatio: '1/1',
-									}}
-								/>
-								<span className="font-bold tracking-wide">
-									{session?.user?.email}
-								</span>
-							</div>
-						}
-						className="icon bg-purple-700 rounded"
-					>
-						<Dropdown.Menu direction="left">
-							{isAdmin(session) ? (
+				<Dropdown
+					icon
+					trigger={
+						<div className="flex items-center space-x-2 pr-2 ">
+							<div
+								style={{
+									background: `url('${session?.user?.avatar}') center / cover no-repeat`,
+									height: '30px',
+									aspectRatio: '1/1',
+								}}
+							/>
+							{mobile ? (
 								<>
-									<Dropdown.Header icon="shield" content="Admin" />
-
-									<Dropdown.Item
-										text="Notes"
-										onClick={() => router.push('/admin/notes')}
-									/>
-
-									<Dropdown.Item
-										text="Admin Menu"
-										description=""
-										onClick={() => router.push('/admin')}
-									/>
+									<Icon name="user" />
 								</>
 							) : (
-								<></>
+								<>
+									<span className="font-bold tracking-wide">
+										{session?.user?.email}
+									</span>
+								</>
 							)}
-							<Dropdown.Divider />
-							<Dropdown.Header icon="user" content="Account" />
-							<Dropdown.Item
-								text="Profile"
-								description=""
-								onClick={() => router.push('/account')}
-							/>
-							<Dropdown.Item
-								text="Notes"
-								onClick={() => router.push('/account/notes')}
-							/>
-							<Dropdown.Divider />
-							<Dropdown.Header icon="book" content="Modules" />
-							<Dropdown.Item>(No Modules)</Dropdown.Item>
-							<Dropdown.Divider />
-							<Dropdown.Item>
-								<Button
-									className=""
-									compact
-									color="purple"
-									content="Sign Out"
-									icon="sign-in"
-									labelPosition="right"
-									onClick={() => router.push('/account/signout')}
+						</div>
+					}
+					className="bg-purple-700 rounded mr-5"
+				>
+					<Dropdown.Menu direction="left">
+						{isAdmin(session) ? (
+							<>
+								<Dropdown.Header icon="shield" content="Admin" />
+
+								<Dropdown.Item
+									text="Notes"
+									onClick={() => router.push('/admin/notes')}
 								/>
-							</Dropdown.Item>
-						</Dropdown.Menu>
-					</Dropdown>
-				</>
+
+								<Dropdown.Item
+									text="Admin Menu"
+									description=""
+									onClick={() => router.push('/admin')}
+								/>
+							</>
+						) : (
+							<></>
+						)}
+						<Dropdown.Divider />
+						<Dropdown.Header icon="user" content="Account" />
+						<Dropdown.Item
+							text="Profile"
+							description=""
+							onClick={() => router.push('/account')}
+						/>
+						<Dropdown.Item
+							text="Notes"
+							onClick={() => router.push('/account/notes')}
+						/>
+						<Dropdown.Divider />
+						<Dropdown.Header icon="book" content="Modules" />
+						<Dropdown.Item>(No Modules)</Dropdown.Item>
+						<Dropdown.Divider />
+						<Dropdown.Item>
+							<Button
+								className=""
+								compact
+								color="purple"
+								content="Sign Out"
+								icon="sign-in"
+								labelPosition="right"
+								onClick={() => router.push('/account/signout')}
+							/>
+						</Dropdown.Item>
+					</Dropdown.Menu>
+				</Dropdown>
 			);
 	}
 };
