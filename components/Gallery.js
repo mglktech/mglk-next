@@ -24,9 +24,9 @@ const ImagesGallery = () => {
 	return images ? (
 		<ImageGallery
 			autoPlay={true}
-			showPlayButton={false}
-			showFullscreenButton={false}
-			disableSwipe={true}
+			showPlayButton={true}
+			showFullscreenButton={true}
+			disableSwipe={false}
 			showThumbnails={false}
 			items={images}
 			slideInterval={10000}
