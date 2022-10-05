@@ -9,7 +9,7 @@ import {
 	Menu,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import { isRole } from '../../lib/auth';
+import { isRole } from '../../../lib/auth';
 export default function Component({ fixed, mobile }) {
 	const { data: session } = useSession();
 	const router = useRouter();
