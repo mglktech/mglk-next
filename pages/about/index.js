@@ -38,10 +38,23 @@ const Index = () => {
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Grid container stackable>
 					<Grid.Row verticalAlign="middle">
-						<Grid.Column className="text-center  text-4xl" width={8}>
+						<Grid.Column
+							className="text-center text-4xl tracking-wide"
+							width={8}
+						>
 							<Header inverted>{`Hello,`}</Header>
-							<Header inverted>{`I'm Michael.`}</Header>
-							<span className="text-xl">{`Welcome To My Website`}</span>
+							<Header inverted>
+								{`I'm`}{' '}
+								<b className="bg-white text-black font-mono text-5xl">
+									Michael
+								</b>
+							</Header>
+							<span className="text-2xl">
+								Welcome to{' '}
+								<b className="bg-white text-black font-mono text-3xl">
+									My Domain.
+								</b>
+							</span>
 						</Grid.Column>
 						<Grid.Column floated="right" width={8}>
 							<Image
@@ -54,13 +67,20 @@ const Index = () => {
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row columns={1}>
-						<Grid.Column className="py-20">
+						<Grid.Column className="py-10">
 							<Message
 								color="black"
 								size="massive"
 								className="tracking-wide text-center"
 							>
-								<Message.Header>
+								I Created This Space to help me{' '}
+								<b className="bg-white text-black font-mono ">Learn</b>
+								{` `}and Showcase My Experience in{' '}
+								<b className="bg-white text-black font-mono ">
+									Web Development
+								</b>
+								<br /> <br />
+								<Message.Header className="py-6">
 									I am a{' '}
 									<b className="bg-white text-black font-mono text-4xl">
 										Maker
@@ -75,14 +95,7 @@ const Index = () => {
 								color="black"
 								size="huge"
 								className="teacking-wide text-center"
-							>
-								I Created This Space to help me{' '}
-								<b className="bg-white text-black font-mono ">Learn</b>
-								{` `}and Showcase My Experience in{' '}
-								<b className="bg-white text-black font-mono ">
-									Web Development
-								</b>
-							</Message>
+							></Message>
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row stretched columns={2}>
