@@ -27,14 +27,7 @@ export const User = ({ fixed, mobile }) => {
 		case 'unauthenticated':
 			return (
 				<>
-					<Dropdown
-						floating
-						labeled
-						icon="user circle"
-						button
-						className="icon"
-						text="Login"
-					>
+					<Dropdown floating labeled button text="Login">
 						<Dropdown.Menu direction="left">
 							<Dropdown.Header>Account Management</Dropdown.Header>
 							<Menu.Item onClick={() => signIn()}>
@@ -63,9 +56,10 @@ export const User = ({ fixed, mobile }) => {
 		case 'authenticated':
 			return (
 				<Dropdown
-					icon
+					icon="caret right"
+					inline
 					trigger={
-						<div className="flex items-center space-x-2 pr-2 ">
+						<div className="inline-flex items-center space-x-2 pr-2 ">
 							<div
 								style={{
 									background: `url('${session?.user?.avatar}') center / cover no-repeat`,
@@ -92,14 +86,8 @@ export const User = ({ fixed, mobile }) => {
 						{isAdmin(session) ? (
 							<>
 								<Dropdown.Header icon="shield" content="Admin" />
-
 								<Dropdown.Item
-									text="Notes"
-									onClick={() => router.push('/admin/notes')}
-								/>
-
-								<Dropdown.Item
-									text="Admin Menu"
+									text="Dashboard"
 									description=""
 									onClick={() => router.push('/admin')}
 								/>
@@ -114,13 +102,14 @@ export const User = ({ fixed, mobile }) => {
 							description=""
 							onClick={() => router.push('/account')}
 						/>
+
+						<Dropdown.Divider />
+						<Dropdown.Header icon="book" content="Modules" />
 						<Dropdown.Item
 							text="Notes"
 							onClick={() => router.push('/account/notes')}
 						/>
-						<Dropdown.Divider />
-						<Dropdown.Header icon="book" content="Modules" />
-						<Dropdown.Item>(No Modules)</Dropdown.Item>
+
 						<Dropdown.Divider />
 						<Dropdown.Item>
 							<Button

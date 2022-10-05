@@ -22,6 +22,7 @@ import {
 	Select,
 	Modal,
 	Divider,
+	Message,
 } from 'semantic-ui-react';
 /*
 ABOUT ALL
@@ -48,39 +49,50 @@ const Index = () => {
 								circular
 								alt="about_photo"
 								src="/bin/about_photo_lg_unflip_bw.jpeg"
+								className="p-5"
 							/>
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row columns={1}>
-						<Grid.Column>
-							<Segment inverted style={{ padding: '5em', textAlign: 'center' }}>
-								<Header
-									inverted
-									color="blue"
-									as="h2"
-									style={{ fontSize: '2em' }}
-								>
-									I Wanted Somewhere To Put Things...
-								</Header>
-								<p style={{ fontSize: '1.33em' }}>
-									{`mglk.tech is a website that I created to help me learn and grow
-								as a developer.`}
-								</p>
-								<p style={{ fontSize: '1.33em' }}>
-									{`I'm a software engineer with a passion for learning and building
-								new things.`}
-								</p>
-							</Segment>
+						<Grid.Column className="py-20">
+							<Message
+								color="black"
+								size="massive"
+								className="tracking-wide text-center"
+							>
+								<Message.Header>
+									I am a{' '}
+									<b className="bg-white text-black font-mono text-4xl">
+										Maker
+									</b>
+								</Message.Header>
+								I <b className="bg-white text-black font-mono text-3xl">Like</b>
+								{` `}to Invent.
+							</Message>
+						</Grid.Column>
+						<Grid.Column className="py-20">
+							<Message
+								color="black"
+								size="huge"
+								className="teacking-wide text-center"
+							>
+								I Created This Space to help me{' '}
+								<b className="bg-white text-black font-mono ">Learn</b>
+								{` `}and Showcase My Experience in{' '}
+								<b className="bg-white text-black font-mono ">
+									Web Development
+								</b>
+							</Message>
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row stretched columns={2}>
-						<Grid.Column style={{ padding: '5em' }} color="blue">
+						<Grid.Column color="blue">
 							<List inverted>
 								<List.Item>
 									<List.Icon name="code" size="huge"></List.Icon>
 									<List.Content>
 										<List.Header as="h2">Ambitious Web Developer</List.Header>
-										<List.Description style={{ fontSize: '1.33em' }}>
+										<List.Description>
 											Self-Motivated, Self-Driven, 10+ Years of Experience
 											working with HTML, CSS, JS, React, Node, Express, MongoDB,
 											MySQL, and more.
@@ -89,7 +101,7 @@ const Index = () => {
 								</List.Item>
 							</List>
 						</Grid.Column>
-						<Grid.Column style={{ padding: '5em' }} color="orange">
+						<Grid.Column color="orange">
 							<List inverted>
 								<List.Item>
 									<List.Icon name="fire" size="huge"></List.Icon>
@@ -97,7 +109,7 @@ const Index = () => {
 										<List.Header as="h2">
 											Professional Fire Performer
 										</List.Header>
-										<List.Description style={{ fontSize: '1.23em' }}>
+										<List.Description>
 											I have Always been Mesmerised by the Power of Fire, Ever
 											since I was Young. This Intense Passion for Heat and Flame
 											has led to me performing in a Diverse assortment of
@@ -110,7 +122,7 @@ const Index = () => {
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row>
-						<Grid.Column style={{ padding: '5em' }} width={16} color="violet">
+						<Grid.Column width={16} color="violet">
 							<List inverted>
 								<List.Item>
 									<List.Icon name="computer" size="huge"></List.Icon>
@@ -118,7 +130,7 @@ const Index = () => {
 										<List.Header as="h2">
 											Experienced Computer Hardware Technician
 										</List.Header>
-										<List.Description style={{ fontSize: '1.33em' }}>
+										<List.Description>
 											Specialist in PC Hardware, Networking, and IT Support.
 											Also proficient with <b>Internet of Things (IoT)450</b>{' '}
 											devices.
