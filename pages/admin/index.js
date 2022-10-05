@@ -1,12 +1,32 @@
 import { DefaultLayout } from '../../layouts/DefaultLayout';
 
 import ValheimConfigEditor from '../../components/ValheimConfigEditor';
-
+import Dashboard from '../../components/admin/dashboard';
+import {
+	Form,
+	Checkbox,
+	Button,
+	Label,
+	Icon,
+	Container,
+	Segment,
+	Grid,
+	Header,
+	Menu,
+	Placeholder,
+	Modal,
+	Input,
+	Divider,
+	TextArea,
+} from 'semantic-ui-react';
 const Page = ({ ctx }) => {
 	return (
 		<>
 			<DefaultLayout>
 				<div className="pt-10" />
+				<div className="flex justify-center">
+					<Dashboard />
+				</div>
 				{/* <Container className="flex space-y-5">
 					<ProjectEditor />
 					
@@ -15,7 +35,7 @@ const Page = ({ ctx }) => {
 				</Container> */}
 				{/* <QuickLinks /> */}
 				{/* <AdminComponent ctx={ctx} /> */}
-				<ValheimConfigEditor />
+				{/* <ValheimConfigEditor /> */}
 			</DefaultLayout>
 		</>
 	);
