@@ -26,8 +26,8 @@ export const User = ({ fixed, mobile }) => {
 			);
 		case 'unauthenticated':
 			return (
-				<>
-					<Dropdown floating labeled button text="Login">
+				<Button basic inverted>
+					<Dropdown text="Sign In / Sign Up">
 						<Dropdown.Menu direction="left">
 							<Dropdown.Header>Account Management</Dropdown.Header>
 							<Menu.Item onClick={() => signIn()}>
@@ -51,7 +51,7 @@ export const User = ({ fixed, mobile }) => {
 							</Menu.Item>
 						</Dropdown.Menu>
 					</Dropdown>
-				</>
+				</Button>
 			);
 		case 'authenticated':
 			return (

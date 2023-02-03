@@ -69,9 +69,6 @@ const MobileNav = ({ handleToggle }) => (
 	<Menu inverted pointing secondary size="large">
 		<Menu.Item>mglk.tech</Menu.Item>
 		<Menu.Item position="right">
-			<Menu.Item onClick={handleToggle}>
-				<Icon name="sidebar" />
-			</Menu.Item>
 			<UserComponent />
 		</Menu.Item>
 	</Menu>
@@ -136,7 +133,6 @@ const NavbarDesktop = () => {
 				<NavMenuItems />
 
 				<Menu.Item position="right">
-					{/* <SpotifyNavWidget /> */}
 					<UserComponent />
 				</Menu.Item>
 			</Menu>
